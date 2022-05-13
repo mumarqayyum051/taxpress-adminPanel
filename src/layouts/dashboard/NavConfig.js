@@ -17,21 +17,6 @@ const navConfig = [
     icon: getIcon('ic:sharp-cases'),
   },
   {
-    title: 'Notification',
-    path: '/dashboard/notification',
-    icon: getIcon('fa6-solid:blog'),
-  },
-  {
-    title: 'Statute',
-    path: '/dashboard/Statute',
-    icon: getIcon('eva:people-fill'),
-  },
-  {
-    title: 'Dictionary',
-    path: '/dashboard/dictionary',
-    icon: getIcon('eva:shopping-bag-fill'),
-  },
-  {
     title: 'statutes',
     path: '/dashboard/statutes',
     icon: getIcon('codicon:law'),

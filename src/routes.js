@@ -17,6 +17,7 @@ import Statutes from './pages/Statutes/Statutes';
 import AddStatutes from './pages/Statutes/Add';
 import Dictionary from './pages/Dictionary/Dictionary';
 import Notifications from './pages/Notifications/Notifications';
+import AddDictionary from './pages/Dictionary/AddDictionary';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -26,17 +27,14 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'statute', element: <CaseLaw /> },
-        { path: 'dictionary', element: <CaseLaw /> },
         { path: 'blog', element: <Blog /> },
-        { path: 'notification', element: <CaseLaw /> },
-        { path: 'dictionary', element: <CaseLaw /> },
         { path: 'caselaws', element: <CaseLaw /> },
         { path: 'addCase', element: <AddCase /> },
         { path: 'editCase', element: <EditCase /> },
         { path: 'statutes', element: <Statutes /> },
         { path: 'addStatue', element: <AddStatutes /> },
         { path: 'dictionary', element: <Dictionary /> },
+        { path: 'addDictionary', element: <AddDictionary /> },
         { path: 'notifications', element: <Notifications /> },
       ],
     },
