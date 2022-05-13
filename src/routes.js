@@ -23,9 +23,11 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <User /> },
-        { path: 'products', element: <Products /> },
+        { path: 'statute', element: <CaseLaw /> },
+        { path: 'dictionary', element: <CaseLaw /> },
         { path: 'blog', element: <Blog /> },
+        { path: 'notification', element: <CaseLaw /> },
+        { path: 'dictionary', element: <CaseLaw /> },
         { path: 'caselaws', element: <CaseLaw /> },
         { path: 'addCase', element: <AddCase /> },
         { path: 'editCase', element: <EditCase /> },

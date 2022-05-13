@@ -16,21 +16,21 @@ const navConfig = [
     path: '/dashboard/caselaws',
     icon: getIcon('ic:sharp-cases'),
   },
-  // {
-  //   title: 'blogs',
-  //   path: '/dashboard/blogs',
-  //   icon: getIcon('fa6-solid:blog'),
-  // },
-  // {
-  //   title: 'user',
-  //   path: '/dashboard/user',
-  //   icon: getIcon('eva:people-fill'),
-  // },
-  // {
-  //   title: 'product',
-  //   path: '/dashboard/products',
-  //   icon: getIcon('eva:shopping-bag-fill'),
-  // },
+  {
+    title: 'Notification',
+    path: '/dashboard/notification',
+    icon: getIcon('fa6-solid:blog'),
+  },
+  {
+    title: 'Statute',
+    path: '/dashboard/Statute',
+    icon: getIcon('eva:people-fill'),
+  },
+  {
+    title: 'Dictionary',
+    path: '/dashboard/dictionary',
+    icon: getIcon('eva:shopping-bag-fill'),
+  },
   {
     title: 'blog',
     path: '/dashboard/blog',
