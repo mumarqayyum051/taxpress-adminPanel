@@ -2,11 +2,11 @@ import { _get, _post, _put, _delete } from './httpService';
 
 const _addDictionary = (caseData) => _post('/dictionary/add', caseData);
 
-const _getAllDictionarys = () => _get('/counts/getCounts');
+const _getAllDictionarys = () => _get('/dictionary/getAll');
 
-const _deleteDictionary = (caseID) => _delete(`/cases/deleteDictionary/${caseID}`);
+const _deleteDictionary = (caseID) => _delete(`/dictionary/deleteDictionary/${caseID}`);
 
-const _searchDictionary = (caseData) => _post('/cases/searchDictionary', caseData);
+const _searchDictionary = (caseData) => _post('/dictionary/searchDictionary', caseData);
 
 const DictionaryService = {
   _addDictionary,

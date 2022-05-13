@@ -18,6 +18,7 @@ import AddStatutes from './pages/Statutes/Add';
 import Dictionary from './pages/Dictionary/Dictionary';
 import Notifications from './pages/Notifications/Notifications';
 import AddDictionary from './pages/Dictionary/AddDictionary';
+import AddNotification from './pages/Notifications/Add';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -36,6 +37,7 @@ export default function Router() {
         { path: 'dictionary', element: <Dictionary /> },
         { path: 'addDictionary', element: <AddDictionary /> },
         { path: 'notifications', element: <Notifications /> },
+        { path: 'addNotification', element: <AddNotification /> },
       ],
     },
 

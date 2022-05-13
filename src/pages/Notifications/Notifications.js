@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -32,6 +33,7 @@ import Actions from './Actions';
 import USERLIST from '../../_mock/user';
 
 import CaseLawService from '../../services/CaseLawService';
+import NotificationService from '../../services/NotificationService';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +81,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function Notifications() {
-  const { _getAllCases } = CaseLawService;
+  const { _getAllNotifications } = NotificationService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -88,7 +90,7 @@ export default function Notifications() {
   }, []);
 
   const getAllCases = () => {
-    _getAllCases()
+    _getAllNotifications()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -176,12 +178,12 @@ export default function Notifications() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Notifications
+            Notification
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addCase"
+            to="/dashboard/addNotification"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Notification
@@ -195,29 +197,33 @@ export default function Notifications() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Page</TableCell>
-                    <TableCell align="left">Court</TableCell>
-                    <TableCell align="left">Lawyer</TableCell>
-                    <TableCell align="left">Judge</TableCell>
-                    <TableCell align="center">Case</TableCell>
+                    <TableCell>Id</TableCell>
+                    <TableCell>Notification Type Id</TableCell>
+                    <TableCell>SRO NO</TableCell>
+                    <TableCell>Subject</TableCell>
+                    <TableCell>Year</TableCell>
+                    <TableCell>Dated</TableCell>
+                    <TableCell>Law Or Statute Id</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     console.log(row);
-                    const { id, pageNo, court, lawyer, judge, caseNo } = row;
+                    // eslint-disable-next-line camelcase
+                    const { id, notificationTypeId, sroNO, subject, year, dated, law_or_statute_id } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{pageNo}</TableCell>
-                        <TableCell align="left">{court}</TableCell>
-                        <TableCell align="left">{lawyer}</TableCell>
-                        <TableCell align="left">{judge}</TableCell>
-                        <TableCell align="left">{caseNo}</TableCell>
-
-                        <TableCell align="right">
+                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{notificationTypeId}</TableCell>
+                        <TableCell align="left">{sroNO}</TableCell>
+                        <TableCell align="left">{subject}</TableCell>
+                        <TableCell align="left">{year}</TableCell>
+                        <TableCell align="left">{dated}</TableCell>
+                        <TableCell align="left">{law_or_statute_id}</TableCell>
+                        {/* <TableCell align="right">
                           <Actions id={id} onDelete={getAllCases} />
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}
