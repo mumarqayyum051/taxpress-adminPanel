@@ -2,11 +2,16 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
+import React, { useState, useEffect } from 'react';
 import Page from '../components/Page';
 import Iconify from '../components/Iconify';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import POSTS from '../_mock/blog';
+
+// ----------------------------------------------------------------------
+
+import BlogService from '../services/BlogService';
 
 // ----------------------------------------------------------------------
 
@@ -16,9 +21,11 @@ const SORT_OPTIONS = [
   { value: 'oldest', label: 'Oldest' },
 ];
 
-// ----------------------------------------------------------------------
-
 export default function Blog() {
+  const { _getAllBlogs } = BlogService;
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {}, []);
   return (
     <Page title="Dashboard: Blog">
       <Container>
