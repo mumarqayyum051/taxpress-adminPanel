@@ -1,6 +1,6 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
@@ -19,24 +19,27 @@ import {
   TablePagination,
 } from '@mui/material';
 // components
+import TableHead from '@mui/material/TableHead';
 import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import Iconify from '../../components/Iconify';
+
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user';
 // mock
 import USERLIST from '../../_mock/user';
 
+import CaseLawService from '../../services/CaseLawService';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'page', label: 'Page', alignRight: false },
+  { id: 'court', label: 'Court', alignRight: false },
+  { id: 'lawyer', label: 'Lawyer', alignRight: false },
+  { id: 'judge', label: 'Judge', alignRight: false },
+  { id: 'case', label: 'Case', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -58,6 +61,10 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query) {
+  console.log(array);
+  if (!array.length) {
+    return [];
+  }
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -71,6 +78,38 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function CaseLaw() {
+  const { _getAllCases } = CaseLawService;
+  const [cases, setCases] = useState([]);
+  const [filteredCases, setFilteredCases] = useState([]);
+  const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  useEffect(() => {
+    getAllCases();
+  }, []);
+
+  const getAllCases = () => {
+    _getAllCases()
+      .then((res) => {
+        if (res.status === 200) {
+          setCases(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    console.log(cases);
+    const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
+
+    if (arr.length === 0) {
+      setisCaseNotFound(true);
+    } else {
+      setisCaseNotFound(false);
+
+      setFilteredCases(arr);
+    }
+  }, [cases]);
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -128,9 +167,7 @@ export default function CaseLaw() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
-
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = filteredCases.length === 0;
 
   return (
     <Page title="User">
@@ -139,62 +176,45 @@ export default function CaseLaw() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button variant="contained" component={RouterLink} to="#" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/dashboard/addCase"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
             New User
           </Button>
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-
+          {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Page</TableCell>
+                    <TableCell align="left">Court</TableCell>
+                    <TableCell align="left">Lawyer</TableCell>
+                    <TableCell align="left">Judge</TableCell>
+                    <TableCell align="center">Case</TableCell>
+                  </TableRow>
+                </TableHead>
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    console.log(row);
+                    const { id, pageNo, court, lawyer, judge, caseNo } = row;
 
                     return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
-                        </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-                        <TableCell align="left">
-                          <Label variant="ghost" color={(status === 'banned' && 'error') || 'success'}>
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
+                      <TableRow hover key={id} tabIndex={-1}>
+                        <TableCell align="left">{pageNo}</TableCell>
+                        <TableCell align="left">{court}</TableCell>
+                        <TableCell align="left">{lawyer}</TableCell>
+                        <TableCell align="left">{judge}</TableCell>
+                        <TableCell align="left">{caseNo}</TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu />
+                          <UserMoreMenu id={id} onDelete={getAllCases} />
                         </TableCell>
                       </TableRow>
                     );
@@ -222,7 +242,7 @@ export default function CaseLaw() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={cases.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

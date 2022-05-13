@@ -1,66 +1,35 @@
-import axios from "axios";
+import axios from 'axios';
 
+const baseURL = 'http://localhost:4000/api';
 const headersConfig = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
 };
 
 export const _get = async (path) => {
-  return await axios
-    .get(`${process.env.REACT_APP_API_URL}${path}`, {
-      headers: headersConfig,
-    })
-    .then(function (response) {
-      console.log(response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-      return error;
-    });
+  const response = await axios.get(`${baseURL}${path}`, {
+    headers: headersConfig,
+  });
+  return response;
 };
 
 export const _post = async (path, body) => {
-  return await axios
-    .post(`${process.env.REACT_APP_API_URL}${path}`, body, {
-      headers: headersConfig,
-    })
-    .then(function (response) {
-      console.log(response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-      return error;
-    });
+  const response = await axios.post(`${baseURL}${path}`, body, {
+    headers: headersConfig,
+  });
+  return response;
 };
 
 export const _put = async (path, body) => {
-  return await axios
-    .put(`${process.env.REACT_APP_API_URL}${path}`, body, {
-      headers: headersConfig,
-    })
-    .then(function (response) {
-      console.log(response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-      return error;
-    });
+  const response = await axios.put(`${baseURL}${path}`, body, {
+    headers: headersConfig,
+  });
+  return response;
 };
 
 export const _delete = async (path) => {
-  return await axios
-    .delete(`${process.env.REACT_APP_API_URL}${path}`, {
-      headers: headersConfig,
-    })
-    .then(function (response) {
-      console.log(response);
-      return response;
-    })
-    .catch(function (error) {
-      console.log(error);
-      return error;
-    });
+  const response = await axios.delete(`${baseURL}${path}`, {
+    headers: headersConfig,
+  });
+  return response;
 };
