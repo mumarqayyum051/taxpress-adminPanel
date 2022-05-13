@@ -28,6 +28,7 @@ import Iconify from '../../components/Iconify';
 import SearchNotFound from '../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user';
 // mock
+import Actions from './Actions';
 import USERLIST from '../../_mock/user';
 
 import CaseLawService from '../../services/CaseLawService';
@@ -100,9 +101,10 @@ export default function CaseLaw() {
   useEffect(() => {
     console.log(cases);
     const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
-
+    console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
+      setFilteredCases([]);
     } else {
       setisCaseNotFound(false);
 
@@ -174,7 +176,7 @@ export default function CaseLaw() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Case
           </Typography>
           <Button
             variant="contained"
@@ -182,7 +184,7 @@ export default function CaseLaw() {
             to="/dashboard/addCase"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            New User
+            Add Case
           </Button>
         </Stack>
 
@@ -214,7 +216,7 @@ export default function CaseLaw() {
                         <TableCell align="left">{caseNo}</TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu id={id} onDelete={getAllCases} />
+                          <Actions id={id} onDelete={getAllCases} />
                         </TableCell>
                       </TableRow>
                     );

@@ -12,6 +12,7 @@ import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import CaseLaw from './pages/CaseLaw/CaseLaw';
 import AddCase from './pages/CaseLaw/Add';
+import EditCase from './pages/CaseLaw/Edit';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'blog', element: <Blog /> },
         { path: 'caselaws', element: <CaseLaw /> },
         { path: 'addCase', element: <AddCase /> },
+        { path: 'editCase', element: <EditCase /> },
       ],
     },
 

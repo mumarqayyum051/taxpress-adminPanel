@@ -20,7 +20,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { MONTHS } from '../../constants/months';
 import CaseLawService from '../../services/CaseLawService';
 
-const AddCase = () => {
+const EditCase = () => {
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -157,7 +157,7 @@ const AddCase = () => {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Add Case{' '}
+            Edit Case{' '}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -200,6 +200,16 @@ const AddCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={4}>
+                  {/* <Autocomplete
+                    id="size-small-outlined-multi"
+                    size="medium"
+                    options={MONTHS}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Month" placeholder="Favorites" />
+                    )}
+                  /> */}
+
                   <TextField
                     id="month"
                     select
@@ -486,4 +496,4 @@ const AddCase = () => {
   );
 };
 
-export default AddCase;
+export default EditCase;
