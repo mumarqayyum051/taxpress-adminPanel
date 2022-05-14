@@ -3,7 +3,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Blog from './pages/Blog';
+import Blog from './pages/Blog/Blog';
 import User from './pages/User';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
@@ -19,6 +19,7 @@ import Dictionary from './pages/Dictionary/Dictionary';
 import Notifications from './pages/Notifications/Notifications';
 import AddDictionary from './pages/Dictionary/AddDictionary';
 import AddNotification from './pages/Notifications/Add';
+import AddBlog from './pages/Blog/Add';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -29,6 +30,7 @@ export default function Router() {
       children: [
         { path: 'app', element: <DashboardApp /> },
         { path: 'blog', element: <Blog /> },
+        { path: 'addBlog', element: <AddBlog /> },
         { path: 'caselaws', element: <CaseLaw /> },
         { path: 'addCase', element: <AddCase /> },
         { path: 'editCase', element: <EditCase /> },

@@ -3,15 +3,15 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
 import React, { useState, useEffect } from 'react';
-import Page from '../components/Page';
-import Iconify from '../components/Iconify';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
+import Page from '../../components/Page';
+import Iconify from '../../components/Iconify';
+import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../sections/@dashboard/blog';
 // mock
-import POSTS from '../_mock/blog';
+import POSTS from '../../_mock/blog';
 
 // ----------------------------------------------------------------------
 
-import BlogService from '../services/BlogService';
+import BlogService from '../../services/BlogService';
 
 // ----------------------------------------------------------------------
 
@@ -33,18 +33,23 @@ export default function Blog() {
           <Typography variant="h4" gutterBottom>
             Blog
           </Typography>
-          <Button variant="contained" component={RouterLink} to="#" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/dashboard/addBlog"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
             New Post
           </Button>
         </Stack>
 
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+        {/* <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
           <BlogPostsSearch posts={POSTS} />
           <BlogPostsSort options={SORT_OPTIONS} />
-        </Stack>
+        </Stack> */}
 
         <Grid container spacing={3}>
-          {POSTS.map((post, index) => (
+          {_getAllBlogs.map((post, index) => (
             <BlogPostCard key={post.id} post={post} index={index} />
           ))}
         </Grid>
