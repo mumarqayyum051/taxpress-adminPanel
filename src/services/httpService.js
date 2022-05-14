@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'https://taxpress.api.quantux.net/api';
+const baseURL = 'http://localhost:4000/api';
 const headersConfig = {
   'Content-Type': 'application/json',
   Accept: 'application/json',

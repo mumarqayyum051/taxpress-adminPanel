@@ -13,7 +13,10 @@ import DashboardApp from './pages/DashboardApp';
 import CaseLaw from './pages/CaseLaw/CaseLaw';
 import AddCase from './pages/CaseLaw/Add';
 import EditCase from './pages/CaseLaw/Edit';
-
+import Statutes from './pages/Statutes/Statutes';
+import AddStatutes from './pages/Statutes/Add';
+import Dictionary from './pages/Dictionary/Dictionary';
+import Notifications from './pages/Notifications/Notifications';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -31,6 +34,10 @@ export default function Router() {
         { path: 'caselaws', element: <CaseLaw /> },
         { path: 'addCase', element: <AddCase /> },
         { path: 'editCase', element: <EditCase /> },
+        { path: 'statutes', element: <Statutes /> },
+        { path: 'addStatue', element: <AddStatutes /> },
+        { path: 'dictionary', element: <Dictionary /> },
+        { path: 'notifications', element: <Notifications /> },
       ],
     },
 

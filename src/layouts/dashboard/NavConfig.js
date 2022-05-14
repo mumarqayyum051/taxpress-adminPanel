@@ -32,10 +32,27 @@ const navConfig = [
     icon: getIcon('eva:shopping-bag-fill'),
   },
   {
+    title: 'statutes',
+    path: '/dashboard/statutes',
+    icon: getIcon('codicon:law'),
+  },
+  {
     title: 'blog',
     path: '/dashboard/blog',
     icon: getIcon('eva:file-text-fill'),
   },
+  {
+    title: 'notifications',
+    path: '/dashboard/notifications',
+    icon: getIcon('ant-design:notification-filled'),
+  },
+
+  {
+    title: 'dictionary',
+    path: '/dashboard/dictionary',
+    icon: getIcon('heroicons-solid:library'),
+  },
+
   // {
   //   title: 'login',
   //   path: '/login',
