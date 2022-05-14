@@ -31,7 +31,7 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@das
 // mock
 import Actions from './Actions';
 import USERLIST from '../../_mock/user';
-
+import StatutesService from '../../services/StatuteService';
 import CaseLawService from '../../services/CaseLawService';
 import NotificationService from '../../services/NotificationService';
 
@@ -82,6 +82,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function Notifications() {
   const { _getAllNotifications } = NotificationService;
+  const { _getStatuteById } = StatutesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -126,36 +127,6 @@ export default function Notifications() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -165,14 +136,21 @@ export default function Notifications() {
     setPage(0);
   };
 
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const isUserNotFound = filteredCases.length === 0;
-
+  const getStatuteByID = (id) => {
+    StatutesService._getStatuteById(id)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response.data.data);
+          return response.data.data[0]?.law_or_statute || '???';
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <Page title="User">
       <Container>
@@ -197,30 +175,39 @@ export default function Notifications() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Id</TableCell>
-                    <TableCell>Notification Type Id</TableCell>
-                    <TableCell>SRO NO</TableCell>
+                    <TableCell>#</TableCell>
+                    <TableCell>Notification</TableCell>
+                    <TableCell sx={{ width: '15%' }}>SRO NO</TableCell>
                     <TableCell>Subject</TableCell>
                     <TableCell>Year</TableCell>
                     <TableCell>Dated</TableCell>
-                    <TableCell>Law Or Statute Id</TableCell>
+                    <TableCell>Law/Statute</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
                     // eslint-disable-next-line camelcase
-                    const { id, notificationTypeId, sroNO, subject, year, dated, law_or_statute_id } = row;
+                    const {
+                      id,
+
+                      sroNO,
+                      subject,
+                      year,
+                      dated,
+                      notificationCategoryName,
+                      law_or_statute,
+                    } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{id}</TableCell>
-                        <TableCell align="left">{notificationTypeId}</TableCell>
+                        <TableCell align="left">{i + 1}</TableCell>
+                        <TableCell align="left">{notificationCategoryName}</TableCell>
                         <TableCell align="left">{sroNO}</TableCell>
                         <TableCell align="left">{subject}</TableCell>
                         <TableCell align="left">{year}</TableCell>
                         <TableCell align="left">{dated}</TableCell>
-                        <TableCell align="left">{law_or_statute_id}</TableCell>
+                        <TableCell align="left">{law_or_statute}</TableCell>
                         {/* <TableCell align="right">
                           <Actions id={id} onDelete={getAllCases} />
                         </TableCell> */}

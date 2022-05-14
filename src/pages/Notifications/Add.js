@@ -69,7 +69,7 @@ const AddNotification = () => {
       notificationTypeId: '',
       sroNO: '',
       year: '',
-      dated: +new Date(),
+      dated: '',
       subject: '',
       file: '',
     },
@@ -80,12 +80,10 @@ const AddNotification = () => {
       year: yup.string().required('Year is required'),
       dated: yup.string().required('Date is required'),
       subject: yup.string().required('Subject is required'),
-      file: yup.string().required('Please attach a PDF'),
     }),
 
     onSubmit: (values) => {
       setFileError('');
-
       console.log(values);
       if (!values.file) {
         setFileError('Please select a file');
@@ -165,6 +163,7 @@ const AddNotification = () => {
                       value={formik.values.notificationTypeId}
                       label="Statute"
                       onChange={(event) => {
+                        console.log(event.target.value);
                         formik.setFieldValue('notificationTypeId', event.target.value);
                       }}
                     >
@@ -185,7 +184,14 @@ const AddNotification = () => {
                     label="SRO No"
                     color="secondary"
                     key="sroNO"
+                    type="number"
                     value={formik.values.sroNO}
+                    InputProps={{
+                      inputProps: {
+                        type: 'number',
+                        min: 0,
+                      },
+                    }}
                     onChange={formik.handleChange}
                     fullWidth
                   />
@@ -200,6 +206,15 @@ const AddNotification = () => {
                     label="Year"
                     color="secondary"
                     key="year"
+                    type="number"
+                    placeholder="2011"
+                    InputProps={{
+                      inputProps: {
+                        type: 'number',
+                        min: 1900,
+                        max: 2100,
+                      },
+                    }}
                     value={formik.values.year}
                     onChange={formik.handleChange}
                     fullWidth
