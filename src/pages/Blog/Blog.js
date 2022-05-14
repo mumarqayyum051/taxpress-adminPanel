@@ -25,7 +25,11 @@ export default function Blog() {
   const { _getAllBlogs } = BlogService;
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    _getAllBlogs().then((res) => {
+      setPosts(res.data.data);
+    });
+  }, []);
   return (
     <Page title="Dashboard: Blog">
       <Container>
@@ -49,7 +53,7 @@ export default function Blog() {
         </Stack> */}
 
         <Grid container spacing={3}>
-          {_getAllBlogs.map((post, index) => (
+          {posts.map((post, index) => (
             <BlogPostCard key={post.id} post={post} index={index} />
           ))}
         </Grid>

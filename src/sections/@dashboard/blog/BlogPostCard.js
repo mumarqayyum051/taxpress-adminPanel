@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgIconStyle from '../../../components/SvgIconStyle';
@@ -58,7 +58,7 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, author, createdAt } = post;
+  const { image, title, paragraph, date } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
@@ -100,8 +100,8 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
           <AvatarStyle
-            alt={author.name}
-            src={author.avatarUrl}
+            alt={'Admin'}
+            src={'/static/mock-images/avatars/avatar_1.jpg'}
             sx={{
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,
@@ -113,7 +113,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <CoverImgStyle alt={title} src={cover} />
+          <CoverImgStyle alt={title} src={'/static/mock-images/covers/cover_1.jpg'} />
         </CardMediaStyle>
 
         <CardContent
@@ -126,9 +126,9 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {fDate(createdAt)}
-          </Typography>
+          {/* <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+            {fDateTime(date)}
+          </Typography> */}
 
           <TitleStyle
             to="#"
