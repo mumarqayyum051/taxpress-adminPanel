@@ -20,7 +20,7 @@ import NotificationService from '../../services/NotificationService';
 import StatuteService from '../../services/StatuteService';
 
 const AddNotification = () => {
-  const { _getAllNotifications, _addNotification, _getNotificationTypes } = NotificationService;
+  const { _addNotification, _getNotificationTypes } = NotificationService;
   const { _getAllStatutes } = StatuteService;
   const navigate = useNavigate();
 
@@ -158,7 +158,7 @@ const AddNotification = () => {
               <Grid container spacing={2}>
                 <Grid item xs={6} md={6}>
                   <FormControl fullWidth>
-                    <InputLabel id="notification">Law/Statute</InputLabel>
+                    <InputLabel id="notification">Notification</InputLabel>
                     <Select
                       labelId="notification"
                       id="notification"
@@ -224,7 +224,7 @@ const AddNotification = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
                   ) : null}
                 </Grid>
-                <Grid item xs={6} md={12}>
+                <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 2"
                     color="secondary"
@@ -239,18 +239,35 @@ const AddNotification = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
                   ) : null}
                 </Grid>
-                <TextField
-                  color="secondary"
-                  id="dated"
-                  type="date"
-                  key="dated"
-                  value={formik.values.dated}
-                  onChange={formik.handleChange}
-                  fullWidth
-                />
-                {formik.errors.dated && formik.touched.dated ? (
-                  <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.dated}</p>
-                ) : null}
+                <Grid item xs={6} md={6}>
+                  <TextField
+                    label="Subject"
+                    color="secondary"
+                    id="subject"
+                    type="text"
+                    key="subject"
+                    value={formik.values.subject}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
+                  {formik.errors.subject && formik.touched.subject ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.subject}</p>
+                  ) : null}
+                </Grid>
+                <Grid item xs={6} md={6}>
+                  <TextField
+                    color="secondary"
+                    id="dated"
+                    type="date"
+                    key="dated"
+                    value={formik.values.dated}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
+                  {formik.errors.dated && formik.touched.dated ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.dated}</p>
+                  ) : null}
+                </Grid>
                 <Grid item xs={6} md={6}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Law/Statute</InputLabel>
@@ -272,66 +289,6 @@ const AddNotification = () => {
                   </FormControl>
                   {formik.errors.law_or_statute_id && formik.touched.law_or_statute_id ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute_id}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={12}>
-                  <TextField
-                    label="Section"
-                    color="secondary"
-                    id="textSearch2"
-                    type="text"
-                    key="textSearch2"
-                    value={formik.values.textSearch2}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    id="section"
-                    label="Section"
-                    color="secondary"
-                    key="section"
-                    value={formik.values.section}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-
-                  {formik.errors.section && formik.touched.section ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Search 1"
-                    color="secondary"
-                    id="textSearch1"
-                    type="text"
-                    key="textSearch1"
-                    value={formik.values.textSearch1}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={12}>
-                  <TextField
-                    label="Section"
-                    color="secondary"
-                    id="section"
-                    type="text"
-                    key="section"
-                    value={formik.values.section}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.section && formik.touched.section ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
                   ) : null}
                 </Grid>
 
