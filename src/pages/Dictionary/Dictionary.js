@@ -32,6 +32,7 @@ import Actions from './Actions';
 import USERLIST from '../../_mock/user';
 
 import CaseLawService from '../../services/CaseLawService';
+import DictionaryService from '../../services/DictionaryService';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +80,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function Dictionary() {
-  const { _getAllCases } = CaseLawService;
+  const { _getAllDictionarys } = DictionaryService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -88,7 +89,7 @@ export default function Dictionary() {
   }, []);
 
   const getAllCases = () => {
-    _getAllCases()
+    _getAllDictionarys()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -124,36 +125,6 @@ export default function Dictionary() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -181,7 +152,7 @@ export default function Dictionary() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addCase"
+            to="/dashboard/addDictionary"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Word
@@ -195,29 +166,28 @@ export default function Dictionary() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Page</TableCell>
-                    <TableCell align="left">Court</TableCell>
-                    <TableCell align="left">Lawyer</TableCell>
-                    <TableCell align="left">Judge</TableCell>
-                    <TableCell align="center">Case</TableCell>
+                    <TableCell>id</TableCell>
+                    <TableCell align="left">Word</TableCell>
+                    <TableCell align="left">Meaning</TableCell>
+                    {/* <TableCell align="left">Methods</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     console.log(row);
-                    const { id, pageNo, court, lawyer, judge, caseNo } = row;
+                    const { id, word, meaning } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{pageNo}</TableCell>
-                        <TableCell align="left">{court}</TableCell>
-                        <TableCell align="left">{lawyer}</TableCell>
-                        <TableCell align="left">{judge}</TableCell>
-                        <TableCell align="left">{caseNo}</TableCell>
-
-                        <TableCell align="right">
-                          <Actions id={id} onDelete={getAllCases} />
+                        <TableCell component="th" scope="row">
+                          {id}
                         </TableCell>
+                        <TableCell align="left">{word}</TableCell>
+                        <TableCell align="left">{meaning}</TableCell>
+
+                        {/* <TableCell align="right">
+                          <Actions id={id} onDelete={getAllCases} />
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}

@@ -5,11 +5,11 @@ const _getAllNotifications = () => _get('/notifications/getAllNotifications');
 const _deleteNotification = (notificationID) => _delete(`/notifications/deleteNotification/${notificationID}`);
 const _getNotificationTypes = () => _get('/notifications/getNotificationTypes');
 
-const CaseLawService = {
+const NotificationService = {
   _addNotification,
   _deleteNotification,
   _getAllNotifications,
   _getNotificationTypes,
 };
 
-export default CaseLawService;
+export default NotificationService;
