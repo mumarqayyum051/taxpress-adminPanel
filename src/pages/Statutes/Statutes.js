@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -30,17 +31,15 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@das
 // mock
 import Actions from './Actions';
 import USERLIST from '../../_mock/user';
-
+import StatusesService from '../../services/StatuteService';
 import CaseLawService from '../../services/CaseLawService';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'page', label: 'Page', alignRight: false },
-  { id: 'court', label: 'Court', alignRight: false },
-  { id: 'lawyer', label: 'Lawyer', alignRight: false },
-  { id: 'judge', label: 'Judge', alignRight: false },
-  { id: 'case', label: 'Case', alignRight: false },
+  { id: 'staute', label: 'Law/Statute', alignRight: false },
+  { id: 'chapter', label: 'Chapter', alignRight: false },
+  { id: 'section', label: 'Section', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -78,20 +77,22 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function CaseLaw() {
+export default function Statutes() {
   const { _getAllCases } = CaseLawService;
+  const { _getAllStatuses } = StatusesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const [statutes, setStatutes] = useState([]);
   useEffect(() => {
-    getAllCases();
+    getAllStatutes();
   }, []);
 
-  const getAllCases = () => {
-    _getAllCases()
+  const getAllStatutes = () => {
+    _getAllStatuses()
       .then((res) => {
         if (res.status === 200) {
-          setCases(res.data.data);
+          setStatutes(res.data.data);
         }
       })
       .catch((err) => {
@@ -100,7 +101,7 @@ export default function CaseLaw() {
   };
   useEffect(() => {
     console.log(cases);
-    const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
+    const arr = applySortFilter(statutes, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
@@ -110,49 +111,13 @@ export default function CaseLaw() {
 
       setFilteredCases(arr);
     }
-  }, [cases]);
+  }, [statutes]);
 
   const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -161,10 +126,6 @@ export default function CaseLaw() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -176,47 +137,44 @@ export default function CaseLaw() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Cases
+            Statutes
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addCase"
+            to="/dashboard/addStatue"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Add Case
+            Add Statute
           </Button>
         </Stack>
 
         <Card>
-          {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell>Page</TableCell>
-                    <TableCell align="left">Court</TableCell>
-                    <TableCell align="left">Lawyer</TableCell>
-                    <TableCell align="left">Judge</TableCell>
-                    <TableCell align="center">Case</TableCell>
+                    <TableCell align="left">Law/Statute</TableCell>
+                    <TableCell align="left">Chapter</TableCell>
+                    <TableCell align="left">Section</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     console.log(row);
-                    const { id, pageNo, court, lawyer, judge, caseNo } = row;
+                    // eslint-disable-next-line camelcase
+                    const { id, law_or_statute, chapter, section } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{pageNo}</TableCell>
-                        <TableCell align="left">{court}</TableCell>
-                        <TableCell align="left">{lawyer}</TableCell>
-                        <TableCell align="left">{judge}</TableCell>
-                        <TableCell align="left">{caseNo}</TableCell>
+                        <TableCell align="left">{law_or_statute}</TableCell>
+                        <TableCell align="left">{chapter}</TableCell>
+                        <TableCell align="left">{section}</TableCell>
 
                         <TableCell align="right">
-                          <Actions id={id} onDelete={getAllCases} />
+                          <Actions id={id} onDelete={getAllStatutes} />
                         </TableCell>
                       </TableRow>
                     );

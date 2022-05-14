@@ -96,26 +96,26 @@ const AddCase = () => {
       const caseNos = _.compact(formik.values.caseNo.split(','));
       const journals = _.compact(formik.values.journals.split(','));
 
-      formData.append('year_or_vol', values.year_or_vol);
-      formData.append('pageNo', values.pageNo);
-      formData.append('month', values.month);
-      formData.append('law_or_statute', values.law_or_statute);
-      formData.append('section', values.section);
-      formData.append('section2', values.section2);
-      formData.append('court', values.court);
-      formData.append('caseNo', caseNos);
-      formData.append('dated', values.dated);
-      formData.append('textSearch1', values.textSearch1);
-      formData.append('textSearch2', values.textSearch2);
-      formData.append('phraseSearch', values.phraseSearch);
-      formData.append('judge', judges);
-      formData.append('lawyer', lawyers);
-      formData.append('journals', journals);
-      formData.append('appellant_or_opponent', values.appellant_or_opponent);
-      formData.append('principleOfCaseLaws', values.principleOfCaseLaws);
-      formData.append('file', uploader.current.files[0]);
-      console.log(...formData);
-      _addCase(formData)
+      // formData.append('year_or_vol', values.year_or_vol);
+      // formData.append('pageNo', values.pageNo);
+      // formData.append('month', values.month);
+      // formData.append('law_or_statute', values.law_or_statute);
+      // formData.append('section', values.section);
+      // formData.append('section2', values.section2);
+      // formData.append('court', values.court);
+      // formData.append('caseNo', caseNos);
+      // formData.append('dated', values.dated);
+      // formData.append('textSearch1', values.textSearch1);
+      // formData.append('textSearch2', values.textSearch2);
+      // formData.append('phraseSearch', values.phraseSearch);
+      // formData.append('judge', judges);
+      // formData.append('lawyer', lawyers);
+      // formData.append('journals', journals);
+      // formData.append('appellant_or_opponent', values.appellant_or_opponent);
+      // formData.append('principleOfCaseLaws', values.principleOfCaseLaws);
+      // formData.append('file', values.file);
+      // console.log(...formData);
+      _addCase(formik.values)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
@@ -150,7 +150,23 @@ const AddCase = () => {
       uploader.current.value = '';
       return;
     }
-    formik.setFieldValue('file', event.target.files[0]);
+
+    // formik.setFieldValue('file', event.target.files[0]);
+    // fileToBase64(event);
+    fileToBase64(event.target.files[0], (result) => {
+      formik.setFieldValue('file', result);
+      console.log(result);
+    });
+  };
+  const fileToBase64 = async (file, cb) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      cb(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
   };
   return (
     <Container>

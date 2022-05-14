@@ -78,7 +78,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function CaseLaw() {
+export default function Notifications() {
   const { _getAllCases } = CaseLawService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
@@ -176,7 +176,7 @@ export default function CaseLaw() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Cases
+            Notifications
           </Typography>
           <Button
             variant="contained"
@@ -184,7 +184,7 @@ export default function CaseLaw() {
             to="/dashboard/addCase"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Add Case
+            Add Notification
           </Button>
         </Stack>
 
