@@ -79,7 +79,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function Statutes() {
   const { _getAllCases } = CaseLawService;
-  const { _getAllStatuses } = StatusesService;
+  const { _getAllStatutes } = StatusesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -89,7 +89,7 @@ export default function Statutes() {
   }, []);
 
   const getAllStatutes = () => {
-    _getAllStatuses()
+    _getAllStatutes()
       .then((res) => {
         if (res.status === 200) {
           setStatutes(res.data.data);
