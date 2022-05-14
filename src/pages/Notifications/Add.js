@@ -67,7 +67,7 @@ const AddNotification = () => {
     initialValues: {
       law_or_statute_id: '',
       notificationTypeId: '',
-      sroNo: '',
+      sroNO: '',
       year: '',
       dated: +new Date(),
       subject: '',
@@ -76,7 +76,7 @@ const AddNotification = () => {
     validationSchema: yup.object({
       law_or_statute_id: yup.string().required('Law or Statute is required'),
       notificationTypeId: yup.string().required('Notification Type is required'),
-      sroNo: yup.string().required('SRO No is required'),
+      sroNO: yup.string().required('SRO No is required'),
       year: yup.string().required('Year is required'),
       dated: yup.string().required('Date is required'),
       subject: yup.string().required('Subject is required'),
@@ -181,17 +181,17 @@ const AddNotification = () => {
                 </Grid>
                 <Grid item xs={6} md={6}>
                   <TextField
-                    id="sroNo"
+                    id="sroNO"
                     label="SRO No"
                     color="secondary"
-                    key="sroNo"
-                    value={formik.values.sroNo}
+                    key="sroNO"
+                    value={formik.values.sroNO}
                     onChange={formik.handleChange}
                     fullWidth
                   />
 
-                  {formik.errors.sroNo && formik.touched.sroNo ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.sroNo}</p>
+                  {formik.errors.sroNO && formik.touched.sroNO ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.sroNO}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>

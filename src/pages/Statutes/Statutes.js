@@ -173,9 +173,9 @@ export default function Statutes() {
                         <TableCell align="left">{chapter}</TableCell>
                         <TableCell align="left">{section}</TableCell>
 
-                        <TableCell align="right">
+                        {/* <TableCell align="right">
                           <Actions id={id} onDelete={getAllStatutes} />
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     );
                   })}
