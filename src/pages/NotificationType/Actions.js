@@ -1,7 +1,6 @@
 // material
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // component
 import Iconify from '../../components/Iconify';
 import NotificationService from '../../services/NotificationService';

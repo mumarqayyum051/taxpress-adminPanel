@@ -1,28 +1,18 @@
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import MenuItem from '@mui/material/MenuItem';
+import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-
 import { useFormik } from 'formik';
-import _ from 'lodash';
 import React, { useRef, useState } from 'react';
+import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { MONTHS } from '../../constants/months';
-import CaseLawService from '../../services/CaseLawService';
-
 import StatuteService from '../../services/StatuteService';
 
 const AddStatute = () => {
@@ -219,7 +209,14 @@ const AddStatute = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <input type="file" onChange={onFileUpload} ref={uploader} />
+                  <FileBase64
+                    onChange={onFileUpload}
+                    onDone={(event) => {
+                      console.log(event.base64);
+                      formik.setFieldValue('file', event.base64);
+                    }}
+                    ref={uploader}
+                  />
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">

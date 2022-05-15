@@ -33,14 +33,9 @@ import Actions from './Actions';
 import USERLIST from '../../_mock/user';
 import StatusesService from '../../services/StatuteService';
 import CaseLawService from '../../services/CaseLawService';
+import environment from '../../environment/env';
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'staute', label: 'Law/Statute', alignRight: false },
-  { id: 'chapter', label: 'Chapter', alignRight: false },
-  { id: 'section', label: 'Section', alignRight: false },
-];
 
 // ----------------------------------------------------------------------
 
@@ -78,12 +73,13 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function Statutes() {
-  const { _getAllCases } = CaseLawService;
   const { _getAllStatutes } = StatusesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [statutes, setStatutes] = useState([]);
+  const { fileURL } = environment;
+
   useEffect(() => {
     getAllStatutes();
   }, []);
@@ -155,27 +151,34 @@ export default function Statutes() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Page</TableCell>
+                    <TableCell align="left">#</TableCell>
                     <TableCell align="left">Law/Statute</TableCell>
                     <TableCell align="left">Chapter</TableCell>
                     <TableCell align="left">Section</TableCell>
+                    <TableCell align="left">File</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
                     // eslint-disable-next-line camelcase
-                    const { id, law_or_statute, chapter, section } = row;
+                    const { id, law_or_statute, chapter, section, file } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
+                        <TableCell align="left">{i + 1}</TableCell>
+
                         <TableCell align="left">{law_or_statute}</TableCell>
                         <TableCell align="left">{chapter}</TableCell>
                         <TableCell align="left">{section}</TableCell>
-
-                        {/* <TableCell align="right">
+                        <TableCell align="left">
+                          <Button size="small" variant="contained" href={fileURL + file} target="_blank" download>
+                            <span>View File</span>
+                          </Button>
+                        </TableCell>
+                        <TableCell align="right">
                           <Actions id={id} onDelete={getAllStatutes} />
-                        </TableCell> */}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -185,16 +188,6 @@ export default function Statutes() {
                     </TableRow>
                   )}
                 </TableBody>
-
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           </Scrollbar>

@@ -5,11 +5,12 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 // component
 import Iconify from '../../components/Iconify';
 import CaseLawService from '../../services/CaseLawService';
+import StatuteService from '../../services/StatuteService';
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
   const ref = useRef(null);
-  const { _deleteCase } = CaseLawService;
+  const { _deleteStatute } = StatuteService;
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     console.log(props);
@@ -39,7 +40,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('delete');
-              _deleteCase(props.id)
+              _deleteStatute(props.id)
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {
