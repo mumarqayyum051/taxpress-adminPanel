@@ -1,15 +1,15 @@
-import { useRef, useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 // component
 import Iconify from '../../components/Iconify';
-import CaseLawService from '../../services/CaseLawService';
+import NotificationService from '../../services/NotificationService';
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
   const ref = useRef(null);
-  const { _deleteCase } = CaseLawService;
+  const { _deleteNotificationType } = NotificationService;
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     console.log(props);
@@ -39,7 +39,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('delete');
-              _deleteCase(props.id)
+              _deleteNotificationType(props.id)
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {
@@ -52,13 +52,6 @@ export default function UserMoreMenu(props) {
                 });
             }}
           />
-        </MenuItem>
-
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
-          <ListItemIcon>
-            <Iconify icon="eva:edit-fill" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>

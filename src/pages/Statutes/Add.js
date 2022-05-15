@@ -51,7 +51,6 @@ const AddStatute = () => {
       section: yup.string().required('Section is required'),
       textSearch1: yup.string().required('Text Search 1 is required'),
       textSearch2: yup.string().required('Text Search 2 is required'),
-      file: yup.string().required('Please attach a PDF'),
     }),
 
     onSubmit: (values) => {
@@ -128,7 +127,7 @@ const AddStatute = () => {
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={6} md={6}>
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Law/Statute</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
@@ -143,7 +142,17 @@ const AddStatute = () => {
                       <MenuItem value={20}>Twenty</MenuItem>
                       <MenuItem value={30}>Thirty</MenuItem>
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
+                  <TextField
+                    label="Law/Statute"
+                    color="secondary"
+                    id="law_or_statute"
+                    type="text"
+                    key="law_or_statute"
+                    value={formik.values.law_or_statute}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
                   {formik.errors.law_or_statute && formik.touched.law_or_statute ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute}</p>
                   ) : null}
@@ -163,21 +172,7 @@ const AddStatute = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.chapter}</p>
                   ) : null}
                 </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    id="section"
-                    label="Section"
-                    color="secondary"
-                    key="section"
-                    value={formik.values.section}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
 
-                  {formik.errors.section && formik.touched.section ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
-                  ) : null}
-                </Grid>
                 <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 1"
@@ -193,7 +188,7 @@ const AddStatute = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
                   ) : null}
                 </Grid>
-                <Grid item xs={6} md={12}>
+                <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 2"
                     color="secondary"
@@ -208,7 +203,21 @@ const AddStatute = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
                   ) : null}
                 </Grid>
+                <Grid item xs={6} md={6}>
+                  <TextField
+                    id="section"
+                    label="Section"
+                    color="secondary"
+                    key="section"
+                    value={formik.values.section}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
 
+                  {formik.errors.section && formik.touched.section ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
+                  ) : null}
+                </Grid>
                 <Grid item xs={12} md={12}>
                   <input type="file" onChange={onFileUpload} ref={uploader} />
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}

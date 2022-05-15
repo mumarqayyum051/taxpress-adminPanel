@@ -37,13 +37,7 @@ import NotificationService from '../../services/NotificationService';
 import environment from '../../environment/env';
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'page', label: 'Page', alignRight: false },
-  { id: 'court', label: 'Court', alignRight: false },
-  { id: 'lawyer', label: 'Lawyer', alignRight: false },
-  { id: 'judge', label: 'Judge', alignRight: false },
-  { id: 'case', label: 'Case', alignRight: false },
-];
+const TABLE_HEAD = [{ id: 'category', label: 'category', alignRight: false }];
 
 // ----------------------------------------------------------------------
 
@@ -81,21 +75,19 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function NotificationType() {
-  const { _getAllNotifications } = NotificationService;
-  const { _getStatuteById } = StatutesService;
-  const [cases, setCases] = useState([]);
+  const { _getAllNotificationTypes } = NotificationService;
+  const [data, setData] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
-  const { fileURL } = environment;
   useEffect(() => {
-    getAllCases();
+    getNotificationTypes();
   }, []);
 
-  const getAllCases = () => {
-    _getAllNotifications()
+  const getNotificationTypes = () => {
+    _getAllNotificationTypes()
       .then((res) => {
         if (res.status === 200) {
-          setCases(res.data.data);
+          setData(res.data.data);
         }
       })
       .catch((err) => {
@@ -103,8 +95,8 @@ export default function NotificationType() {
       });
   };
   useEffect(() => {
-    console.log(cases);
-    const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
+    console.log(data);
+    const arr = applySortFilter(data, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
@@ -114,15 +106,9 @@ export default function NotificationType() {
 
       setFilteredCases(arr);
     }
-  }, [cases]);
+  }, [data]);
 
   const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
 
@@ -140,32 +126,21 @@ export default function NotificationType() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const isUserNotFound = filteredCases.length === 0;
-  const getStatuteByID = (id) => {
-    StatutesService._getStatuteById(id)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(response.data.data);
-          return response.data.data[0]?.law_or_statute || '???';
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
   return (
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Notification
+            Notification Types
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addNotification"
+            to="/dashboard/addNotificationType"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Add Notification
+            Add Notification Type
           </Button>
         </Stack>
 
@@ -177,48 +152,25 @@ export default function NotificationType() {
                 <TableHead>
                   <TableRow>
                     <TableCell>#</TableCell>
-                    <TableCell>Notification</TableCell>
-                    <TableCell sx={{ width: '15%' }}>SRO NO</TableCell>
-                    <TableCell>Subject</TableCell>
-                    <TableCell>Year</TableCell>
-                    <TableCell>Dated</TableCell>
-                    <TableCell>Law/Statute</TableCell>
-                    <TableCell>File</TableCell>
+                    <TableCell>Category</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
                     // eslint-disable-next-line camelcase
-                    const {
-                      id,
-
-                      sroNO,
-                      subject,
-                      year,
-                      dated,
-                      notificationCategoryName,
-                      law_or_statute,
-                      file,
-                    } = row;
+                    const { id, notificationCategoryName } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{notificationCategoryName}</TableCell>
-                        <TableCell align="left">{sroNO}</TableCell>
-                        <TableCell align="left">{subject}</TableCell>
-                        <TableCell align="left">{year}</TableCell>
-                        <TableCell align="left">{dated}</TableCell>
-                        <TableCell align="left">{law_or_statute}</TableCell>
-                        <TableCell align="left">
-                          <Button size="small" href={fileURL + file} target="_blank" download>
-                            View File
-                          </Button>
+                        <TableCell align="left" sx={{ width: '50%' }}>
+                          {notificationCategoryName}
                         </TableCell>
-                        {/* <TableCell align="right">
-                          <Actions id={id} onDelete={getAllCases} />
-                        </TableCell> */}
+
+                        <TableCell align="right">
+                          <Actions id={id} onDelete={getNotificationTypes} />
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -245,7 +197,7 @@ export default function NotificationType() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={cases.length}
+            count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

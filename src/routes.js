@@ -21,6 +21,7 @@ import AddDictionary from './pages/Dictionary/AddDictionary';
 import AddNotification from './pages/Notifications/Add';
 import AddBlog from './pages/Blog/Add';
 import NotificationType from './pages/NotificationType/NotificationType';
+import AddNotificationType from './pages/NotificationType/Add';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -42,6 +43,7 @@ export default function Router() {
         { path: 'notifications', element: <Notifications /> },
         { path: 'addNotification', element: <AddNotification /> },
         { path: 'notificationsType', element: <NotificationType /> },
+        { path: 'addNotificationType', element: <AddNotificationType /> },
       ],
     },
 
