@@ -80,7 +80,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Notifications() {
+export default function NotificationType() {
   const { _getAllNotifications } = NotificationService;
   const { _getStatuteById } = StatutesService;
   const [cases, setCases] = useState([]);

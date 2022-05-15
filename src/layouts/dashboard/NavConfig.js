@@ -31,6 +31,11 @@ const navConfig = [
     path: '/dashboard/notifications',
     icon: getIcon('ant-design:notification-filled'),
   },
+  {
+    title: 'notifications type',
+    path: '/dashboard/notificationsType',
+    icon: getIcon('ic:baseline-notification-add'),
+  },
 
   {
     title: 'dictionary',
