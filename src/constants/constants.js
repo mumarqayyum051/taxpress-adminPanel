@@ -12,3 +12,11 @@ export const MONTHS = [
   { label: 'November', value: 'November' },
   { label: 'December', value: 'December' },
 ];
+
+export const COURTS = [
+  { title: 'Balochistan High Court' },
+  { title: 'Islamabad High Court' },
+  { title: 'Lahore High Court' },
+  { title: 'Peshawar High Court' },
+  { title: 'Sindh High Court' },
+];

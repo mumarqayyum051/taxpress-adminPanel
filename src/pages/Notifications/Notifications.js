@@ -37,14 +37,6 @@ import NotificationService from '../../services/NotificationService';
 import environment from '../../environment/env';
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'page', label: 'Page', alignRight: false },
-  { id: 'court', label: 'Court', alignRight: false },
-  { id: 'lawyer', label: 'Lawyer', alignRight: false },
-  { id: 'judge', label: 'Judge', alignRight: false },
-  { id: 'case', label: 'Case', alignRight: false },
-];
-
 // ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
@@ -82,7 +74,6 @@ function applySortFilter(array, comparator, query) {
 
 export default function Notifications() {
   const { _getAllNotifications } = NotificationService;
-  const { _getStatuteById } = StatutesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);

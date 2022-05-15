@@ -1,47 +1,33 @@
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
-  Checkbox,
-  TableRow,
+  Card,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
 // components
 import TableHead from '@mui/material/TableHead';
-import Page from '../../components/Page';
-import Label from '../../components/Label';
-import Scrollbar from '../../components/Scrollbar';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
-
+import Page from '../../components/Page';
+import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user';
+import environment from '../../environment/env';
+import CaseLawService from '../../services/CaseLawService';
+import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
-import USERLIST from '../../_mock/user';
-
-import CaseLawService from '../../services/CaseLawService';
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'page', label: 'Page', alignRight: false },
-  { id: 'court', label: 'Court', alignRight: false },
-  { id: 'lawyer', label: 'Lawyer', alignRight: false },
-  { id: 'judge', label: 'Judge', alignRight: false },
-  { id: 'case', label: 'Case', alignRight: false },
-];
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +69,8 @@ export default function CaseLaw() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const { fileURL } = environment;
+
   useEffect(() => {
     getAllCases();
   }, []);
@@ -116,8 +104,6 @@ export default function CaseLaw() {
 
   const [order, setOrder] = useState('asc');
 
-  const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
@@ -130,30 +116,6 @@ export default function CaseLaw() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -161,10 +123,6 @@ export default function CaseLaw() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -195,26 +153,29 @@ export default function CaseLaw() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Page</TableCell>
+                    <TableCell align="left">#</TableCell>
                     <TableCell align="left">Court</TableCell>
                     <TableCell align="left">Lawyer</TableCell>
                     <TableCell align="left">Judge</TableCell>
-                    <TableCell align="center">Case</TableCell>
+                    <TableCell>File</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
-                    const { id, pageNo, court, lawyer, judge, caseNo } = row;
+                    const { id, pageNo, court, lawyer, judge, caseNo, file } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{pageNo}</TableCell>
+                        <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left">{court}</TableCell>
                         <TableCell align="left">{lawyer}</TableCell>
                         <TableCell align="left">{judge}</TableCell>
-                        <TableCell align="left">{caseNo}</TableCell>
-
+                        <TableCell align="left">
+                          <Button size="small" variant="contained" href={fileURL + file} target="_blank" download>
+                            <span>View File</span>
+                          </Button>
+                        </TableCell>
                         <TableCell align="right">
                           <Actions id={id} onDelete={getAllCases} />
                         </TableCell>
@@ -227,16 +188,6 @@ export default function CaseLaw() {
                     </TableRow>
                   )}
                 </TableBody>
-
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           </Scrollbar>

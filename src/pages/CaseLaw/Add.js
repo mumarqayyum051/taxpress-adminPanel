@@ -12,30 +12,27 @@ import Chip from '@mui/material/Chip';
 
 import { useFormik } from 'formik';
 import _ from 'lodash';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import { MONTHS } from '../../constants/months';
+import { MONTHS, COURTS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
+import StatuteService from '../../services/StatuteService';
 
 const AddCase = () => {
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-  ];
+  const courts = COURTS;
   const { _addCase } = CaseLawService;
+  const { _getAllStatutes } = StatuteService;
   const navigate = useNavigate();
-
+  useEffect(() => {
+    getAllStatutes();
+  }, []);
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [statutes, setStatutes] = useState([]);
   const [open, setOpen] = React.useState({
     open: false,
     message: '',
@@ -79,11 +76,9 @@ const AddCase = () => {
       journals: yup.string().required('Required'),
       appellant_or_opponent: yup.string().required('Required'),
       principleOfCaseLaws: yup.string().required('Required'),
-      file: yup.string().required('Required'),
     }),
 
     onSubmit: (values) => {
-      const formData = new FormData();
       setFileError('');
 
       console.log(values);
@@ -91,30 +86,7 @@ const AddCase = () => {
         setFileError('Please select a file');
         return;
       }
-      const lawyers = _.compact(formik.values.lawyer.split(','));
-      const judges = _.compact(formik.values.judge.split(','));
-      const caseNos = _.compact(formik.values.caseNo.split(','));
-      const journals = _.compact(formik.values.journals.split(','));
 
-      // formData.append('year_or_vol', values.year_or_vol);
-      // formData.append('pageNo', values.pageNo);
-      // formData.append('month', values.month);
-      // formData.append('law_or_statute', values.law_or_statute);
-      // formData.append('section', values.section);
-      // formData.append('section2', values.section2);
-      // formData.append('court', values.court);
-      // formData.append('caseNo', caseNos);
-      // formData.append('dated', values.dated);
-      // formData.append('textSearch1', values.textSearch1);
-      // formData.append('textSearch2', values.textSearch2);
-      // formData.append('phraseSearch', values.phraseSearch);
-      // formData.append('judge', judges);
-      // formData.append('lawyer', lawyers);
-      // formData.append('journals', journals);
-      // formData.append('appellant_or_opponent', values.appellant_or_opponent);
-      // formData.append('principleOfCaseLaws', values.principleOfCaseLaws);
-      // formData.append('file', values.file);
-      // console.log(...formData);
       _addCase(formik.values)
         .then((res) => {
           console.log(res);
@@ -167,6 +139,18 @@ const AddCase = () => {
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
+  };
+
+  const getAllStatutes = () => {
+    _getAllStatutes()
+      .then((res) => {
+        if (res.stateus === 200) {
+          setStatutes(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Container>
@@ -374,14 +358,17 @@ const AddCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Court"
-                    color="secondary"
-                    id="court"
-                    type="text"
-                    key="court"
-                    value={formik.values.court}
-                    onChange={formik.handleChange}
+                  x
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={courts}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(event, newValue) => {
+                      console.log(newValue);
+                      formik.setFieldValue('court', newValue?.title || '');
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Court" />}
                     fullWidth
                   />
                   {formik.errors.court && formik.touched.court ? (
@@ -404,6 +391,18 @@ const AddCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
+                  <Autocomplete
+                    disablePortal
+                    id="statutes"
+                    options={statutes}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(event, newValue) => {
+                      console.log(newValue);
+                      formik.setFieldValue('law_or_statute', newValue?.title || '');
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Court" />}
+                    fullWidth
+                  />
                   <TextField
                     label="Law or Statute"
                     color="secondary"

@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import { MONTHS } from '../../constants/months';
+import { MONTHS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 
 const EditCase = () => {
