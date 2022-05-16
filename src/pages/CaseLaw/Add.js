@@ -124,25 +124,8 @@ const AddCase = () => {
     if (isValidFormate === 0) {
       setFileError('Please upload a pdf file');
       uploader.current.value = '';
-      return;
+      formik.setFieldValue('file', '');
     }
-
-    // formik.setFieldValue('file', event.target.files[0]);
-    // fileToBase64(event);
-    fileToBase64(event.target.files[0], (result) => {
-      formik.setFieldValue('file', result);
-      console.log(result);
-    });
-  };
-  const fileToBase64 = async (file, cb) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      cb(reader.result);
-    };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
   };
 
   const getStatutes = () => {
@@ -469,6 +452,7 @@ const AddCase = () => {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <FileBase64
+                    onChange={onFileUpload}
                     onDone={(event) => {
                       console.log(event.base64);
                       formik.setFieldValue('file', event.base64);

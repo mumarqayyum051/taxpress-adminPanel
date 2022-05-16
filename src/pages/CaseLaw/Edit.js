@@ -117,6 +117,19 @@ const EditCase = () => {
     },
   });
 
+  const onFileUpload = (event) => {
+    console.log(event.target.files[0]);
+    setFileError('');
+    const fileFormate = event.target.files[0].name.split('.').pop();
+    console.log(fileFormate);
+    const isValidFormate = allowedFormates.filter((formate) => formate === fileFormate).length;
+    if (isValidFormate === 0) {
+      setFileError('Please upload a pdf file');
+      uploader.current.value = '';
+      formik.setFieldValue('file', '');
+    }
+  };
+
   const getStatutes = () => {
     _getStatutesOnly()
       .then((res) => {
@@ -427,6 +440,7 @@ const EditCase = () => {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <FileBase64
+                    onChange={onFileUpload}
                     onDone={(event) => {
                       console.log(event.base64);
                       formik.setFieldValue('file', event.base64);
