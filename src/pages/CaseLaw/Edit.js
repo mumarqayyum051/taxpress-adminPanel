@@ -27,13 +27,14 @@ import StatuteService from '../../services/StatuteService';
 
 const EditCase = () => {
   const courts = COURTS;
-  const { _updateCase } = CaseLawService;
+  const { _updateCase, _getCaseById } = CaseLawService;
   const { _getStatutesOnly } = StatuteService;
   const navigate = useNavigate();
   const { state } = useLocation();
   const { id } = state;
   useEffect(() => {
     getStatutes();
+    getCaseById(id);
   }, []);
   const uploader = useRef();
   const allowedFormates = ['pdf'];
@@ -136,6 +137,45 @@ const EditCase = () => {
         if (res.status === 200) {
           console.log(res);
           setStatutes(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const getCaseById = (id) => {
+    _getCaseById(id)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res);
+          if (res.data.data.length) {
+            formik.setValues(res.data.data[0]);
+            formik.setFieldValue(
+              'court',
+              courts.map((court) => court.title === res.data.data[0].court)
+            );
+            formik.setFieldValue(
+              'law_or_statute',
+              statutes.map((statute) => statute.id === res.data.data[0].law_or_statute)
+            );
+          }
+          // formik.setFieldValue('year_or_vol',res.data.data.year_or_vol);
+          // formik.setFieldValue('pageNo',res.data.data.pageNo);
+          // formik.setFieldValue('month',res.data.data.month);
+          // formik.setFieldValue('law_or_statute',res.data.data.law_or_statute);
+          // formik.setFieldValue('section',res.data.data.section);
+          // formik.setFieldValue('section2',res.data.data.section2);
+          // formik.setFieldValue('court',res.data.data.court);
+          // formik.setFieldValue('caseNo',res.data.data.caseNo);
+          // formik.setFieldValue('dated',res.data.data.dated);
+          // formik.setFieldValue('textSearch1',res.data.data.textSearch1);
+          // formik.setFieldValue('textSearch2',res.data.data.textSearch2);
+          // formik.setFieldValue('phraseSearch',res.data.data.phraseSearch);
+          // formik.setFieldValue('judge',res.data.data.judge);
+          // formik.setFieldValue('lawyer',res.data.data.lawyer);
+          // formik.setFieldValue('journals',res.data.data.journals);
+          // formik.setFieldValue('appellant_or_opponent',res.data.data.appellant_or_opponent);
+          // formik.setFieldValue('principleOfCaseLaws',res.data.data.principleOfCaseLaws);
         }
       })
       .catch((err) => {
@@ -359,7 +399,8 @@ const EditCase = () => {
                     disablePortal
                     id="combo-box-demo"
                     options={courts}
-                    getOptionLabel={(option) => option.title}
+                    isOptionEqualToValue={(option, value) => option.title}
+                    value={formik.values.court}
                     onChange={(event, newValue) => {
                       console.log(newValue);
                       formik.setFieldValue('court', newValue?.title || '');
@@ -391,6 +432,7 @@ const EditCase = () => {
                     disablePortal
                     id="statutes"
                     options={statutes}
+                    value={formik.values.law_or_statute}
                     getOptionLabel={(option) => option.law_or_statute}
                     onChange={(event, newValue) => {
                       console.log(newValue);
