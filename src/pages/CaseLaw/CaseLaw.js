@@ -13,6 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 // components
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -20,7 +22,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
-import SearchNotFound from '../../components/SearchNotFound';
 import environment from '../../environment/env';
 import CaseLawService from '../../services/CaseLawService';
 import USERLIST from '../../_mock/user';
@@ -69,6 +70,10 @@ export default function CaseLaw() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+  });
   const { fileURL } = environment;
 
   useEffect(() => {
@@ -145,7 +150,6 @@ export default function CaseLaw() {
             Add Case
           </Button>
         </Stack>
-
         <Card>
           {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>
@@ -177,7 +181,16 @@ export default function CaseLaw() {
                           </Button>
                         </TableCell>
                         <TableCell align="right">
-                          <Actions id={id} onDelete={getAllCases} />
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllCases();
+                              setAlert({
+                                open: true,
+                                message: 'Case Deleted Successfully',
+                              });
+                            }}
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -202,6 +215,38 @@ export default function CaseLaw() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        ,
+        {alert
+          ? [
+              <Snackbar
+                open={alert.open}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                TransitionComponent="SlideTransition"
+                onClose={() => {
+                  setAlert({
+                    open: false,
+                    message: '',
+                  });
+                }}
+                key="Snackbar"
+              >
+                <Alert
+                  onClose={() => {
+                    setAlert({
+                      open: false,
+                      message: '',
+                    });
+                  }}
+                  severity="success"
+                  sx={{ width: '100%' }}
+                  key="alert"
+                >
+                  {alert.message}
+                </Alert>
+              </Snackbar>,
+            ]
+          : null}
       </Container>
     </Page>
   );

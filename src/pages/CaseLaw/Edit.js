@@ -9,33 +9,36 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { useFormik } from 'formik';
 import _ from 'lodash';
-import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import { MONTHS } from '../../constants/constants';
+import FileBase64 from 'react-file-base64';
+import { MONTHS, COURTS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
+import StatuteService from '../../services/StatuteService';
 
 const EditCase = () => {
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-  ];
-  const { _addCase } = CaseLawService;
+  const courts = COURTS;
+  const { _updateCase } = CaseLawService;
+  const { _getStatutesOnly } = StatuteService;
   const navigate = useNavigate();
-
+  const { state } = useLocation();
+  const { id } = state;
+  useEffect(() => {
+    getStatutes();
+  }, []);
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [statutes, setStatutes] = useState([]);
   const [open, setOpen] = React.useState({
     open: false,
     message: '',
@@ -79,11 +82,9 @@ const EditCase = () => {
       journals: yup.string().required('Required'),
       appellant_or_opponent: yup.string().required('Required'),
       principleOfCaseLaws: yup.string().required('Required'),
-      file: yup.string().required('Required'),
     }),
 
     onSubmit: (values) => {
-      const formData = new FormData();
       setFileError('');
 
       console.log(values);
@@ -91,31 +92,8 @@ const EditCase = () => {
         setFileError('Please select a file');
         return;
       }
-      const lawyers = _.compact(formik.values.lawyer.split(','));
-      const judges = _.compact(formik.values.judge.split(','));
-      const caseNos = _.compact(formik.values.caseNo.split(','));
-      const journals = _.compact(formik.values.journals.split(','));
 
-      formData.append('year_or_vol', values.year_or_vol);
-      formData.append('pageNo', values.pageNo);
-      formData.append('month', values.month);
-      formData.append('law_or_statute', values.law_or_statute);
-      formData.append('section', values.section);
-      formData.append('section2', values.section2);
-      formData.append('court', values.court);
-      formData.append('caseNo', caseNos);
-      formData.append('dated', values.dated);
-      formData.append('textSearch1', values.textSearch1);
-      formData.append('textSearch2', values.textSearch2);
-      formData.append('phraseSearch', values.phraseSearch);
-      formData.append('judge', judges);
-      formData.append('lawyer', lawyers);
-      formData.append('journals', journals);
-      formData.append('appellant_or_opponent', values.appellant_or_opponent);
-      formData.append('principleOfCaseLaws', values.principleOfCaseLaws);
-      formData.append('file', uploader.current.files[0]);
-      console.log(...formData);
-      _addCase(formData)
+      _updateCase(formik.values)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
@@ -139,18 +117,17 @@ const EditCase = () => {
     },
   });
 
-  const onFileUpload = (event) => {
-    console.log(event.target.files[0]);
-    setFileError('');
-    const fileFormate = event.target.files[0].name.split('.').pop();
-    console.log(fileFormate);
-    const isValidFormate = allowedFormates.filter((formate) => formate === fileFormate).length;
-    if (isValidFormate === 0) {
-      setFileError('Please upload a pdf file');
-      uploader.current.value = '';
-      return;
-    }
-    formik.setFieldValue('file', event.target.files[0]);
+  const getStatutes = () => {
+    _getStatutesOnly()
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res);
+          setStatutes(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Container>
@@ -189,27 +166,24 @@ const EditCase = () => {
                     label="Year/Vol"
                     color="secondary"
                     id="year_or_vol"
-                    type="text"
+                    type="number"
                     key="year_or_vol"
+                    InputProps={{
+                      inputProps: {
+                        type: 'number',
+                        min: 0,
+                      },
+                    }}
                     value={formik.values.year_or_vol}
                     onChange={formik.handleChange}
                     fullWidth
                   />
+
                   {formik.errors.year_or_vol && formik.touched.year_or_vol ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.year_or_vol}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={4}>
-                  {/* <Autocomplete
-                    id="size-small-outlined-multi"
-                    size="medium"
-                    options={MONTHS}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Month" placeholder="Favorites" />
-                    )}
-                  /> */}
-
                   <TextField
                     id="month"
                     select
@@ -368,14 +342,16 @@ const EditCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Court"
-                    color="secondary"
-                    id="court"
-                    type="text"
-                    key="court"
-                    value={formik.values.court}
-                    onChange={formik.handleChange}
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={courts}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(event, newValue) => {
+                      console.log(newValue);
+                      formik.setFieldValue('court', newValue?.title || '');
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Court" />}
                     fullWidth
                   />
                   {formik.errors.court && formik.touched.court ? (
@@ -398,17 +374,19 @@ const EditCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <TextField
-                    label="Law or Statute"
-                    color="secondary"
-                    id="law_or_statute"
-                    type="text"
-                    key="law_or_statute"
-                    value={formik.values.law_or_statute}
-                    onChange={formik.handleChange}
-                    multiline
+                  <Autocomplete
+                    disablePortal
+                    id="statutes"
+                    options={statutes}
+                    getOptionLabel={(option) => option.law_or_statute}
+                    onChange={(event, newValue) => {
+                      console.log(newValue);
+                      formik.setFieldValue('law_or_statute', newValue?.id || '');
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Law/Statute" />}
                     fullWidth
                   />
+
                   {formik.errors.law_or_statute && formik.touched.law_or_statute ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute}</p>
                   ) : null}
@@ -448,12 +426,18 @@ const EditCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <input type="file" onChange={onFileUpload} ref={uploader} />
+                  <FileBase64
+                    onDone={(event) => {
+                      console.log(event.base64);
+                      formik.setFieldValue('file', event.base64);
+                    }}
+                    ref={uploader}
+                  />{' '}
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
-                    Submit
+                    Update
                   </Button>
                 </Grid>
               </Grid>

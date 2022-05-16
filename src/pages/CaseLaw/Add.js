@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { useFormik } from 'formik';
 import _ from 'lodash';
@@ -17,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import FileBase64 from 'react-file-base64';
 import { MONTHS, COURTS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
@@ -24,10 +28,10 @@ import StatuteService from '../../services/StatuteService';
 const AddCase = () => {
   const courts = COURTS;
   const { _addCase } = CaseLawService;
-  const { _getAllStatutes } = StatuteService;
+  const { _getStatutesOnly } = StatuteService;
   const navigate = useNavigate();
   useEffect(() => {
-    getAllStatutes();
+    getStatutes();
   }, []);
   const uploader = useRef();
   const allowedFormates = ['pdf'];
@@ -141,10 +145,11 @@ const AddCase = () => {
     };
   };
 
-  const getAllStatutes = () => {
-    _getAllStatutes()
+  const getStatutes = () => {
+    _getStatutesOnly()
       .then((res) => {
-        if (res.stateus === 200) {
+        if (res.status === 200) {
+          console.log(res);
           setStatutes(res.data.data);
         }
       })
@@ -185,16 +190,37 @@ const AddCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={4}>
+                  {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      views={['year']}
+                      label="Year/Vol"
+                      value={formik.values.year_or_vol}
+                      sx={{ width: '100%' }}
+                      onChange={(newValue) => {
+                        console.log(newValue);
+                        const date = new Date(newValue);
+                        formik.setFieldValue('year_or_vol', date.getFullYear());
+                      }}
+                      renderInput={(params) => <TextField {...params} helperText={null} />}
+                    />
+                  </LocalizationProvider> */}
                   <TextField
                     label="Year/Vol"
                     color="secondary"
                     id="year_or_vol"
-                    type="text"
+                    type="number"
                     key="year_or_vol"
+                    InputProps={{
+                      inputProps: {
+                        type: 'number',
+                        min: 0,
+                      },
+                    }}
                     value={formik.values.year_or_vol}
                     onChange={formik.handleChange}
                     fullWidth
                   />
+
                   {formik.errors.year_or_vol && formik.touched.year_or_vol ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.year_or_vol}</p>
                   ) : null}
@@ -358,7 +384,6 @@ const AddCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
-                  x
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
@@ -395,25 +420,15 @@ const AddCase = () => {
                     disablePortal
                     id="statutes"
                     options={statutes}
-                    getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option.law_or_statute}
                     onChange={(event, newValue) => {
                       console.log(newValue);
-                      formik.setFieldValue('law_or_statute', newValue?.title || '');
+                      formik.setFieldValue('law_or_statute', newValue?.id || '');
                     }}
-                    renderInput={(params) => <TextField {...params} label="Court" />}
+                    renderInput={(params) => <TextField {...params} label="Law/Statute" />}
                     fullWidth
                   />
-                  <TextField
-                    label="Law or Statute"
-                    color="secondary"
-                    id="law_or_statute"
-                    type="text"
-                    key="law_or_statute"
-                    value={formik.values.law_or_statute}
-                    onChange={formik.handleChange}
-                    multiline
-                    fullWidth
-                  />
+
                   {formik.errors.law_or_statute && formik.touched.law_or_statute ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute}</p>
                   ) : null}
@@ -453,7 +468,13 @@ const AddCase = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <input type="file" onChange={onFileUpload} ref={uploader} />
+                  <FileBase64
+                    onDone={(event) => {
+                      console.log(event.base64);
+                      formik.setFieldValue('file', event.base64);
+                    }}
+                    ref={uploader}
+                  />{' '}
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
