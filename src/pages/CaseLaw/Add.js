@@ -371,10 +371,11 @@ const AddCase = () => {
                     disablePortal
                     id="combo-box-demo"
                     options={courts}
-                    getOptionLabel={(option) => option.title}
+                    value={courts.label}
+                    getOptionLabel={(option) => option.label}
                     onChange={(event, newValue) => {
                       console.log(newValue);
-                      formik.setFieldValue('court', newValue?.title || '');
+                      formik.setFieldValue('court', newValue?.id || '');
                     }}
                     renderInput={(params) => <TextField {...params} label="Court" />}
                     fullWidth
@@ -403,6 +404,7 @@ const AddCase = () => {
                     disablePortal
                     id="statutes"
                     options={statutes}
+                    value={statutes.law_or_statute}
                     getOptionLabel={(option) => option.law_or_statute}
                     onChange={(event, newValue) => {
                       console.log(newValue);
