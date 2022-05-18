@@ -14,9 +14,9 @@ export const MONTHS = [
 ];
 
 export const COURTS = [
-  { title: 'Balochistan High Court' },
-  { title: 'Islamabad High Court' },
-  { title: 'Lahore High Court' },
-  { title: 'Peshawar High Court' },
-  { title: 'Sindh High Court' },
+  { id: 1, label: 'Balochistan High Court' },
+  { id: 2, label: 'Islamabad High Court' },
+  { id: 3, label: 'Lahore High Court' },
+  { id: 4, label: 'Peshawar High Court' },
+  { id: 5, label: 'Sindh High Court' },
 ];

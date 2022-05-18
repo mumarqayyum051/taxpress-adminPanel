@@ -105,7 +105,7 @@ const AddCase = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/caselaws');
+              // navigate('/dashboard/caselaws');
             }, 2000);
           }
         })
@@ -375,7 +375,7 @@ const AddCase = () => {
                     getOptionLabel={(option) => option.label}
                     onChange={(event, newValue) => {
                       console.log(newValue);
-                      formik.setFieldValue('court', newValue?.id || '');
+                      formik.setFieldValue('court', newValue?.label || '');
                     }}
                     renderInput={(params) => <TextField {...params} label="Court" />}
                     fullWidth

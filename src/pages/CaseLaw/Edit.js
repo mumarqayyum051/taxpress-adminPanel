@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -33,6 +34,8 @@ const EditCase = () => {
   const { state } = useLocation();
   const { id } = state;
   useEffect(() => {
+    console.log('Component Initiated');
+    console.log('Component Initiated');
     getStatutes();
     getCaseById(id);
   }, []);
@@ -40,6 +43,7 @@ const EditCase = () => {
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
   const [statutes, setStatutes] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
   const [open, setOpen] = React.useState({
     open: false,
     message: '',
@@ -132,356 +136,371 @@ const EditCase = () => {
   };
 
   const getStatutes = () => {
+    setisLoading(true);
     _getStatutesOnly()
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200) {
           console.log(res);
           setStatutes(res.data.data);
+          setisLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setisLoading(false);
       });
   };
-  useEffect(() => {
-    console.log(statutes);
-  }, [statutes]);
+
   const getCaseById = (id) => {
+    setisLoading(true);
+
     _getCaseById(id)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200) {
           console.log(res);
           if (res.data.data.length) {
             const response = res.data.data[0];
+            console.log(res.data.data[0]);
 
-            formik.setValues(response);
-            formik.setFieldValue('law_or_statute', statutes[response.law_or_statute]);
-            formik.setFieldValue('court', courts[response.court]);
+            await formik.setValues(response);
+            const court = _.findIndex(COURTS, ['label', response.court]);
+            formik.setFieldValue('court', COURTS[court]);
+            if (statutes.length) {
+              const law_or_statute = _.findIndex(statutes, ['id', response.law_or_statute]);
+              // console.log(law_or_statute);
+              await formik.setFieldValue('law_or_statute', statutes[law_or_statute]);
+              setisLoading(false);
+            }
           }
         }
       })
       .catch((err) => {
         console.log(err);
+        setisLoading(false);
       });
   };
   return (
     <Container>
-      <Card sx={{ minWidth: 275 }}>
-        <CardContent>
-          <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Edit Case{' '}
-          </Typography>
+      {!isLoading ? (
+        <Card sx={{ minWidth: 275 }}>
+          <CardContent>
+            <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+              Edit Case{' '}
+            </Typography>
 
-          <Box sx={{ flexGrow: 1 }}>
-            <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Page No"
-                    color="secondary"
-                    id="pageNo"
-                    type="number"
-                    InputProps={{
-                      inputProps: {
-                        type: 'number',
-                        min: 0,
-                      },
-                    }}
-                    key="pageNo"
-                    value={formik.values.pageNo}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.pageNo && formik.touched.pageNo ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.pageNo}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Year/Vol"
-                    color="secondary"
-                    id="year_or_vol"
-                    type="number"
-                    key="year_or_vol"
-                    InputProps={{
-                      inputProps: {
-                        type: 'number',
-                        min: 0,
-                      },
-                    }}
-                    value={formik.values.year_or_vol}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
+            <Box sx={{ flexGrow: 1 }}>
+              <form onSubmit={formik.handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Page No"
+                      color="secondary"
+                      id="pageNo"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          type: 'number',
+                          min: 0,
+                        },
+                      }}
+                      key="pageNo"
+                      value={formik.values.pageNo}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.pageNo && formik.touched.pageNo ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.pageNo}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Year/Vol"
+                      color="secondary"
+                      id="year_or_vol"
+                      type="number"
+                      key="year_or_vol"
+                      InputProps={{
+                        inputProps: {
+                          type: 'number',
+                          min: 0,
+                        },
+                      }}
+                      value={formik.values.year_or_vol}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
 
-                  {formik.errors.year_or_vol && formik.touched.year_or_vol ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.year_or_vol}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    id="month"
-                    select
-                    label="Month"
-                    color="secondary"
-                    key="month"
-                    value={formik.values.month}
-                    onChange={(event) => {
-                      formik.setFieldValue('month', event.target.value);
-                    }}
-                    fullWidth
-                  >
-                    {MONTHS.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  {formik.errors.month && formik.touched.month ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.month}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Search 1"
-                    color="secondary"
-                    id="textSearch1"
-                    type="text"
-                    key="textSearch1"
-                    value={formik.values.textSearch1}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Search 2"
-                    color="secondary"
-                    id="textSearch2"
-                    type="text"
-                    key="textSearch2"
-                    value={formik.values.textSearch2}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Phrase Search"
-                    color="secondary"
-                    id="phraseSearch"
-                    type="text"
-                    key="phraseSearch"
-                    value={formik.values.phraseSearch}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.phraseSearch && formik.touched.phraseSearch ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.phraseSearch}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Judge"
-                    color="secondary"
-                    id="judge"
-                    type="text"
-                    key="judge"
-                    value={formik.values.judge}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.judge && formik.touched.judge ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.judge}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Lawyer"
-                    color="secondary"
-                    id="lawyer"
-                    type="text"
-                    key="lawyer"
-                    value={formik.values.lawyer}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.lawyer && formik.touched.lawyer ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.lawyer}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Appellant or Opponent"
-                    color="secondary"
-                    id="appellant_or_opponent"
-                    type="text"
-                    key="appellant_or_opponent"
-                    value={formik.values.appellant_or_opponent}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.appellant_or_opponent && formik.touched.appellant_or_opponent ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.appellant_or_opponent}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Section 1"
-                    color="secondary"
-                    id="section"
-                    type="text"
-                    key="section"
-                    value={formik.values.section}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.section && formik.touched.section ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    label="Section 2"
-                    color="secondary"
-                    id="section2"
-                    type="text"
-                    key="section2"
-                    value={formik.values.section2}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.section2 && formik.touched.section2 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section2}</p>
-                  ) : null}
-                </Grid>
+                    {formik.errors.year_or_vol && formik.touched.year_or_vol ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.year_or_vol}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      id="month"
+                      select
+                      label="Month"
+                      color="secondary"
+                      key="month"
+                      value={formik.values.month}
+                      onChange={(event) => {
+                        formik.setFieldValue('month', event.target.value);
+                      }}
+                      fullWidth
+                    >
+                      {MONTHS.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    {formik.errors.month && formik.touched.month ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.month}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Search 1"
+                      color="secondary"
+                      id="textSearch1"
+                      type="text"
+                      key="textSearch1"
+                      value={formik.values.textSearch1}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Search 2"
+                      color="secondary"
+                      id="textSearch2"
+                      type="text"
+                      key="textSearch2"
+                      value={formik.values.textSearch2}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Phrase Search"
+                      color="secondary"
+                      id="phraseSearch"
+                      type="text"
+                      key="phraseSearch"
+                      value={formik.values.phraseSearch}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.phraseSearch && formik.touched.phraseSearch ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.phraseSearch}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Judge"
+                      color="secondary"
+                      id="judge"
+                      type="text"
+                      key="judge"
+                      value={formik.values.judge}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.judge && formik.touched.judge ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.judge}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Lawyer"
+                      color="secondary"
+                      id="lawyer"
+                      type="text"
+                      key="lawyer"
+                      value={formik.values.lawyer}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.lawyer && formik.touched.lawyer ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.lawyer}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Appellant or Opponent"
+                      color="secondary"
+                      id="appellant_or_opponent"
+                      type="text"
+                      key="appellant_or_opponent"
+                      value={formik.values.appellant_or_opponent}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.appellant_or_opponent && formik.touched.appellant_or_opponent ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.appellant_or_opponent}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Section 1"
+                      color="secondary"
+                      id="section"
+                      type="text"
+                      key="section"
+                      value={formik.values.section}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.section && formik.touched.section ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      label="Section 2"
+                      color="secondary"
+                      id="section2"
+                      type="text"
+                      key="section2"
+                      value={formik.values.section2}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.section2 && formik.touched.section2 ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section2}</p>
+                    ) : null}
+                  </Grid>
 
-                <Grid item xs={6} md={4}>
-                  <TextField
-                    color="secondary"
-                    id="dated"
-                    type="date"
-                    key="dated"
-                    value={formik.values.dated}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.dated && formik.touched.dated ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.dated}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={courts}
-                    value={formik.values.court}
-                    onChange={(event, newValue) => {
-                      console.log(newValue);
-                      formik.setFieldValue('court', newValue?.id || '');
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Court" />}
-                    fullWidth
-                  />
-                  {formik.errors.court && formik.touched.court ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.court}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Journals"
-                    color="secondary"
-                    id="journals"
-                    type="text"
-                    key="journals"
-                    value={formik.values.journals}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.journals && formik.touched.journals ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.journals}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <Autocomplete
-                    disablePortal
-                    id="statutes"
-                    options={statutes}
-                    value={statutes.law_or_statute}
-                    getOptionLabel={(option) => option?.law_or_statute || ''}
-                    onChange={(event, newValue) => {
-                      console.log(newValue);
-                      formik.setFieldValue('law_or_statute', newValue?.id || '');
-                    }}
-                    renderInput={(params) => <TextField {...params} label="Law/Statute" />}
-                    fullWidth
-                  />
+                  <Grid item xs={6} md={4}>
+                    <TextField
+                      color="secondary"
+                      id="dated"
+                      type="date"
+                      key="dated"
+                      value={formik.values.dated}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.dated && formik.touched.dated ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.dated}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={6}>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={courts}
+                      value={formik.values.court}
+                      onChange={(event, newValue) => {
+                        console.log(newValue);
+                        formik.setFieldValue('court', newValue || '');
+                      }}
+                      renderInput={(params) => <TextField {...params} label="Court" />}
+                      fullWidth
+                    />
+                    {formik.errors.court && formik.touched.court ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.court}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={6} md={6}>
+                    <TextField
+                      label="Journals"
+                      color="secondary"
+                      id="journals"
+                      type="text"
+                      key="journals"
+                      value={formik.values.journals}
+                      onChange={formik.handleChange}
+                      fullWidth
+                    />
+                    {formik.errors.journals && formik.touched.journals ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.journals}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Autocomplete
+                      disablePortal
+                      id="statutes"
+                      options={statutes}
+                      value={formik.values.law_or_statute}
+                      getOptionLabel={(option) => option?.law_or_statute || ''}
+                      onChange={(event, newValue) => {
+                        console.log(newValue);
+                        formik.setFieldValue('law_or_statute', newValue || '');
+                      }}
+                      renderInput={(params) => <TextField {...params} label="Law/Statute" />}
+                      fullWidth
+                    />
 
-                  {formik.errors.law_or_statute && formik.touched.law_or_statute ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    label="Case no"
-                    color="secondary"
-                    id="caseNo"
-                    type="text"
-                    key="caseNo"
-                    value={formik.values.caseNo}
-                    onChange={formik.handleChange}
-                    multiline
-                    fullWidth
-                  />
-                  {formik.errors.caseNo && formik.touched.caseNo ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.caseNo}</p>
-                  ) : null}
-                </Grid>
+                    {formik.errors.law_or_statute && formik.touched.law_or_statute ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      label="Case no"
+                      color="secondary"
+                      id="caseNo"
+                      type="text"
+                      key="caseNo"
+                      value={formik.values.caseNo}
+                      onChange={formik.handleChange}
+                      multiline
+                      fullWidth
+                    />
+                    {formik.errors.caseNo && formik.touched.caseNo ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.caseNo}</p>
+                    ) : null}
+                  </Grid>
 
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    label="Principle of Case Laws"
-                    color="secondary"
-                    id="principleOfCaseLaws"
-                    type="text"
-                    key="principleOfCaseLaws"
-                    rows={3}
-                    value={formik.values.principleOfCaseLaws}
-                    onChange={formik.handleChange}
-                    multiline
-                    fullWidth
-                  />
-                  {formik.errors.principleOfCaseLaws && formik.touched.principleOfCaseLaws ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.principleOfCaseLaws}</p>
-                  ) : null}
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      label="Principle of Case Laws"
+                      color="secondary"
+                      id="principleOfCaseLaws"
+                      type="text"
+                      key="principleOfCaseLaws"
+                      rows={3}
+                      value={formik.values.principleOfCaseLaws}
+                      onChange={formik.handleChange}
+                      multiline
+                      fullWidth
+                    />
+                    {formik.errors.principleOfCaseLaws && formik.touched.principleOfCaseLaws ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.principleOfCaseLaws}</p>
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <FileBase64
+                      onChange={onFileUpload}
+                      onDone={(event) => {
+                        console.log(event.base64);
+                        formik.setFieldValue('file', event.base64);
+                      }}
+                      ref={uploader}
+                    />{' '}
+                    {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                  </Grid>
+                  <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                    <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
+                      Update
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onChange={onFileUpload}
-                    onDone={(event) => {
-                      console.log(event.base64);
-                      formik.setFieldValue('file', event.base64);
-                    }}
-                    ref={uploader}
-                  />{' '}
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
-                </Grid>
-                <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
-                    Update
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </Box>
-        </CardContent>
-      </Card>
+              </form>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        ''
+      )}
       {open
         ? [
             <Snackbar
