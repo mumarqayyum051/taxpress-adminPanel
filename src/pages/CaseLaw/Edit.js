@@ -6,22 +6,29 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
+import { Icon } from '@iconify/react';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import { useFormik } from 'formik';
 import _ from 'lodash';
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import * as yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import FileBase64 from 'react-file-base64';
+import environment from '../../environment/env';
+import Iconify from '../../components/Iconify';
 import { MONTHS, COURTS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
@@ -48,6 +55,8 @@ const EditCase = () => {
     open: false,
     message: '',
   });
+  const { fileURL } = environment;
+
   const formik = useFormik({
     initialValues: {
       year_or_vol: '',
@@ -73,7 +82,7 @@ const EditCase = () => {
       year_or_vol: yup.string().required('Required'),
       pageNo: yup.number().required('Required a number'),
       month: yup.string().required('Required'),
-      law_or_statute: yup.string().required('Required'),
+      law_or_statute: yup.object().required('Required'),
       section: yup.string().required('Required'),
       section2: yup.string().required('Required'),
       court: yup.string().required('Required'),
@@ -97,14 +106,15 @@ const EditCase = () => {
         setFileError('Please select a file');
         return;
       }
-
-      _updateCase(formik.values)
+      values.law_or_statute = values.law_or_statute.id;
+      // values.court = values.court.id;
+      _updateCase(formik.values, id)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             setOpen({
               open: true,
-              message: 'Case added successfully',
+              message: 'Case updated successfully',
             });
 
             setTimeout(() => {
@@ -112,7 +122,7 @@ const EditCase = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/caselaws');
+              // navigate('/dashboard/caselaws');
             }, 2000);
           }
         })
@@ -164,6 +174,7 @@ const EditCase = () => {
 
             await formik.setValues(response);
             const court = _.findIndex(COURTS, ['label', response.court]);
+            console.log(court);
             formik.setFieldValue('court', COURTS[court]);
             if (statutes.length) {
               const law_or_statute = _.findIndex(statutes, ['id', response.law_or_statute]);
@@ -191,7 +202,7 @@ const EditCase = () => {
             <Box sx={{ flexGrow: 1 }}>
               <form onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Page No"
                       color="secondary"
@@ -212,7 +223,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.pageNo}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Year/Vol"
                       color="secondary"
@@ -234,7 +245,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.year_or_vol}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       id="month"
                       select
@@ -257,7 +268,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.month}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Search 1"
                       color="secondary"
@@ -272,7 +283,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Search 2"
                       color="secondary"
@@ -287,7 +298,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Phrase Search"
                       color="secondary"
@@ -302,7 +313,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.phraseSearch}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Judge"
                       color="secondary"
@@ -317,7 +328,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.judge}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Lawyer"
                       color="secondary"
@@ -332,7 +343,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.lawyer}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Appellant or Opponent"
                       color="secondary"
@@ -347,7 +358,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.appellant_or_opponent}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Section 1"
                       color="secondary"
@@ -362,7 +373,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       label="Section 2"
                       color="secondary"
@@ -378,7 +389,7 @@ const EditCase = () => {
                     ) : null}
                   </Grid>
 
-                  <Grid item xs={6} md={4}>
+                  <Grid item xs={12} md={4}>
                     <TextField
                       color="secondary"
                       id="dated"
@@ -392,7 +403,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.dated}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <Autocomplete
                       disablePortal
                       id="combo-box-demo"
@@ -400,7 +411,7 @@ const EditCase = () => {
                       value={formik.values.court}
                       onChange={(event, newValue) => {
                         console.log(newValue);
-                        formik.setFieldValue('court', newValue || '');
+                        formik.setFieldValue('court', newValue.label || '');
                       }}
                       renderInput={(params) => <TextField {...params} label="Court" />}
                       fullWidth
@@ -409,7 +420,7 @@ const EditCase = () => {
                       <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.court}</p>
                     ) : null}
                   </Grid>
-                  <Grid item xs={6} md={6}>
+                  <Grid item xs={12} md={6}>
                     <TextField
                       label="Journals"
                       color="secondary"
@@ -478,18 +489,41 @@ const EditCase = () => {
                     ) : null}
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    <FileBase64
-                      onChange={onFileUpload}
-                      onDone={(event) => {
-                        console.log(event.base64);
-                        formik.setFieldValue('file', event.base64);
-                      }}
-                      ref={uploader}
-                    />{' '}
-                    {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                    {!formik.values.file ? (
+                      <>
+                        <FileBase64
+                          onChange={onFileUpload}
+                          onDone={(event) => {
+                            console.log(event.base64);
+                            formik.setFieldValue('file', event.base64);
+                          }}
+                          ref={uploader}
+                        />
+                        {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                      </>
+                    ) : (
+                      <>
+                        <Button variant="contained" href={fileURL + formik.values.file} target="_blank" download>
+                          View file
+                        </Button>
+                        {/* <IconButton aria-label="delete" href={fileURL + formik.values.file} target="_blank" download>
+                          <PictureAsPdfIcon fontSize="inherit" />
+                        </IconButton> */}
+
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={() => {
+                            formik.setFieldValue('file', '');
+                          }}
+                        >
+                          <DeleteIcon fontSize="inherit" />
+                        </IconButton>
+                      </>
+                    )}
                   </Grid>
                   <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                    <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
+                    <Button variant="contained" size="large" type="submit" onClick={formik.handleSubmit}>
                       Update
                     </Button>
                   </Grid>

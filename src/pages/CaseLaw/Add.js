@@ -105,7 +105,7 @@ const AddCase = () => {
                 open: false,
                 message: '',
               });
-              // navigate('/dashboard/caselaws');
+              navigate('/dashboard/caselaws');
             }, 2000);
           }
         })
