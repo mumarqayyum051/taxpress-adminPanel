@@ -122,7 +122,7 @@ const EditCase = () => {
                 open: false,
                 message: '',
               });
-              // navigate('/dashboard/caselaws');
+              navigate('/dashboard/caselaws');
             }, 2000);
           }
         })
@@ -489,7 +489,7 @@ const EditCase = () => {
                     ) : null}
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    {!formik.values.file ? (
+                    {!formik.values.file.startsWith('uploads') ? (
                       <>
                         <FileBase64
                           onChange={onFileUpload}
