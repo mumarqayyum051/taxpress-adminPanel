@@ -55,7 +55,7 @@ const AddDictionary = () => {
           if (res.status === 200) {
             setOpen({
               open: true,
-              message: 'Dictionary added successfully',
+              message: 'Word has been added to the dictionary',
             });
 
             setTimeout(() => {
@@ -81,25 +81,11 @@ const AddDictionary = () => {
     const isValidFormate = allowedFormates.filter((formate) => formate === fileFormate).length;
     if (isValidFormate === 0) {
       setFileError('Please upload a pdf file');
+      formik.setFieldValue('file', '');
       uploader.current.value = '';
-      return;
     }
+  };
 
-    fileToBase64(event.target.files[0], (result) => {
-      formik.setFieldValue('file', result);
-      console.log(result);
-    });
-  };
-  const fileToBase64 = async (file, cb) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      cb(reader.result);
-    };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
-  };
   return (
     <Container>
       <Card sx={{ minWidth: 275 }}>
@@ -111,21 +97,6 @@ const AddDictionary = () => {
           <Box sx={{ flexGrow: 1 }}>
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    label="Word"
-                    color="secondary"
-                    id="word"
-                    type="text"
-                    key="word"
-                    value={formik.values.word}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.word && formik.touched.word ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.word}</p>
-                  ) : null}
-                </Grid>
                 <Grid item xs={12} md={12}>
                   <TextField
                     label="SLD"
@@ -145,6 +116,21 @@ const AddDictionary = () => {
                   />
                   {formik.errors.sld && formik.touched.sld ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.sld}</p>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    label="Word"
+                    color="secondary"
+                    id="word"
+                    type="text"
+                    key="word"
+                    value={formik.values.word}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
+                  {formik.errors.word && formik.touched.word ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.word}</p>
                   ) : null}
                 </Grid>
 
@@ -167,17 +153,20 @@ const AddDictionary = () => {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <FileBase64
-                    onChange={onFileUpload}
                     onDone={(event) => {
-                      console.log(event.base64);
-                      formik.setFieldValue('file', event.base64);
+                      console.log(event);
+                      if (event.name.includes('pdf')) {
+                        formik.setFieldValue('file', event.base64);
+                      } else {
+                        setFileError('Please upload a pdf file');
+                      }
                     }}
                     ref={uploader}
                   />
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
+                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
                     Submit
                   </Button>
                 </Grid>

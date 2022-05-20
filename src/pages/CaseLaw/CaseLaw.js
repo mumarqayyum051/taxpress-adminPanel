@@ -239,7 +239,7 @@ export default function CaseLaw() {
                     });
                   }}
                   severity="success"
-                  sx={{ width: '100%', background: '#28a793', background: '#28a793' }}
+                  sx={{ width: '100%', background: '#28a793' }}
                   key="alert"
                 >
                   {alert.message}

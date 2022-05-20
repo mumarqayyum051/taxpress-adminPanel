@@ -1,48 +1,34 @@
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
-  Checkbox,
-  TableRow,
+  Card,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 // components
 import TableHead from '@mui/material/TableHead';
-import Page from '../../components/Page';
-import Label from '../../components/Label';
-import Scrollbar from '../../components/Scrollbar';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
-
+import Page from '../../components/Page';
+import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user';
+import DictionaryService from '../../services/DictionaryService';
+import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
-import USERLIST from '../../_mock/user';
-
-import CaseLawService from '../../services/CaseLawService';
-import DictionaryService from '../../services/DictionaryService';
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'page', label: 'Page', alignRight: false },
-  { id: 'court', label: 'Court', alignRight: false },
-  { id: 'lawyer', label: 'Lawyer', alignRight: false },
-  { id: 'judge', label: 'Judge', alignRight: false },
-  { id: 'case', label: 'Case', alignRight: false },
-];
 
 // ----------------------------------------------------------------------
 
@@ -84,11 +70,15 @@ export default function Dictionary() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+  });
   useEffect(() => {
-    getAllCases();
+    getAllWords();
   }, []);
 
-  const getAllCases = () => {
+  const getAllWords = () => {
     _getAllDictionarys()
       .then((res) => {
         if (res.status === 200) {
@@ -115,12 +105,6 @@ export default function Dictionary() {
 
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -132,10 +116,6 @@ export default function Dictionary() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
@@ -166,27 +146,36 @@ export default function Dictionary() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>id</TableCell>
+                    <TableCell>#</TableCell>
                     <TableCell align="left">Word</TableCell>
                     <TableCell align="left">Meaning</TableCell>
                     {/* <TableCell align="left">Methods</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
                     const { id, word, meaning } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell component="th" scope="row">
-                          {id}
+                          {i + 1}
                         </TableCell>
                         <TableCell align="left">{word}</TableCell>
                         <TableCell align="left">{meaning}</TableCell>
 
                         {/* <TableCell align="right">
-                          <Actions id={id} onDelete={getAllCases} />
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllWords();
+                              setAlert({
+                                open: true,
+                                message: 'Case Deleted Successfully',
+                              });
+                            }}
+                          />
                         </TableCell> */}
                       </TableRow>
                     );
@@ -221,6 +210,37 @@ export default function Dictionary() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        {alert
+          ? [
+              <Snackbar
+                open={alert.open}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                TransitionComponent="SlideTransition"
+                onClose={() => {
+                  setAlert({
+                    open: false,
+                    message: '',
+                  });
+                }}
+                key="Snackbar"
+              >
+                <Alert
+                  onClose={() => {
+                    setAlert({
+                      open: false,
+                      message: '',
+                    });
+                  }}
+                  severity="success"
+                  sx={{ width: '100%', background: '#28a793' }}
+                  key="alert"
+                >
+                  {alert.message}
+                </Alert>
+              </Snackbar>,
+            ]
+          : null}
       </Container>
     </Page>
   );

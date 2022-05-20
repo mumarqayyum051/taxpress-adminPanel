@@ -310,17 +310,20 @@ const AddNotification = () => {
 
                 <Grid item xs={12} md={12}>
                   <FileBase64
-                    onChange={onFileUpload}
                     onDone={(event) => {
-                      console.log(event.base64);
-                      formik.setFieldValue('file', event.base64);
+                      console.log(event);
+                      if (event.name.includes('pdf')) {
+                        formik.setFieldValue('file', event.base64);
+                      } else {
+                        setFileError('Please upload a pdf file');
+                      }
                     }}
                     ref={uploader}
                   />
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
+                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
                     Submit
                   </Button>
                 </Grid>

@@ -1,19 +1,20 @@
-import { useRef, useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 // component
 import Iconify from '../../components/Iconify';
-import CaseLawService from '../../services/CaseLawService';
+import DictionaryService from '../../services/DictionaryService';
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
+  const { _deleteDictionary } = DictionaryService;
   const ref = useRef(null);
-  const { _deleteCase } = CaseLawService;
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     console.log(props);
   }, []);
+
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
@@ -39,7 +40,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('delete');
-              _deleteCase(props.id)
+              _deleteDictionary(props.id)
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {
