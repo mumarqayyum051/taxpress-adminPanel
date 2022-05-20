@@ -464,7 +464,7 @@ const AddCase = () => {
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" color="info" size="small" type="submit" onClick={formik.handleSubmit}>
+                  <Button variant="contained" color="info" size="medium" type="submit" onClick={formik.handleSubmit}>
                     Submit
                   </Button>
                 </Grid>

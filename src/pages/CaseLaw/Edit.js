@@ -523,7 +523,7 @@ const EditCase = () => {
                     )}
                   </Grid>
                   <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                    <Button variant="contained" size="large" type="submit" onClick={formik.handleSubmit}>
+                    <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
                       Update
                     </Button>
                   </Grid>
@@ -558,7 +558,7 @@ const EditCase = () => {
                   });
                 }}
                 severity="success"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%',  background: '#28a793' }}
                 key="alert"
               >
                 {open.message}
