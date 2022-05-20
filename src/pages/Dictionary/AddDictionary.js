@@ -1,22 +1,19 @@
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import MenuItem from '@mui/material/MenuItem';
+import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-
 import { useFormik } from 'formik';
-import _ from 'lodash';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
+import FileBase64 from 'react-file-base64';
+
 import DictionaryService from '../../services/DictionaryService';
 
 const AddDictionary = () => {
@@ -40,12 +37,10 @@ const AddDictionary = () => {
     validationSchema: yup.object({
       word: yup.string().required('Word is required'),
       meaning: yup.string().required('Meaning is required'),
-      sld: yup.string().required('SLD is required'),
-      file: yup.string().required('Required'),
+      sld: yup.number().required('SLD is required'),
     }),
 
     onSubmit: (values) => {
-      const formData = new FormData();
       setFileError('');
 
       console.log(values);
@@ -54,25 +49,6 @@ const AddDictionary = () => {
         return;
       }
 
-      // formData.append('year_or_vol', values.year_or_vol);
-      // formData.append('pageNo', values.pageNo);
-      // formData.append('month', values.month);
-      // formData.append('law_or_statute', values.law_or_statute);
-      // formData.append('section', values.section);
-      // formData.append('section2', values.section2);
-      // formData.append('court', values.court);
-      // formData.append('caseNo', caseNos);
-      // formData.append('dated', values.dated);
-      // formData.append('textSearch1', values.textSearch1);
-      // formData.append('textSearch2', values.textSearch2);
-      // formData.append('phraseSearch', values.phraseSearch);
-      // formData.append('judge', judges);
-      // formData.append('lawyer', lawyers);
-      // formData.append('journals', journals);
-      // formData.append('appellant_or_opponent', values.appellant_or_opponent);
-      // formData.append('principleOfDictionaryLaws', values.principleOfDictionaryLaws);
-      // formData.append('file', values.file);
-      // console.log(...formData);
       _addDictionary(formik.values)
         .then((res) => {
           console.log(res);
@@ -109,8 +85,6 @@ const AddDictionary = () => {
       return;
     }
 
-    // formik.setFieldValue('file', event.target.files[0]);
-    // fileToBase64(event);
     fileToBase64(event.target.files[0], (result) => {
       formik.setFieldValue('file', result);
       console.log(result);
@@ -146,7 +120,6 @@ const AddDictionary = () => {
                     key="word"
                     value={formik.values.word}
                     onChange={formik.handleChange}
-                    multiline
                     fullWidth
                   />
                   {formik.errors.word && formik.touched.word ? (
@@ -162,7 +135,12 @@ const AddDictionary = () => {
                     key="sld"
                     value={formik.values.sld}
                     onChange={formik.handleChange}
-                    multiline
+                    InputProps={{
+                      inputProps: {
+                        type: 'number',
+                        min: 0,
+                      },
+                    }}
                     fullWidth
                   />
                   {formik.errors.sld && formik.touched.sld ? (
@@ -188,7 +166,14 @@ const AddDictionary = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <input type="file" onChange={onFileUpload} ref={uploader} />
+                  <FileBase64
+                    onChange={onFileUpload}
+                    onDone={(event) => {
+                      console.log(event.base64);
+                      formik.setFieldValue('file', event.base64);
+                    }}
+                    ref={uploader}
+                  />
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
@@ -224,7 +209,7 @@ const AddDictionary = () => {
                   });
                 }}
                 severity="success"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', background: '#28a793' }}
                 key="alert"
               >
                 {open.message}

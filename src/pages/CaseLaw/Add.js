@@ -1,27 +1,21 @@
+import Alert from '@mui/material/Alert';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import { useFormik } from 'formik';
-import _ from 'lodash';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import FileBase64 from 'react-file-base64';
-import { MONTHS, COURTS } from '../../constants/constants';
+import { COURTS, MONTHS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
 
@@ -178,7 +172,7 @@ const AddCase = () => {
                       views={['year']}
                       label="Year/Vol"
                       value={formik.values.year_or_vol}
-                      sx={{ width: '100%' }}
+                      sx={{ width: '100%', background: '#28a793' }}
                       onChange={(newValue) => {
                         console.log(newValue);
                         const date = new Date(newValue);
@@ -496,7 +490,7 @@ const AddCase = () => {
                   });
                 }}
                 severity="success"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', background: '#28a793' }}
                 key="alert"
               >
                 {open.message}

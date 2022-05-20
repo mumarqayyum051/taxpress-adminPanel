@@ -1,35 +1,26 @@
 /* eslint-disable camelcase */
+import DeleteIcon from '@mui/icons-material/Delete';
+import Alert from '@mui/material/Alert';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-
+import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Autocomplete from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
-import { Icon } from '@iconify/react';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useFormik } from 'formik';
 import _ from 'lodash';
-import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
-
-import * as yup from 'yup';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
+import React, { useEffect, useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
+import { useLocation, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+import { COURTS, MONTHS } from '../../constants/constants';
 import environment from '../../environment/env';
-import Iconify from '../../components/Iconify';
-import { MONTHS, COURTS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
 
@@ -558,7 +549,7 @@ const EditCase = () => {
                   });
                 }}
                 severity="success"
-                sx={{ width: '100%',  background: '#28a793' }}
+                sx={{ width: '100%', background: '#28a793' }}
                 key="alert"
               >
                 {open.message}

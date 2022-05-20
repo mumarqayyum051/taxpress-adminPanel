@@ -223,7 +223,7 @@ const AddBlog = () => {
                   });
                 }}
                 severity="success"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', background: '#28a793' }}
                 key="alert"
               >
                 {open.message}
