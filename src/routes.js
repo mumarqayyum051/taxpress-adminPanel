@@ -21,6 +21,7 @@ import Notifications from './pages/Notifications/Notifications';
 import AddDictionary from './pages/Dictionary/AddDictionary';
 import AddNotification from './pages/Notifications/Add';
 import AddBlog from './pages/Blog/Add';
+import EditBlog from './pages/Blog/Edit';
 import NotificationType from './pages/NotificationType/NotificationType';
 import AddNotificationType from './pages/NotificationType/Add';
 // ----------------------------------------------------------------------
@@ -34,6 +35,7 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'blog', element: <Blog /> },
         { path: 'addBlog', element: <AddBlog /> },
+        { path: 'editBlog', element: <EditBlog /> },
         { path: 'caselaws', element: <CaseLaw /> },
         { path: 'addCase', element: <AddCase /> },
         { path: 'editCase', element: <EditCase /> },

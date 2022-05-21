@@ -14,14 +14,16 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as yup from 'yup';
 import FileBase64 from 'react-file-base64';
 import BlogsService from '../../services/BlogService';
 import StatuteService from '../../services/StatuteService';
 
-const AddBlog = () => {
+const EditBlog = () => {
   const { _createBlog } = BlogsService;
+  const { state } = useLocation();
+  const { id } = state;
   const navigate = useNavigate();
   useEffect(() => {
     const date = new Date().toLocaleDateString('en-US', {
@@ -221,4 +223,4 @@ const AddBlog = () => {
   );
 };
 
-export default AddBlog;
+export default EditBlog;

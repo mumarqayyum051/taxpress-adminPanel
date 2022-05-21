@@ -1,15 +1,9 @@
-import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
+import { Avatar, Card, CardContent, Grid, Link } from '@mui/material';
 // material
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
-// utils
-import { fDate, fDateTime } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
-//
-import SvgIconStyle from '../../../components/SvgIconStyle';
-import Iconify from '../../../components/Iconify';
-import environment from '../../../environment/env';
+import PropTypes from 'prop-types';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import environment from '../../environment/env';
 // ----------------------------------------------------------------------
 
 const CardMediaStyle = styled('div')({
@@ -24,23 +18,6 @@ const TitleStyle = styled(Link)({
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
 });
-
-const AvatarStyle = styled(Avatar)(({ theme }) => ({
-  zIndex: 9,
-  width: 32,
-  height: 32,
-  position: 'absolute',
-  left: theme.spacing(3),
-  bottom: theme.spacing(-2),
-}));
-
-const InfoStyle = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'flex-end',
-  marginTop: theme.spacing(3),
-  color: theme.palette.text.disabled,
-}));
 
 const CoverImgStyle = styled('img')({
   top: 0,
@@ -58,7 +35,9 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { image, title, paragraph, date } = post;
+  const { id, image, title } = post;
+
+  const navigate = useNavigate();
   const { fileURL } = environment;
 
   const latestPostLarge = index === 0;
@@ -88,36 +67,8 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <SvgIconStyle
-            color="paper"
-            src={fileURL + image}
-            sx={{
-              width: 80,
-              height: 36,
-              zIndex: 9,
-              bottom: -15,
-              position: 'absolute',
-              color: 'background.paper',
-              ...((latestPostLarge || latestPost) && { display: 'none' }),
-            }}
-          />
-          <AvatarStyle
-            alt={'Admin'}
-            src={'/static/mock-images/avatars/avatar_1.jpg'}
-            sx={{
-              ...((latestPostLarge || latestPost) && {
-                zIndex: 9,
-                top: 24,
-                left: 24,
-                width: 40,
-                height: 40,
-              }),
-            }}
-          />
-
           <CoverImgStyle alt={title} src={fileURL + image} />
         </CardMediaStyle>
-
         <CardContent
           sx={{
             pt: 4,
@@ -128,14 +79,13 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          {/* <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {fDateTime(date)}
-          </Typography> */}
-
           <TitleStyle
             color="inherit"
             variant="subtitle2"
             underline="hover"
+            onClick={() => {
+              navigate('/dashboard/editBlog', { state: { id } });
+            }}
             sx={{
               ...(latestPostLarge && { typography: 'h5', height: 60 }),
               ...((latestPostLarge || latestPost) && {

@@ -1,11 +1,11 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Grid, Button, Container, Stack, Typography } from '@mui/material';
+import { Grid, Button, Container, Stack, Typography, Box } from '@mui/material';
 // components
 import React, { useState, useEffect } from 'react';
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../../sections/@dashboard/blog';
+import BlogPostCard from './BlogCard';
 // mock
 import POSTS from '../../_mock/blog';
 
@@ -15,19 +15,16 @@ import BlogService from '../../services/BlogService';
 
 // ----------------------------------------------------------------------
 
-const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'popular', label: 'Popular' },
-  { value: 'oldest', label: 'Oldest' },
-];
-
 export default function Blog() {
   const { _getAllBlogs } = BlogService;
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     _getAllBlogs().then((res) => {
-      setPosts(res.data.data);
+      if (res.status === 200) {
+        console.log(res);
+        setPosts(res.data.data);
+      }
     });
   }, []);
   return (
@@ -52,11 +49,23 @@ export default function Blog() {
           <BlogPostsSort options={SORT_OPTIONS} />
         </Stack> */}
 
-        <Grid container spacing={3}>
-          {posts.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
-          ))}
-        </Grid>
+        {posts.length > 0 ? (
+          <Grid container spacing={3}>
+            {posts.map((post, index) => (
+              <BlogPostCard key={post.id} post={post} index={index} />
+            ))}
+          </Grid>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <h2>No Blog</h2>
+          </Box>
+        )}
       </Container>
     </Page>
   );
