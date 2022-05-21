@@ -34,6 +34,7 @@ const AddCase = () => {
   const [open, setOpen] = React.useState({
     open: false,
     message: '',
+    severity: 'success',
   });
   const formik = useFormik({
     initialValues: {
@@ -172,7 +173,7 @@ const AddCase = () => {
                       views={['year']}
                       label="Year/Vol"
                       value={formik.values.year_or_vol}
-                      sx={{ width: '100%', background: '#28a793' }}
+                      sx={{  width: '100%' }}
                       onChange={(newValue) => {
                         console.log(newValue);
                         const date = new Date(newValue);
@@ -492,8 +493,8 @@ const AddCase = () => {
                     message: '',
                   });
                 }}
-                severity="success"
-                sx={{ width: '100%', background: '#28a793' }}
+                severity={open.severity}
+                sx={{ width: '100%' }}
                 key="alert"
               >
                 {open.message}

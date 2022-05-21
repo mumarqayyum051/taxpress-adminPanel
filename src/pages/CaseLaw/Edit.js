@@ -45,6 +45,7 @@ const EditCase = () => {
   const [open, setOpen] = React.useState({
     open: false,
     message: '',
+    severity: 'success',
   });
   const { fileURL } = environment;
 
@@ -95,6 +96,11 @@ const EditCase = () => {
       console.log(values);
       if (!values.file) {
         setFileError('Please select a file');
+        return;
+      }
+
+      if (!values.file.includes('pdf')) {
+        setFileError('Please attach a pdf file');
         return;
       }
       values.law_or_statute = values.law_or_statute.id;
@@ -548,8 +554,8 @@ const EditCase = () => {
                     message: '',
                   });
                 }}
-                severity="success"
-                sx={{ width: '100%', background: '#28a793' }}
+                severity={open.severity}
+                sx={{ width: '100%' }}
                 key="alert"
               >
                 {open.message}

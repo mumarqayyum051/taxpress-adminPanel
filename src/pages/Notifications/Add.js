@@ -33,6 +33,7 @@ const AddNotification = () => {
   const [open, setOpen] = React.useState({
     open: false,
     message: '',
+    severity: 'success',
   });
 
   useEffect(() => {
@@ -354,8 +355,8 @@ const AddNotification = () => {
                     message: '',
                   });
                 }}
-                severity="success"
-                sx={{ width: '100%', background: '#28a793' }}
+                severity={open.severity}
+                sx={{ width: '100%' }}
                 key="alert"
               >
                 {open.message}

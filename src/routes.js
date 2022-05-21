@@ -15,6 +15,7 @@ import AddCase from './pages/CaseLaw/Add';
 import EditCase from './pages/CaseLaw/Edit';
 import Statutes from './pages/Statutes/Statutes';
 import AddStatutes from './pages/Statutes/Add';
+import EditStatute from './pages/Statutes/Edit';
 import Dictionary from './pages/Dictionary/Dictionary';
 import Notifications from './pages/Notifications/Notifications';
 import AddDictionary from './pages/Dictionary/AddDictionary';
@@ -37,7 +38,8 @@ export default function Router() {
         { path: 'addCase', element: <AddCase /> },
         { path: 'editCase', element: <EditCase /> },
         { path: 'statutes', element: <Statutes /> },
-        { path: 'addStatue', element: <AddStatutes /> },
+        { path: 'addStatute', element: <AddStatutes /> },
+        { path: 'editStatute', element: <EditStatute /> },
         { path: 'dictionary', element: <Dictionary /> },
         { path: 'addDictionary', element: <AddDictionary /> },
         { path: 'notifications', element: <Notifications /> },

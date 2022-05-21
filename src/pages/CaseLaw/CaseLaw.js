@@ -238,8 +238,8 @@ export default function CaseLaw() {
                       message: '',
                     });
                   }}
-                  severity="success"
-                  sx={{ width: '100%', background: '#28a793' }}
+                  severity={open.severity}
+                  sx={{ width: '100%' }}
                   key="alert"
                 >
                   {alert.message}

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 // component
@@ -12,6 +12,7 @@ export default function UserMoreMenu(props) {
   const ref = useRef(null);
   const { _deleteStatute } = StatuteService;
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     console.log(props);
   }, []);
@@ -55,11 +56,18 @@ export default function UserMoreMenu(props) {
           />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
+        <MenuItem sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText
+            primary="Edit"
+            primaryTypographyProps={{ variant: 'body2' }}
+            onClick={() => {
+              console.log('sdadasda', props.id);
+              navigate('/dashboard/editStatute', { state: { id: props.id } });
+            }}
+          />
         </MenuItem>
       </Menu>
     </>

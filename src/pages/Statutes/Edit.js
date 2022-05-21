@@ -1,3 +1,4 @@
+import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -5,21 +6,28 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import FileBase64 from 'react-file-base64';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import * as yup from 'yup';
+import environment from '../../environment/env';
 import StatuteService from '../../services/StatuteService';
 
-const AddStatute = () => {
-  const { _addStatute } = StatuteService;
+const EditStatute = () => {
   const navigate = useNavigate();
-
+  const { _editStatute, _getStatuteById } = StatuteService;
   const uploader = useRef();
+  useEffect(() => {
+    getStatute(id);
+  }, []);
+  const { fileURL } = environment;
+  const { state } = useLocation();
+  const { id } = state;
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
   const [open, setOpen] = React.useState({
@@ -27,6 +35,7 @@ const AddStatute = () => {
     message: '',
     severity: 'success',
   });
+
   const formik = useFormik({
     initialValues: {
       law_or_statute: '',
@@ -42,12 +51,25 @@ const AddStatute = () => {
       section: yup.string().required('Section is required'),
       textSearch1: yup.string().required('Text Search 1 is required'),
       textSearch2: yup.string().required('Text Search 2 is required'),
+      file: yup.string().required('File is required'),
     }),
 
     onSubmit: (values) => {
       setFileError('');
-
+      setOpen({
+        open: false,
+        message: '',
+        severity: '',
+      });
       console.log(values);
+      if (!formik.isValid) {
+        console.log(values);
+        setOpen({
+          open: true,
+          message: 'Please fill all the fields',
+          severity: 'warning',
+        });
+      }
       if (!values.file) {
         setFileError('Please select a file');
         return;
@@ -55,15 +77,20 @@ const AddStatute = () => {
 
       if (!values.file.includes('pdf')) {
         setFileError('Please attach a pdf file');
+        setOpen({
+          open: true,
+          message: 'Please attach a pdf file only',
+          severity: 'info',
+        });
         return;
       }
-      _addStatute(formik.values)
+      _editStatute(formik.values, id)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             setOpen({
               open: true,
-              message: 'Statute added successfully',
+              message: 'Statute updated successfully',
             });
 
             setTimeout(() => {
@@ -81,12 +108,24 @@ const AddStatute = () => {
     },
   });
 
+  const getStatute = (id) => {
+    _getStatuteById(id)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          formik.setValues(res.data.data[0]);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <Container>
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Add Statute{' '}
+            Edit Statute{' '}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -169,31 +208,54 @@ const AddStatute = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onDone={(event) => {
-                      console.log(event);
-                      if (event.name.includes('pdf')) {
-                        formik.setFieldValue('file', event.base64);
-                        setFileError('');
-                      } else {
-                        formik.setFieldValue('file', '');
+                  {!formik.values?.file?.startsWith('uploads') ? (
+                    <>
+                      <FileBase64
+                        onDone={(event) => {
+                          console.log(event);
+                          if (event.name.includes('pdf')) {
+                            formik.setFieldValue('file', event.base64);
+                            setFileError('');
+                          } else {
+                            formik.setFieldValue('file', '');
 
-                        setFileError('Please upload a pdf file');
-                        setOpen({
-                          open: true,
-                          message: 'Please attach a pdf file',
-                          severity: 'info',
-                        });
-                      }
-                    }}
-                    ref={uploader}
-                  />
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                            setFileError('Please upload a pdf file');
+                            setOpen({
+                              open: true,
+                              message: 'Please attach a pdf file',
+                              severity: 'info',
+                            });
+                          }
+                        }}
+                        ref={uploader}
+                      />
+                      {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="contained" href={fileURL + formik.values.file} target="_blank" download>
+                        View file
+                      </Button>
+                      {/* <IconButton aria-label="delete" href={fileURL + formik.values.file} target="_blank" download>
+                          <PictureAsPdfIcon fontSize="inherit" />
+                        </IconButton> */}
+
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        onClick={() => {
+                          formik.setFieldValue('file', '');
+                        }}
+                      >
+                        <DeleteIcon fontSize="inherit" />
+                      </IconButton>
+                    </>
+                  )}
                 </Grid>
 
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
-                    Submit
+                    Update
                   </Button>
                 </Grid>
               </Grid>
@@ -236,4 +298,4 @@ const AddStatute = () => {
   );
 };
 
-export default AddStatute;
+export default EditStatute;

@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -77,6 +79,10 @@ export default function Statutes() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+  });
   const [statutes, setStatutes] = useState([]);
   const { fileURL } = environment;
 
@@ -138,7 +144,7 @@ export default function Statutes() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addStatue"
+            to="/dashboard/addStatute"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Statute
@@ -152,7 +158,9 @@ export default function Statutes() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">#</TableCell>
-                    <TableCell align="left">Law/Statute</TableCell>
+                    <TableCell align="left" sx={{ width: '50%' }}>
+                      Law/Statute
+                    </TableCell>
                     <TableCell align="left">Chapter</TableCell>
                     <TableCell align="left">Section</TableCell>
                     <TableCell align="left">File</TableCell>
@@ -160,7 +168,6 @@ export default function Statutes() {
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    console.log(row);
                     // eslint-disable-next-line camelcase
                     const { id, law_or_statute, chapter, section, file } = row;
 
@@ -168,16 +175,27 @@ export default function Statutes() {
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
 
-                        <TableCell align="left">{law_or_statute}</TableCell>
+                        <TableCell align="left" sx={{ width: '50%' }}>
+                          {law_or_statute}
+                        </TableCell>
                         <TableCell align="left">{chapter}</TableCell>
                         <TableCell align="left">{section}</TableCell>
                         <TableCell align="left">
-                          <Button size="small" variant="contained" href={fileURL + file} target="_blank" download>
-                            <span>View File</span>
+                          <Button variant="contained" href={fileURL + file} target="_blank" download>
+                            View
                           </Button>
                         </TableCell>
                         <TableCell align="right">
-                          <Actions id={id} onDelete={getAllStatutes} />
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllStatutes();
+                              setAlert({
+                                open: true,
+                                message: 'Case Deleted Successfully',
+                              });
+                            }}
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -202,6 +220,37 @@ export default function Statutes() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        {alert
+          ? [
+              <Snackbar
+                open={alert.open}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                TransitionComponent="SlideTransition"
+                onClose={() => {
+                  setAlert({
+                    open: false,
+                    message: '',
+                  });
+                }}
+                key="Snackbar"
+              >
+                <Alert
+                  onClose={() => {
+                    setAlert({
+                      open: false,
+                      message: '',
+                    });
+                  }}
+                  severity={open.severity}
+                  sx={{ width: '100%' }}
+                  key="alert"
+                >
+                  {alert.message}
+                </Alert>
+              </Snackbar>,
+            ]
+          : null}
       </Container>
     </Page>
   );
