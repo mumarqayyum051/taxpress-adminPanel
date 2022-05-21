@@ -194,6 +194,7 @@ export default function Statutes() {
                               setAlert({
                                 open: true,
                                 message: 'Case Deleted Successfully',
+                                severity: 'success',
                               });
                             }}
                           />
@@ -214,7 +215,7 @@ export default function Statutes() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={cases.length}
+            count={statutes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
