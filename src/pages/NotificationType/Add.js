@@ -21,7 +21,7 @@ const AddNotificationType = () => {
   const allowedFormates = ['pdf'];
   const [data, setData] = useState([]);
   const [statutes, setStatutes] = useState([]);
-  const [open, setOpen] = React.useState({
+  const [alert, setAlert] = React.useState({
     open: false,
     message: '',
     severity: 'success',
@@ -40,13 +40,13 @@ const AddNotificationType = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setOpen({
+            setAlert({
               open: true,
               message: 'Notification type created successfully',
             });
 
             setTimeout(() => {
-              setOpen({
+              setAlert({
                 open: false,
                 message: '',
               });
@@ -97,15 +97,15 @@ const AddNotificationType = () => {
           </Box>
         </CardContent>
       </Card>
-      {open
+      {alert
         ? [
             <Snackbar
-              open={open.open}
+              open={alert.open}
               autoHideDuration={6000}
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               TransitionComponent="SlideTransition"
               onClose={() => {
-                setOpen({
+                setAlert({
                   open: false,
                   message: '',
                 });
@@ -114,16 +114,16 @@ const AddNotificationType = () => {
             >
               <Alert
                 onClose={() => {
-                  setOpen({
+                  setAlert({
                     open: false,
                     message: '',
                   });
                 }}
-                severity={open.severity}
+                severity={alert.severity}
                 sx={{ width: '100%' }}
                 key="alert"
               >
-                {open.message}
+                {alert.message}
               </Alert>
             </Snackbar>,
           ]

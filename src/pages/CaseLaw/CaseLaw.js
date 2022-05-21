@@ -238,7 +238,7 @@ export default function CaseLaw() {
                       message: '',
                     });
                   }}
-                  severity={open.severity}
+                  severity={alert.severity}
                   sx={{ width: '100%' }}
                   key="alert"
                 >

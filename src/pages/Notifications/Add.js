@@ -30,7 +30,7 @@ const AddNotification = () => {
   const [setFile, setFileError] = useState('');
   const [notificationTypes, setNotificationTypes] = useState([]);
   const [statutes, setStatutes] = useState([]);
-  const [open, setOpen] = React.useState({
+  const [alert, setAlert] = React.useState({
     open: false,
     message: '',
     severity: 'success',
@@ -96,13 +96,13 @@ const AddNotification = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setOpen({
+            setAlert({
               open: true,
               message: 'Notification added successfully',
             });
 
             setTimeout(() => {
-              setOpen({
+              setAlert({
                 open: false,
                 message: '',
               });
@@ -333,15 +333,15 @@ const AddNotification = () => {
           </Box>
         </CardContent>
       </Card>
-      {open
+      {alert
         ? [
             <Snackbar
-              open={open.open}
+              open={alert.open}
               autoHideDuration={6000}
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               TransitionComponent="SlideTransition"
               onClose={() => {
-                setOpen({
+                setAlert({
                   open: false,
                   message: '',
                 });
@@ -350,16 +350,16 @@ const AddNotification = () => {
             >
               <Alert
                 onClose={() => {
-                  setOpen({
+                  setAlert({
                     open: false,
                     message: '',
                   });
                 }}
-                severity={open.severity}
+                severity={alert.severity}
                 sx={{ width: '100%' }}
                 key="alert"
               >
-                {open.message}
+                {alert.message}
               </Alert>
             </Snackbar>,
           ]

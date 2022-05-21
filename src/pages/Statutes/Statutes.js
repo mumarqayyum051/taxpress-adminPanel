@@ -82,6 +82,7 @@ export default function Statutes() {
   const [alert, setAlert] = useState({
     open: false,
     message: '',
+    severity: 'success',
   });
   const [statutes, setStatutes] = useState([]);
   const { fileURL } = environment;
@@ -242,7 +243,7 @@ export default function Statutes() {
                       message: '',
                     });
                   }}
-                  severity={open.severity}
+                  severity={alert.severity}
                   sx={{ width: '100%' }}
                   key="alert"
                 >

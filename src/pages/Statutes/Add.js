@@ -22,7 +22,7 @@ const AddStatute = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [open, setOpen] = React.useState({
+  const [alert, setAlert] = React.useState({
     open: false,
     message: '',
     severity: 'success',
@@ -61,13 +61,13 @@ const AddStatute = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setOpen({
+            setAlert({
               open: true,
               message: 'Statute added successfully',
             });
 
             setTimeout(() => {
-              setOpen({
+              setAlert({
                 open: false,
                 message: '',
               });
@@ -179,7 +179,7 @@ const AddStatute = () => {
                         formik.setFieldValue('file', '');
 
                         setFileError('Please upload a pdf file');
-                        setOpen({
+                        setAlert({
                           open: true,
                           message: 'Please attach a pdf file',
                           severity: 'info',
@@ -201,15 +201,15 @@ const AddStatute = () => {
           </Box>
         </CardContent>
       </Card>
-      {open
+      {alert
         ? [
             <Snackbar
-              open={open.open}
+              open={alert.open}
               autoHideDuration={6000}
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               TransitionComponent="SlideTransition"
               onClose={() => {
-                setOpen({
+                setAlert({
                   open: false,
                   message: '',
                 });
@@ -218,16 +218,16 @@ const AddStatute = () => {
             >
               <Alert
                 onClose={() => {
-                  setOpen({
+                  setAlert({
                     open: false,
                     message: '',
                   });
                 }}
-                severity={open.severity}
+                severity={alert.severity}
                 sx={{ width: '100%' }}
                 key="alert"
               >
-                {open.message}
+                {alert.message}
               </Alert>
             </Snackbar>,
           ]

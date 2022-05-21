@@ -30,7 +30,7 @@ const EditStatute = () => {
   const { id } = state;
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [open, setOpen] = React.useState({
+  const [alert, setAlert] = React.useState({
     open: false,
     message: '',
     severity: 'success',
@@ -56,7 +56,7 @@ const EditStatute = () => {
 
     onSubmit: (values) => {
       setFileError('');
-      setOpen({
+      setAlert({
         open: false,
         message: '',
         severity: '',
@@ -64,7 +64,7 @@ const EditStatute = () => {
       console.log(values);
       if (!formik.isValid) {
         console.log(values);
-        setOpen({
+        setAlert({
           open: true,
           message: 'Please fill all the fields',
           severity: 'warning',
@@ -77,7 +77,7 @@ const EditStatute = () => {
 
       if (!values.file.includes('pdf')) {
         setFileError('Please attach a pdf file');
-        setOpen({
+        setAlert({
           open: true,
           message: 'Please attach a pdf file only',
           severity: 'info',
@@ -88,13 +88,13 @@ const EditStatute = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setOpen({
+            setAlert({
               open: true,
               message: 'Statute updated successfully',
             });
 
             setTimeout(() => {
-              setOpen({
+              setAlert({
                 open: false,
                 message: '',
               });
@@ -220,7 +220,7 @@ const EditStatute = () => {
                             formik.setFieldValue('file', '');
 
                             setFileError('Please upload a pdf file');
-                            setOpen({
+                            setAlert({
                               open: true,
                               message: 'Please attach a pdf file',
                               severity: 'info',
@@ -263,15 +263,15 @@ const EditStatute = () => {
           </Box>
         </CardContent>
       </Card>
-      {open
+      {alert
         ? [
             <Snackbar
-              open={open.open}
+              open={alert.open}
               autoHideDuration={6000}
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               TransitionComponent="SlideTransition"
               onClose={() => {
-                setOpen({
+                setAlert({
                   open: false,
                   message: '',
                 });
@@ -280,16 +280,16 @@ const EditStatute = () => {
             >
               <Alert
                 onClose={() => {
-                  setOpen({
+                  setAlert({
                     open: false,
                     message: '',
                   });
                 }}
-                severity={open.severity}
+                severity={alert.severity}
                 sx={{ width: '100%' }}
                 key="alert"
               >
-                {open.message}
+                {alert.message}
               </Alert>
             </Snackbar>,
           ]
