@@ -1,16 +1,12 @@
-import { _post } from './httpService';
+import { _post, _delete, _get } from './httpService';
 
-const _addCase = (caseData) => {
-  return _post('/cases/addCase', caseData);
+const _addOrdinance = (data) => _post('/ordinance/addOrdinance', data);
+const _deleteOrdinance = (id) => _delete(`/ordinance/deleteOrdinance/${id}`);
+const __getAllOrdinances = () => _get('/ordinance/getAllOrdinances');
+const OrdinanceService = {
+  _addOrdinance,
+  _deleteOrdinance,
+  __getAllOrdinances,
 };
 
-const _searchCase = (caseData) => {
-  return _post('/cases/searchCase', caseData);
-};
-
-const libraryService = {
-  _addCase,
-  _searchCase,
-};
-
-export default libraryService;
+export default OrdinanceService;
