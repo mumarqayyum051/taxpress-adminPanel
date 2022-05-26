@@ -1,41 +1,33 @@
 /* eslint-disable camelcase */
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
-  Checkbox,
-  TableRow,
+  Card,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 // components
 import TableHead from '@mui/material/TableHead';
-import Page from '../../components/Page';
-import Label from '../../components/Label';
-import Scrollbar from '../../components/Scrollbar';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
-
-import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user';
+import Page from '../../components/Page';
+import Scrollbar from '../../components/Scrollbar';
+import environment from '../../environment/env';
+import StatusesService from '../../services/StatuteService';
+import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
-import USERLIST from '../../_mock/user';
-import StatusesService from '../../services/StatuteService';
-import CaseLawService from '../../services/CaseLawService';
-import environment from '../../environment/env';
 
 // ----------------------------------------------------------------------
 
@@ -84,8 +76,8 @@ export default function Statutes() {
     message: '',
     severity: 'success',
   });
-  const [statutes, setStatutes] = useState([]);
   const { fileURL } = environment;
+  const [statutes, setStatutes] = useState([]);
 
   useEffect(() => {
     getAllStatutes();

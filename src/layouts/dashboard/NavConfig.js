@@ -36,7 +36,11 @@ const navConfig = [
     path: '/dashboard/notificationsType',
     icon: getIcon('ic:baseline-notification-add'),
   },
-
+  {
+    title: 'Ordinance',
+    path: '/dashboard/ordinance',
+    icon: getIcon('fa-brands:jedi-order'),
+  },
   {
     title: 'dictionary',
     path: '/dashboard/dictionary',

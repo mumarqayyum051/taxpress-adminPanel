@@ -24,6 +24,8 @@ import AddBlog from './pages/Blog/Add';
 import EditBlog from './pages/Blog/Edit';
 import NotificationType from './pages/NotificationType/NotificationType';
 import AddNotificationType from './pages/NotificationType/Add';
+import AddOrdinance from './pages/Ordinance/Add';
+import Ordinance from './pages/Ordinance/Ordinance';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -48,6 +50,8 @@ export default function Router() {
         { path: 'addNotification', element: <AddNotification /> },
         { path: 'notificationsType', element: <NotificationType /> },
         { path: 'addNotificationType', element: <AddNotificationType /> },
+        { path: 'AddOrdinance', element: <AddOrdinance /> },
+        { path: 'ordinance', element: <Ordinance /> },
       ],
     },
 
