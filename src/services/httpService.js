@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:4000/api';
+const baseURL = 'http://demo@quantux.net/api';
 const headersConfig = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
