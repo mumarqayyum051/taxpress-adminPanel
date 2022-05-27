@@ -21,8 +21,4 @@ export const COURTS = [
   { id: 5, label: 'Sindh High Court' },
 ];
 
-export const ORDINANCE = [
-  { id: 1, label: 'Act' },
-  { id: 2, label: 'Ordinance' },
-  { id: 3, label: 'Rule' },
-];
+export const ORDINANCE = [{ label: 'Act' }, { label: 'Ordinance' }, { label: 'Rule' }];

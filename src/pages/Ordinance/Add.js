@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-key */
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -5,29 +8,27 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
 import { useFormik } from 'formik';
 import React, { useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { ORDINANCE } from '../../constants/constants';
-import StatuteService from '../../services/StatuteService';
+import OrdinanceService from '../../services/OrdinanceService';
 
 const Add = () => {
-  const { _addStatute } = StatuteService;
+  const { _addOrdinance } = OrdinanceService;
   const navigate = useNavigate();
 
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [highlights, setHighlights] = useState([]);
+  const [highlights, setHighlights] = useState(['']);
   const [alert, setAlert] = React.useState({
     open: false,
     message: '',
@@ -35,25 +36,13 @@ const Add = () => {
   });
   const formik = useFormik({
     initialValues: {
-      law_or_statute: '',
-      chapter: '',
-      section: '',
-      textSearch1: '',
-      textSearch2: '',
+      type: '',
       file: '',
     },
     validationSchema: yup.object({
-      highlights: yup.array().of(
-        yup.object().shape({
-          id: yup.string().required('Id is required'),
-          name: yup.string().required('Name is required'),
-        })
-      ),
       type: yup.string().required('Type is required'),
-      typeName: yup.string().required('Type Name is required'),
       file: yup.string().required('File is required'),
     }),
-
     onSubmit: (values) => {
       setFileError('');
 
@@ -67,13 +56,13 @@ const Add = () => {
         setFileError('Please attach a pdf file');
         return;
       }
-      _addStatute(formik.values)
+      _addOrdinance({ highlights, ...formik.values })
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             setAlert({
               open: true,
-              message: 'Statute added successfully',
+              message: 'Aded successfully',
             });
 
             setTimeout(() => {
@@ -81,7 +70,7 @@ const Add = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/addOrdinance');
+              navigate('/dashboard/ordinance');
             }, 2000);
           }
         })
@@ -109,12 +98,16 @@ const Add = () => {
                     label="Type"
                     color="secondary"
                     key="type"
-                    value={formik.values.law_or_statute}
-                    onChange={formik.handleChange}
+                    value={formik.values.type}
+                    onChange={(event) => {
+                      console.log(event);
+                      formik.setFieldValue('type', event.target.value);
+                      console.log(formik.values.type);
+                    }}
                     fullWidth
                   >
                     {ORDINANCE.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
+                      <MenuItem key={option.label} value={option.label}>
                         {option.label}
                       </MenuItem>
                     ))}
@@ -123,73 +116,61 @@ const Add = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.month}</p>
                   ) : null}
                 </Grid>
-                {highlights.map((highlight, index) => (
+                {highlights.map((highlight, index) =>
                   // eslint-disable-next-line react/jsx-key
-                  <Grid item xs={12} md={12}>
-                    <TextField
-                      label="Chapter"
-                      color="secondary"
-                      id="chapter"
-                      type="text"
-                      key="chapter"
-                      value={formik.values.chapter}
-                      onChange={formik.handleChange}
-                      fullWidth
-                    />
-                    <IconButton aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                    {formik.errors.chapter && formik.touched.chapter ? (
-                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.chapter}</p>
-                    ) : null}
-                  </Grid>
-                ))}
+                  [
+                    // eslint-disable-next-line react/jsx-key
+                    <Grid item xs={10} md={10}>
+                      <TextField
+                        label={index === 0 ? `Highlight` : `Highlight ${index}`}
+                        color="secondary"
+                        id={`name${index}`}
+                        type="text"
+                        key={`name${index}`}
+                        name={`name${index}`}
+                        onChange={(e) => {
+                          const newHighlights = highlights;
+                          newHighlights[index] = e.target.value;
+                          setHighlights(newHighlights);
 
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Search 1"
-                    color="secondary"
-                    id="textSearch1"
-                    type="text"
-                    key="textSearch1"
-                    value={formik.values.textSearch1}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    label="Search 2"
-                    color="secondary"
-                    id="textSearch2"
-                    type="text"
-                    key="textSearch2"
-                    value={formik.values.textSearch2}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-                  {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    id="section"
-                    label="Section"
-                    color="secondary"
-                    key="section"
-                    value={formik.values.section}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
+                          console.log(highlights);
+                        }}
+                        fullWidth
+                      />
 
-                  {formik.errors.section && formik.touched.section ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.section}</p>
-                  ) : null}
-                </Grid>
+                      {formik.errors.chapter && formik.touched.chapter ? (
+                        <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.chapter}</p>
+                      ) : null}
+                    </Grid>,
+                    <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'grey' }}>
+                      <IconButton
+                        aria-label="Add"
+                        onClick={() => {
+                          setHighlights([...highlights, '']);
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Grid>,
+                    <>
+                      {index !== 0 ? (
+                        <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              setHighlights(highlights.filter((item, i) => i !== index));
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      ) : (
+                        ''
+                      )}
+                    </>,
+                  ]
+                )}
+
                 <Grid item xs={12} md={12}>
                   <FileBase64
                     onDone={(event) => {
