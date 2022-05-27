@@ -26,7 +26,7 @@ import NotificationType from './pages/NotificationType/NotificationType';
 import AddNotificationType from './pages/NotificationType/Add';
 import AddOrdinance from './pages/Ordinance/Add';
 import Ordinance from './pages/Ordinance/Ordinance';
-
+import AddServiceType from './pages/ServiceType/Add';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -53,6 +53,7 @@ export default function Router() {
         { path: 'addNotificationType', element: <AddNotificationType /> },
         { path: 'addOrdinance', element: <AddOrdinance /> },
         { path: 'ordinance', element: <Ordinance /> },
+        { path: 'addServiceType', element: <AddServiceType /> },
       ],
     },
 
