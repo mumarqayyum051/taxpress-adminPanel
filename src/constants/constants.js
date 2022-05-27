@@ -20,3 +20,9 @@ export const COURTS = [
   { id: 4, label: 'Peshawar High Court' },
   { id: 5, label: 'Sindh High Court' },
 ];
+
+export const ORDINANCE = [
+  { id: 1, label: 'Act' },
+  { id: 2, label: 'Ordinance' },
+  { id: 3, label: 'Rule' },
+];
