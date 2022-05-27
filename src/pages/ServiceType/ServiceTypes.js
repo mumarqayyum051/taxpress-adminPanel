@@ -66,7 +66,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const Ordinance = () => {
+const ServiceTypes = () => {
   const { _getAllOrdinance } = OrdinanceService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
@@ -246,4 +246,4 @@ const Ordinance = () => {
   );
 };
 
-export default Ordinance;
+export default ServiceTypes;

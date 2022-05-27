@@ -42,6 +42,11 @@ const navConfig = [
     icon: getIcon('fa-brands:jedi-order'),
   },
   {
+    title: 'Service Type',
+    path: '/dashboard/serviceTypes',
+    icon: getIcon('carbon:ibm-security-services'),
+  },
+  {
     title: 'dictionary',
     path: '/dashboard/dictionary',
     icon: getIcon('heroicons-solid:library'),
