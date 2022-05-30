@@ -7,12 +7,12 @@ import { Link, Stack, Checkbox, TextField, IconButton, InputAdornment, FormContr
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
-
+import AuthService from '../../../services/AuthService';
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
-
+  const { _login } = AuthService;
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -24,11 +24,18 @@ export default function LoginForm() {
     initialValues: {
       email: '',
       password: '',
-      remember: true,
+      type: 1,
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values, actions) => {
+      _login(values)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+            actions.setSubmitting(false);
+          }
+        })
+        .catch((err) => console.log(err));
     },
   });
 
