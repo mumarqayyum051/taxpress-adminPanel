@@ -5,6 +5,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 // material
 import { Link, Stack, Checkbox, TextField, IconButton, InputAdornment, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import useAuth from '../../../hooks/useAuth';
 // component
 import Iconify from '../../../components/Iconify';
 import AuthService from '../../../services/AuthService';
@@ -13,6 +14,7 @@ import AuthService from '../../../services/AuthService';
 export default function LoginForm() {
   const navigate = useNavigate();
   const { _login } = AuthService;
+  const { setAuth } = useAuth;
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -32,6 +34,8 @@ export default function LoginForm() {
         .then((response) => {
           if (response.status === 200) {
             console.log(response);
+            const user = response?.data?.data;
+            setAuth(user);
             actions.setSubmitting(false);
           }
         })
