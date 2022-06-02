@@ -11,6 +11,7 @@ import DashboardLayout from './layouts/dashboard';
 import Login from './pages/Login';
 // eslint-disable-next-line import/named
 import ProtectedRoute from './ProtectedRoutes';
+import RequireAuth from './RequireAuth';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -34,16 +35,10 @@ export default function App() {
           />
         </Route> */}
         <Route element={<RouterLayout />}>
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout />
-              </ProtectedRoute>
-            }
-          />
+          <Route element={<RequireAuth />}>
+            <Route path="/dashboard" element={<DashboardLayout />} />
+          </Route>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Navigate to="/dashboard" />} />
         </Route>
       </Routes>
     </ThemeProvider>

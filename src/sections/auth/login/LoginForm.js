@@ -14,7 +14,7 @@ import AuthService from '../../../services/AuthService';
 export default function LoginForm() {
   const navigate = useNavigate();
   const { _login } = AuthService;
-  const { setAuth } = useAuth;
+  const { setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -35,7 +35,7 @@ export default function LoginForm() {
           if (response.status === 200) {
             console.log(response);
             const user = response?.data?.data;
-            setAuth(user);
+            setUser(user);
             actions.setSubmitting(false);
           }
         })
