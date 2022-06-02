@@ -1,4 +1,4 @@
-import { _get, _post, _put, _delete } from './httpService';
+import { _get, _post, _put, _delete } from './HttpService';
 
 const _createBlog = (blogData) => _post('/blogs/createBlog', blogData);
 

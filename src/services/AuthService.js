@@ -1,4 +1,4 @@
-import { _post } from './httpService';
+import { _post } from './HttpService';
 
 const _login = (data) => _post('/users/admin/login', data);
 

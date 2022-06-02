@@ -1,4 +1,4 @@
-import { _delete, _get, _put, _post } from './httpService';
+import { _delete, _get, _put, _post } from './HttpService';
 
 const _addStatute = (statuteData) => _post('/statutes/addStatutes', statuteData);
 

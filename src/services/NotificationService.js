@@ -1,4 +1,4 @@
-import { _delete, _get, _post } from './httpService';
+import { _delete, _get, _post } from './HttpService';
 
 const _addNotification = (notificationData) => _post('/notifications/createNotification', notificationData);
 const _getAllNotifications = () => _get('/notifications/getAllNotifications');
