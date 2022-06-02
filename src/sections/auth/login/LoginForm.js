@@ -9,6 +9,7 @@ import useAuth from '../../../hooks/useAuth';
 // component
 import Iconify from '../../../components/Iconify';
 import AuthService from '../../../services/AuthService';
+import JWTService from '../../../services/JWTService';
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
@@ -34,11 +35,11 @@ export default function LoginForm() {
         .then((response) => {
           if (response.status === 200) {
             console.log(response);
-            const user = response?.data?.data;
-            setUser(user);
-            setIsAuthenticated(true);
             actions.setSubmitting(false);
-            navigate('/dashboard');
+            const user = response?.data?.data;
+            const { token } = response?.data?.data;
+            setUser(user);
+            JWTService.setToken(token);
           }
         })
         .catch((err) => console.log(err));
