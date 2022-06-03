@@ -49,23 +49,24 @@ const AddBlog = () => {
         year: 'numeric',
         month: 'numeric',
       }),
-      shortParagraph: '',
-      image: '',
+      short_paragraph: '',
+      file: '',
       author: '',
     },
     validationSchema: yup.object({
+      author: yup.string().required('Author is required'),
       title: yup.string().required('Title is required'),
       paragraph: yup.string().required('Paragraph is required'),
 
-      shortParagraph: yup.string().required('Short Paragraph is required'),
-      image: yup.string().required('Please attach an Image'),
+      short_paragraph: yup.string().required('Short Paragraph is required'),
+      file: yup.string().required('Please attach an Image'),
     }),
 
     onSubmit: (values) => {
       setFileError('');
 
       console.log(values);
-      if (!values.image) {
+      if (!values.file) {
         setFileError('Please upload a jpg, jpeg or png file');
         return;
       }
@@ -76,7 +77,7 @@ const AddBlog = () => {
           if (res.status === 200) {
             setAlert({
               open: true,
-              message: 'Blog added successfully',
+              message: 'Blog created successfully',
             });
 
             setTimeout(() => {
@@ -99,12 +100,27 @@ const AddBlog = () => {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Add Blog{' '}
+            Create Blog{' '}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={2}>
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    id="author"
+                    label="Author"
+                    color="secondary"
+                    key="author"
+                    value={formik.values.author}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
+
+                  {formik.errors.author && formik.touched.author ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.author}</p>
+                  ) : null}
+                </Grid>
                 <Grid item xs={12} md={12}>
                   <TextField
                     id="title"
@@ -120,37 +136,22 @@ const AddBlog = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.title}</p>
                   ) : null}
                 </Grid>
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    id="author"
-                    label="Author"
-                    color="secondary"
-                    key="author"
-                    value={formik.values.author}
-                    onChange={formik.handleChange}
-                    fullWidth
-                  />
-
-                  {formik.errors.title && formik.touched.title ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.title}</p>
-                  ) : null}
-                </Grid>
 
                 <Grid item xs={12} md={12}>
                   <TextField
                     label="Short Paragraph"
                     color="secondary"
-                    id="shortParagraph"
+                    id="short_paragraph"
                     type="text"
-                    key="shortParagraph"
+                    key="short_paragraph"
                     rows={3}
-                    value={formik.values.shortParagraph}
+                    value={formik.values.short_paragraph}
                     onChange={formik.handleChange}
                     multiline
                     fullWidth
                   />
-                  {formik.errors.shortParagraph && formik.touched.shortParagraph ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.shortParagraph}</p>
+                  {formik.errors.short_paragraph && formik.touched.short_paragraph ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.short_paragraph}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
@@ -176,10 +177,10 @@ const AddBlog = () => {
                     onDone={(event) => {
                       console.log(event);
                       if (event.name.includes('jpg') || event.name.includes('png') || event.name.includes('jpeg')) {
-                        formik.setFieldValue('image', event.base64);
+                        formik.setFieldValue('file', event.base64);
                         setFileError('');
                       } else {
-                        formik.setFieldValue('image', '');
+                        formik.setFieldValue('file', '');
                         setFileError('Please upload a jpg, jpeg or png file');
                         setAlert({
                           open: true,

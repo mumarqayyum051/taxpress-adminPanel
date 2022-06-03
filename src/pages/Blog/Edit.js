@@ -51,14 +51,14 @@ const EditBlog = () => {
         year: 'numeric',
         month: 'numeric',
       }),
-      shortParagraph: '',
+      short_paragraph: '',
       image: '',
     },
     validationSchema: yup.object({
       title: yup.string().required('Title is required'),
       paragraph: yup.string().required('Paragraph is required'),
 
-      shortParagraph: yup.string().required('Short Paragraph is required'),
+      short_paragraph: yup.string().required('Short Paragraph is required'),
       image: yup.string().required('Please attach an Image'),
     }),
 
@@ -126,17 +126,17 @@ const EditBlog = () => {
                   <TextField
                     label="Short Paragraph"
                     color="secondary"
-                    id="shortParagraph"
+                    id="short_paragraph"
                     type="text"
-                    key="shortParagraph"
+                    key="short_paragraph"
                     rows={3}
-                    value={formik.values.shortParagraph}
+                    value={formik.values.short_paragraph}
                     onChange={formik.handleChange}
                     multiline
                     fullWidth
                   />
-                  {formik.errors.shortParagraph && formik.touched.shortParagraph ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.shortParagraph}</p>
+                  {formik.errors.short_paragraph && formik.touched.short_paragraph ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.short_paragraph}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>

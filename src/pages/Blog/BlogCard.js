@@ -1,8 +1,10 @@
 import { Avatar, Card, CardContent, Grid, Link } from '@mui/material';
 // material
 import { alpha, styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
 import environment from '../../environment/env';
 // ----------------------------------------------------------------------
 
@@ -35,7 +37,7 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { id, image, title } = post;
+  const { id, date, file, title } = post;
 
   const navigate = useNavigate();
   const { fileURL } = environment;
@@ -67,7 +69,7 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <CoverImgStyle alt={title} src={fileURL + image} />
+          <CoverImgStyle alt={title} src={fileURL + file} />
         </CardMediaStyle>
         <CardContent
           sx={{
@@ -79,7 +81,7 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <TitleStyle
+          <Typography
             color="inherit"
             variant="subtitle2"
             underline="hover"
@@ -94,7 +96,8 @@ export default function BlogPostCard({ post, index }) {
             }}
           >
             {title}
-          </TitleStyle>
+          </Typography>
+          <span style={{ fontSize: 12, color: 'white' }}>{format(new Date(date), 'MMM dd, yyyy')}</span>
         </CardContent>
       </Card>
     </Grid>

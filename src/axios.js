@@ -1,7 +1,8 @@
 import * as _axios from 'axios';
+import environment from './environment/env';
 import JWTService from './services/JWTService';
 
-const baseURL = 'http://localhost:4000/api';
+const { baseURL } = environment;
 const axios = _axios.create({
   baseURL,
   timeout: 5000,
