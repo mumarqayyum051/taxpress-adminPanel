@@ -50,7 +50,7 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query) {
-  console.log(array);
+  console.log({ array });
   if (!array.length) {
     return [];
   }
@@ -152,30 +152,31 @@ const Ordinance = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">#</TableCell>
+                    <TableCell align="left">Type</TableCell>
                     <TableCell align="left" sx={{ width: '50%' }}>
-                      Type
+                      Hightlights
                     </TableCell>
 
-                    <TableCell align="left">File</TableCell>
+                    <TableCell align="center">File</TableCell>
+                    {/* <TableCell align="right">Action</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // eslint-disable-next-line camelcase
-                    const { id, file, type } = row;
-                    console.log(row);
-                    return (
+                  {filteredCases
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map(({ id, file, type, highlights }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{'asdsad'}</TableCell>
+                        <TableCell align="left">{type}</TableCell>
+                        <TableCell align="left">{highlights[0].name}</TableCell>
 
-                        <TableCell align="left">
+                        <TableCell align="center">
                           <Button variant="contained" href={fileURL + file} target="_blank" download>
                             View
                           </Button>
                         </TableCell>
-                        <TableCell align="right">
-                          <Actions
+                        {/* <TableCell align="right">
+                        <Actions
                             id={id}
                             onDelete={() => {
                               getAllOrdinance();
@@ -185,11 +186,10 @@ const Ordinance = () => {
                                 severity: 'success',
                               });
                             }}
-                          />
-                        </TableCell>
+                          /> 
+                        </TableCell> */}
                       </TableRow>
-                    );
-                  })}
+                    ))}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
@@ -203,7 +203,7 @@ const Ordinance = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={statutes.length}
+            count={statutes ? statutes.length : 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
