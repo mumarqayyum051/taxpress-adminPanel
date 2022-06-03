@@ -76,14 +76,18 @@ export default function BlogPostCard({ post, index }) {
           <Typography
             color="inherit"
             variant="subtitle2"
-            underline="hover"
             onClick={() => {
-              navigate('/editBlog', { state: { id } });
+              navigate('/blog/editBlog', { state: { id } });
             }}
             sx={{
               ...(latestPostLarge && { typography: 'h5', height: 60 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
+                cursor: 'pointer',
+                '&:hover': {
+                  color: '#ffffff',
+                  textDecoration: 'underline #ffffff',
+                },
               }),
             }}
           >

@@ -40,10 +40,10 @@ import ServiceTypes from './pages/ServiceType/ServiceTypes';
 
 export default function App() {
   const protectedRoutes = [
-    { path: 'app', element: <DashboardApp /> },
+    { path: 'dashboard', element: <DashboardApp /> },
     { path: 'blog', element: <Blog /> },
-    { path: 'addBlog', element: <AddBlog /> },
-    { path: 'editBlog', element: <EditBlog /> },
+    { path: 'blog/addBlog', element: <AddBlog /> },
+    { path: 'blog/editBlog', element: <EditBlog /> },
     { path: 'caselaws', element: <CaseLaw /> },
     { path: 'addCase', element: <AddCase /> },
     { path: 'editCase', element: <EditCase /> },
@@ -82,7 +82,7 @@ export default function App() {
             </Route>
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" />} />
-            <Route path="/" element={<Navigate to="/app" />} />
+            <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
         </Route>
       </Routes>
