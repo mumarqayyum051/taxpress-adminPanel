@@ -27,7 +27,6 @@ import environment from '../../environment/env';
 import OrdinanceService from '../../services/OrdinanceService';
 import USERLIST from '../../_mock/user';
 // mock
-import Actions from './Actions';
 
 // ----------------------------------------------------------------------
 
@@ -175,7 +174,7 @@ const ServiceTypes = () => {
                           </Button>
                         </TableCell>
                         <TableCell align="right">
-                          <Actions
+                          {/* <Actions
                             id={id}
                             onDelete={() => {
                               getAllOrdinance();
@@ -185,7 +184,7 @@ const ServiceTypes = () => {
                                 severity: 'success',
                               });
                             }}
-                          />
+                          /> */}
                         </TableCell>
                       </TableRow>
                     );

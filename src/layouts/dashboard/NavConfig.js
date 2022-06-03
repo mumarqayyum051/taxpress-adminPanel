@@ -8,47 +8,47 @@ const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/dashboard/app',
+    path: '/app',
     icon: getIcon('eva:pie-chart-2-fill'),
   },
   {
     title: 'caselaws',
-    path: '/dashboard/caselaws',
+    path: '/caselaws',
     icon: getIcon('ic:sharp-cases'),
   },
   {
     title: 'statutes',
-    path: '/dashboard/statutes',
+    path: '/statutes',
     icon: getIcon('codicon:law'),
   },
   {
     title: 'blog',
-    path: '/dashboard/blog',
+    path: '/blog',
     icon: getIcon('eva:file-text-fill'),
   },
   {
     title: 'notifications',
-    path: '/dashboard/notifications',
+    path: '/notifications',
     icon: getIcon('ant-design:notification-filled'),
   },
   {
     title: 'notifications type',
-    path: '/dashboard/notificationsType',
+    path: '/notificationsType',
     icon: getIcon('ic:baseline-notification-add'),
   },
   {
     title: 'Ordinance',
-    path: '/dashboard/ordinance',
+    path: '/ordinance',
     icon: getIcon('fa-brands:jedi-order'),
   },
   {
     title: 'Service Type',
-    path: '/dashboard/serviceTypes',
+    path: '/serviceTypes',
     icon: getIcon('carbon:ibm-security-services'),
   },
   {
     title: 'dictionary',
-    path: '/dashboard/dictionary',
+    path: '/dictionary',
     icon: getIcon('heroicons-solid:library'),
   },
 

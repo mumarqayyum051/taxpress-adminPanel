@@ -52,6 +52,7 @@ export default function Router() {
         { path: 'addNotificationType', element: <AddNotificationType /> },
         { path: 'addOrdinance', element: <AddOrdinance /> },
         { path: 'ordinance', element: <Ordinance /> },
+        { path: 'serviceTypes', element: <AddServiceType /> },
         { path: 'addServiceType', element: <AddServiceType /> },
       ],
     },
