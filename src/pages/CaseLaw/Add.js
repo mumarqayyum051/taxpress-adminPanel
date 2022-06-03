@@ -41,7 +41,7 @@ const AddCase = () => {
       year_or_vol: '',
       pageNo: '',
       month: '',
-      law_or_statute: '',
+      law_or_statute_id: '',
       section: '',
       section2: '',
       court: '',
@@ -61,7 +61,7 @@ const AddCase = () => {
       year_or_vol: yup.string().required('Required'),
       pageNo: yup.number().required('Required a number'),
       month: yup.string().required('Required'),
-      law_or_statute: yup.string().required('Required'),
+      law_or_statute_id: yup.string().required('Required'),
       section: yup.string().required('Required'),
       section2: yup.string().required('Required'),
       court: yup.string().required('Required'),
@@ -399,18 +399,18 @@ const AddCase = () => {
                     disablePortal
                     id="statutes"
                     options={statutes}
-                    value={statutes.law_or_statute}
+                    value={statutes.law_or_statute_id}
                     getOptionLabel={(option) => option.law_or_statute}
                     onChange={(event, newValue) => {
                       console.log(newValue);
-                      formik.setFieldValue('law_or_statute', newValue?.id || '');
+                      formik.setFieldValue('law_or_statute_id', newValue?.id || '');
                     }}
                     renderInput={(params) => <TextField {...params} label="Law/Statute" />}
                     fullWidth
                   />
 
-                  {formik.errors.law_or_statute && formik.touched.law_or_statute ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute}</p>
+                  {formik.errors.law_or_statute_id && formik.touched.law_or_statute_id ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute_id}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
@@ -453,6 +453,7 @@ const AddCase = () => {
                       console.log(event);
                       if (event.name.includes('pdf')) {
                         formik.setFieldValue('file', event.base64);
+                        setFileError(null);
                       } else {
                         setFileError('Please upload a pdf file');
                       }

@@ -141,7 +141,12 @@ export default function CaseLaw() {
           <Typography variant="h4" gutterBottom>
             Cases
           </Typography>
-          <Button variant="contained" component={RouterLink} to="/addCase" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/caselaws/addCase"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
             Add Case
           </Button>
         </Stack>

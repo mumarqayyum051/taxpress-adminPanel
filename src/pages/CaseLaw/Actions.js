@@ -55,7 +55,7 @@ export default function UserMoreMenu(props) {
           />
         </MenuItem>
 
-        <MenuItem to={('/dashboard/editCase', { state: { modalMode: 1 } })} sx={{ color: 'text.secondary' }}>
+        <MenuItem to={('/caselaws/editCase', { state: { modalMode: 1 } })} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
