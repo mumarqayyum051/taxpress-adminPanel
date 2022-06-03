@@ -39,7 +39,9 @@ export default function LoginForm() {
             const user = response?.data?.data;
             const { token } = response?.data?.data;
             setUser(user);
-            JWTService.setToken(token);
+            JWTService._setToken(token);
+            setIsAuthenticated(true);
+            navigate('/');
           }
         })
         .catch((err) => console.log(err));

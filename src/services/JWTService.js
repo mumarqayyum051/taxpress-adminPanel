@@ -1,11 +1,11 @@
-const setToken = (data) => {
+const _setToken = (data) => {
   localStorage.setItem('token', data);
 };
 
 const getToken = () => localStorage.getItem('token');
-const destroyToken = () => {
+const _destroyToken = () => {
   localStorage.removeItem('token');
 };
-const JWTService = { setToken, getToken, destroyToken };
+const JWTService = { _setToken, getToken, _destroyToken };
 
 export default JWTService;
