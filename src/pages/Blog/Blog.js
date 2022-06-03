@@ -20,19 +20,23 @@ export default function Blog() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    getAllBlogs();
+  }, []);
+
+  const getAllBlogs = async () => {
     _getAllBlogs().then((res) => {
       if (res.status === 200) {
         console.log(res);
         setPosts(res.data.data);
       }
     });
-  }, []);
+  };
   return (
     <Page title="Dashboard: Blog">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Blog
+            Blogs
           </Typography>
           <Button
             variant="contained"
@@ -44,15 +48,18 @@ export default function Blog() {
           </Button>
         </Stack>
 
-        {/* <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-          <BlogPostsSearch posts={POSTS} />
-          <BlogPostsSort options={SORT_OPTIONS} />
-        </Stack> */}
-
         {posts.length > 0 ? (
           <Grid container spacing={3}>
             {posts.map((post, index) => (
-              <BlogPostCard key={post.id} post={post} index={index} />
+              <BlogPostCard
+                key={post.id}
+                post={post}
+                index={index}
+                onDelete={() => {
+                  console.log('on delete');
+                  getAllBlogs();
+                }}
+              />
             ))}
           </Grid>
         ) : (

@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Box, Link, Avatar } from '@mui/material';
+import { Card, CardContent, Grid, Alert, Snackbar, Box, Link, Avatar } from '@mui/material';
 // material
 import { useState } from 'react';
 import { alpha, styled } from '@mui/material/styles';
@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
 import environment from '../../environment/env';
+import BlogService from '../../services/BlogService';
 // ----------------------------------------------------------------------
 
 const CardMediaStyle = styled('div')({
@@ -41,10 +42,17 @@ BlogPostCard.propTypes = {
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index }) {
+export default function BlogPostCard(props) {
+  const { post, index } = props;
   const { id, date, file, title } = post;
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
   const navigate = useNavigate();
+  const { _deleteBlog } = BlogService;
   const { fileURL } = environment;
 
   const latestPostLarge = index === 0;
@@ -98,6 +106,25 @@ export default function BlogPostCard({ post, index }) {
                   },
                 }),
               }}
+              onClick={() => {
+                _deleteBlog(id).then((response) => {
+                  if (response.status === 200) {
+                    setAlert({
+                      open: true,
+                      message: 'Blog deleted successfully',
+                      severity: 'success',
+                    });
+                    props.onDelete();
+                    setTimeout(() => {
+                      setAlert({
+                        open: false,
+                        message: '',
+                        severity: 'success',
+                      });
+                    }, 15000);
+                  }
+                });
+              }}
             />
           ) : null}
           <CoverImgStyle alt={title} src={fileURL + file} />
@@ -135,6 +162,37 @@ export default function BlogPostCard({ post, index }) {
           <span style={{ fontSize: 12, color: 'white' }}>{format(new Date(date), 'MMM dd, yyyy')}</span>
         </CardContent>
       </Card>
+      {alert
+        ? [
+            <Snackbar
+              open={alert.open}
+              autoHideDuration={6000}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              TransitionComponent="SlideTransition"
+              onClose={() => {
+                setAlert({
+                  open: false,
+                  message: '',
+                });
+              }}
+              key="Snackbar"
+            >
+              <Alert
+                onClose={() => {
+                  setAlert({
+                    open: false,
+                    message: '',
+                  });
+                }}
+                severity={alert.severity}
+                sx={{ width: '100%' }}
+                key="alert"
+              >
+                {alert.message}
+              </Alert>
+            </Snackbar>,
+          ]
+        : null}
     </Grid>
   );
 }
