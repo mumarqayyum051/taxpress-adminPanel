@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import ProtectedRoute from './ProtectedRoutes';
 import PersistLogin from './PersistLogin';
 import RequireAuth from './RequireAuth';
+import NoAuth from './NoAuth';
 
 // ----------------------------------------------------------------------
 
@@ -25,10 +26,12 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route element={<PersistLogin />}>
+            <Route element={<NoAuth />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
             <Route element={<RequireAuth />}>
               <Route path="/" element={<DashboardLayout />} />
             </Route>
-            <Route path="/login" element={<Login />} />
           </Route>
         </Route>
       </Routes>
