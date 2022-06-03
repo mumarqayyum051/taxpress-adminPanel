@@ -1,24 +1,16 @@
-import { Avatar, Card, CardContent, Grid, Link } from '@mui/material';
+import { Card, CardContent, Grid } from '@mui/material';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import PropTypes from 'prop-types';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import environment from '../../environment/env';
 // ----------------------------------------------------------------------
 
 const CardMediaStyle = styled('div')({
   position: 'relative',
   paddingTop: 'calc(100% * 3 / 4)',
-});
-
-const TitleStyle = styled(Link)({
-  height: 44,
-  overflow: 'hidden',
-  WebkitLineClamp: 2,
-  display: '-webkit-box',
-  WebkitBoxOrient: 'vertical',
 });
 
 const CoverImgStyle = styled('img')({
