@@ -50,7 +50,7 @@ const AddNotificationType = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/notificationsType');
+              navigate('/notificationsType');
             }, 2000);
           }
         })

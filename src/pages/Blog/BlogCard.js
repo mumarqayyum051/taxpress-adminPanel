@@ -84,7 +84,7 @@ export default function BlogPostCard({ post, index }) {
             variant="subtitle2"
             underline="hover"
             onClick={() => {
-              navigate('/dashboard/editBlog', { state: { id } });
+              navigate('/editBlog', { state: { id } });
             }}
             sx={{
               ...(latestPostLarge && { typography: 'h5', height: 60 }),

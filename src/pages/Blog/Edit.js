@@ -85,7 +85,7 @@ const EditBlog = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/blog');
+              navigate('/blog');
             }, 2000);
           }
         })

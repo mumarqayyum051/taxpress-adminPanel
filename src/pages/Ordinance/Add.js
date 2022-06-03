@@ -70,7 +70,7 @@ const Add = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/ordinance');
+              navigate('/ordinance');
             }, 2000);
           }
         })

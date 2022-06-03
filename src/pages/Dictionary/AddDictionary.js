@@ -68,7 +68,7 @@ const AddDictionary = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/dictionary');
+              navigate('/dictionary');
             }, 2000);
           }
         })

@@ -32,16 +32,16 @@ const AddStatute = () => {
       law_or_statute: '',
       chapter: '',
       section: '',
-      textSearch1: '',
-      textSearch2: '',
+      text_search_1: '',
+      text_search_2: '',
       file: '',
     },
     validationSchema: yup.object({
       law_or_statute: yup.string().required('Law or Statute is required'),
       chapter: yup.string().required('Chapter is required'),
       section: yup.string().required('Section is required'),
-      textSearch1: yup.string().required('Text Search 1 is required'),
-      textSearch2: yup.string().required('Text Search 2 is required'),
+      text_search_1: yup.string().required('Text Search 1 is required'),
+      text_search_2: yup.string().required('Text Search 2 is required'),
     }),
 
     onSubmit: (values) => {
@@ -71,7 +71,7 @@ const AddStatute = () => {
                 open: false,
                 message: '',
               });
-              navigate('/dashboard/statutes');
+              navigate('/statutes');
             }, 2000);
           }
         })
@@ -127,30 +127,30 @@ const AddStatute = () => {
                   <TextField
                     label="Search 1"
                     color="secondary"
-                    id="textSearch1"
+                    id="text_search_1"
                     type="text"
-                    key="textSearch1"
-                    value={formik.values.textSearch1}
+                    key="text_search_1"
+                    value={formik.values.text_search_1}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
+                  {formik.errors.text_search_1 && formik.touched.text_search_1 ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.text_search_1}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 2"
                     color="secondary"
-                    id="textSearch2"
+                    id="text_search_2"
                     type="text"
-                    key="textSearch2"
-                    value={formik.values.textSearch2}
+                    key="text_search_2"
+                    value={formik.values.text_search_2}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
+                  {formik.errors.text_search_2 && formik.touched.text_search_2 ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.text_search_2}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>

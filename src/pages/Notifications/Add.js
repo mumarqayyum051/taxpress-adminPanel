@@ -106,7 +106,7 @@ const AddNotification = () => {
                 open: false,
                 message: '',
               });
-              // navigate('/dashboard/notifications');
+              // navigate('/notifications');
             }, 2000);
           }
         })
@@ -230,30 +230,30 @@ const AddNotification = () => {
                   <TextField
                     label="Search 1"
                     color="secondary"
-                    id="textSearch1"
+                    id="text_search_1"
                     type="text"
-                    key="textSearch1"
-                    value={formik.values.textSearch1}
+                    key="text_search_1"
+                    value={formik.values.text_search_1}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
+                  {formik.errors.text_search_1 && formik.touched.text_search_1 ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.text_search_1}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 2"
                     color="secondary"
-                    id="textSearch2"
+                    id="text_search_2"
                     type="text"
-                    key="textSearch2"
-                    value={formik.values.textSearch2}
+                    key="text_search_2"
+                    value={formik.values.text_search_2}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
+                  {formik.errors.text_search_2 && formik.touched.text_search_2 ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.text_search_2}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>

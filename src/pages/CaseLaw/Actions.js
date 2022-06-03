@@ -63,7 +63,7 @@ export default function UserMoreMenu(props) {
             primary="Edit"
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
-              navigate('/dashboard/editCase', { state: { id: props.id } });
+              navigate('/editCase', { state: { id: props.id } });
             }}
           />
         </MenuItem>
