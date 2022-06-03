@@ -132,7 +132,7 @@ export default function Dictionary() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addDictionary"
+            to="/addDictionary"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Word

@@ -137,7 +137,7 @@ export default function Statutes() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addStatute"
+            to="/addStatute"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Statute

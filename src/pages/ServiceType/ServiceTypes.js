@@ -137,7 +137,7 @@ const ServiceTypes = () => {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addOrdinance"
+            to="/addOrdinance"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add

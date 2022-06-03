@@ -40,7 +40,7 @@ import ServiceTypes from './pages/ServiceType/ServiceTypes';
 
 export default function App() {
   const protectedRoutes = [
-    { path: 'app', element: <DashboardApp /> },
+    { path: '/app', element: <DashboardApp /> },
     { path: 'blog', element: <Blog /> },
     { path: 'addBlog', element: <AddBlog /> },
     { path: 'editBlog', element: <EditBlog /> },

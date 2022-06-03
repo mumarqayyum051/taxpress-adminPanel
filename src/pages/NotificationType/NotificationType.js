@@ -137,7 +137,7 @@ export default function NotificationType() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addNotificationType"
+            to="/addNotificationType"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Notification Type
