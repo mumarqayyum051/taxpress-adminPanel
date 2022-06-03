@@ -1,43 +1,34 @@
 /* eslint-disable camelcase */
-import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 // material
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
-  Checkbox,
-  TableRow,
+  Card,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
   TablePagination,
+  TableRow,
+  Typography,
 } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 // components
 import TableHead from '@mui/material/TableHead';
-import Page from '../../components/Page';
-import Label from '../../components/Label';
-import Scrollbar from '../../components/Scrollbar';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
-
-import SearchNotFound from '../../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user';
-// mock
-import Actions from './Actions';
-import USERLIST from '../../_mock/user';
-import StatutesService from '../../services/StatuteService';
-import CaseLawService from '../../services/CaseLawService';
-import NotificationService from '../../services/NotificationService';
+import Page from '../../components/Page';
+import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
-// ----------------------------------------------------------------------
+import OrdinanceService from '../../services/OrdinanceService';
+import USERLIST from '../../_mock/user';
+// mock
 
-const TABLE_HEAD = [{ id: 'category', label: 'category', alignRight: false }];
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -74,20 +65,29 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function NotificationType() {
-  const { _getAllNotificationTypes } = NotificationService;
-  const [data, setData] = useState([]);
+const ServiceTypes = () => {
+  const { _getAllOrdinance } = OrdinanceService;
+  const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
+  const { fileURL } = environment;
+  const [statutes, setStatutes] = useState([]);
+
   useEffect(() => {
-    getNotificationTypes();
+    getAllOrdinance();
   }, []);
 
-  const getNotificationTypes = () => {
-    _getAllNotificationTypes()
+  const getAllOrdinance = () => {
+    _getAllOrdinance()
       .then((res) => {
         if (res.status === 200) {
-          setData(res.data.data);
+          console.log(res.data);
+          setStatutes(res.data.data);
         }
       })
       .catch((err) => {
@@ -95,8 +95,8 @@ export default function NotificationType() {
       });
   };
   useEffect(() => {
-    console.log(data);
-    const arr = applySortFilter(data, getComparator('asc', 'name'), filterName);
+    console.log(statutes);
+    const arr = applySortFilter(statutes, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
@@ -106,7 +106,7 @@ export default function NotificationType() {
 
       setFilteredCases(arr);
     }
-  }, [data]);
+  }, [statutes]);
 
   const [page, setPage] = useState(0);
 
@@ -123,7 +123,7 @@ export default function NotificationType() {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - statutes.length) : 0;
 
   const isUserNotFound = filteredCases.length === 0;
 
@@ -132,44 +132,59 @@ export default function NotificationType() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Notification Types
+            Add Act, Ordinance, Rule
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/addNotificationType"
+            to="/addOrdinance"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Add Notification Type
+            Add
           </Button>
         </Stack>
 
         <Card>
-          {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>#</TableCell>
-                    <TableCell>Category</TableCell>
+                    <TableCell align="left">#</TableCell>
+                    <TableCell align="left" sx={{ width: '50%' }}>
+                      Type
+                    </TableCell>
+
+                    <TableCell align="left">File</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    console.log(row);
                     // eslint-disable-next-line camelcase
-                    const { id, notificationCategoryName } = row;
-
+                    const { id, file, type } = row;
+                    console.log(row);
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left" sx={{ width: '50%' }}>
-                          {notificationCategoryName}
-                        </TableCell>
+                        <TableCell align="left">{'asdsad'}</TableCell>
 
+                        <TableCell align="left">
+                          <Button variant="contained" href={fileURL + file} target="_blank" download>
+                            View
+                          </Button>
+                        </TableCell>
                         <TableCell align="right">
-                          <Actions id={id} onDelete={getNotificationTypes} />
+                          {/* <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllOrdinance();
+                              setAlert({
+                                open: true,
+                                message: 'Deleted Successfully',
+                                severity: 'success',
+                              });
+                            }}
+                          /> */}
                         </TableCell>
                       </TableRow>
                     );
@@ -187,14 +202,47 @@ export default function NotificationType() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={data.length}
+            count={statutes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        {alert
+          ? [
+              <Snackbar
+                open={alert.open}
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                TransitionComponent="SlideTransition"
+                onClose={() => {
+                  setAlert({
+                    open: false,
+                    message: '',
+                  });
+                }}
+                key="Snackbar"
+              >
+                <Alert
+                  onClose={() => {
+                    setAlert({
+                      open: false,
+                      message: '',
+                    });
+                  }}
+                  severity={alert.severity}
+                  sx={{ width: '100%' }}
+                  key="alert"
+                >
+                  {alert.message}
+                </Alert>
+              </Snackbar>,
+            ]
+          : null}
       </Container>
     </Page>
   );
-}
+};
+
+export default ServiceTypes;

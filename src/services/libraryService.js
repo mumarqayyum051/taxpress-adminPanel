@@ -1,11 +1,11 @@
-import { _post } from "./httpService";
+import { _post } from './HttpService';
 
 const _addCase = (caseData) => {
-  return _post("/cases/addCase", caseData);
+  return _post('/cases/addCase', caseData);
 };
 
 const _searchCase = (caseData) => {
-  return _post("/cases/searchCase", caseData);
+  return _post('/cases/searchCase', caseData);
 };
 
 const libraryService = {

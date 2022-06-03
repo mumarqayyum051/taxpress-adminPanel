@@ -1,4 +1,4 @@
-import { _get, _post, _put, _delete } from './httpService';
+import { _get, _post, _put, _delete } from './HttpService';
 
 const _addCase = (caseData) => _post('/cases/addCase', caseData);
 

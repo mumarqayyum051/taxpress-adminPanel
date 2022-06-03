@@ -153,7 +153,7 @@ export default function Notifications() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addNotification"
+            to="/addNotification"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Notification

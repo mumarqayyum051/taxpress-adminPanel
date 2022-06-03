@@ -87,6 +87,7 @@ const Ordinance = () => {
     _getAllOrdinance()
       .then((res) => {
         if (res.status === 200) {
+          console.log(res.data);
           setStatutes(res.data.data);
         }
       })
@@ -95,7 +96,7 @@ const Ordinance = () => {
       });
   };
   useEffect(() => {
-    console.log(cases);
+    console.log(statutes);
     const arr = applySortFilter(statutes, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
@@ -123,7 +124,7 @@ const Ordinance = () => {
     setPage(0);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - statutes.length) : 0;
 
   const isUserNotFound = filteredCases.length === 0;
 
@@ -137,7 +138,7 @@ const Ordinance = () => {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/dashboard/addOrdinance"
+            to="/addOrdinance"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add
