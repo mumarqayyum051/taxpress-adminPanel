@@ -1,10 +1,12 @@
-import { Card, CardContent, Grid } from '@mui/material';
+import { Card, CardContent, Grid, Box, Link, Avatar } from '@mui/material';
 // material
+import { useState } from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import Iconify from '../../components/Iconify';
 import environment from '../../environment/env';
 // ----------------------------------------------------------------------
 
@@ -21,6 +23,17 @@ const CoverImgStyle = styled('img')({
   position: 'absolute',
 });
 
+const AvatarStyle = styled(Avatar)(({ theme }) => ({
+  zIndex: 9,
+  width: 16,
+  height: 16,
+  position: 'absolute',
+  left: theme.spacing(3),
+  bottom: theme.spacing(-2),
+  borderRadius: '0%',
+  fontSize: '8px !important',
+}));
+
 // ----------------------------------------------------------------------
 
 BlogPostCard.propTypes = {
@@ -30,7 +43,7 @@ BlogPostCard.propTypes = {
 
 export default function BlogPostCard({ post, index }) {
   const { id, date, file, title } = post;
-
+  const [showDeleteIcon, setShowDeleteIcon] = useState(false);
   const navigate = useNavigate();
   const { fileURL } = environment;
 
@@ -39,7 +52,15 @@ export default function BlogPostCard({ post, index }) {
 
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
-      <Card sx={{ position: 'relative' }}>
+      <Card
+        sx={{ position: 'relative' }}
+        onMouseEnter={() => {
+          setShowDeleteIcon(true);
+        }}
+        onMouseLeave={() => {
+          setShowDeleteIcon(false);
+        }}
+      >
         <CardMediaStyle
           sx={{
             ...((latestPostLarge || latestPost) && {
@@ -61,6 +82,24 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
+          {showDeleteIcon ? (
+            <AvatarStyle
+              alt={'Delete Blog'}
+              src="static/icons/trash-solid.svg"
+              sx={{
+                ...((latestPostLarge || latestPost) && {
+                  zIndex: 9,
+                  top: 24,
+                  left: 24,
+                  width: 20,
+                  height: 20,
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }),
+              }}
+            />
+          ) : null}
           <CoverImgStyle alt={title} src={fileURL + file} />
         </CardMediaStyle>
         <CardContent
