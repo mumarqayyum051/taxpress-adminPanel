@@ -120,7 +120,7 @@ const Add = () => {
                   // eslint-disable-next-line react/jsx-key
                   [
                     // eslint-disable-next-line react/jsx-key
-                    <Grid item xs={10} md={10}>
+                    <Grid item xs={12} md={12}>
                       <TextField
                         label={index === 0 ? `Highlight` : `Highlight ${index}`}
                         color="secondary"
@@ -129,11 +129,11 @@ const Add = () => {
                         key={`name${index}`}
                         name={`name${index}`}
                         onChange={(e) => {
-                          const newHighlights = highlights;
-                          newHighlights[index] = e.target.value;
-                          setHighlights(newHighlights);
-
-                          console.log(highlights);
+                          setHighlights([
+                            ...highlights.slice(0, index),
+                            { id: index, name: e.target.value },
+                            ...highlights.slice(index + 1),
+                          ]);
                         }}
                         fullWidth
                       />
@@ -142,32 +142,32 @@ const Add = () => {
                         <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.chapter}</p>
                       ) : null}
                     </Grid>,
-                    <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'grey' }}>
-                      <IconButton
-                        aria-label="Add"
-                        onClick={() => {
-                          setHighlights([...highlights, '']);
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    </Grid>,
-                    <>
-                      {index !== 0 ? (
-                        <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                          <IconButton
-                            aria-label="delete"
-                            onClick={() => {
-                              setHighlights(highlights.filter((item, i) => i !== index));
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Grid>
-                      ) : (
-                        ''
-                      )}
-                    </>,
+                    // <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'grey' }}>
+                    //   <IconButton
+                    //     aria-label="Add"
+                    //     onClick={() => {
+                    //       setHighlights([...highlights, '']);
+                    //     }}
+                    //   >
+                    //     <AddIcon />
+                    //   </IconButton>
+                    // </Grid>,
+                    // <>
+                    //   {index !== 0 ? (
+                    //     <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                    //       <IconButton
+                    //         aria-label="delete"
+                    //         onClick={() => {
+                    //           setHighlights(highlights.filter((item, i) => i !== index));
+                    //         }}
+                    //       >
+                    //         <DeleteIcon />
+                    //       </IconButton>
+                    //     </Grid>
+                    // ) : (
+                    //   ''
+                    // )}
+                    // </>,
                   ]
                 )}
 

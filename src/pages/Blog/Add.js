@@ -51,6 +51,7 @@ const AddBlog = () => {
       }),
       shortParagraph: '',
       image: '',
+      author: '',
     },
     validationSchema: yup.object({
       title: yup.string().required('Title is required'),
@@ -111,6 +112,21 @@ const AddBlog = () => {
                     color="secondary"
                     key="title"
                     value={formik.values.title}
+                    onChange={formik.handleChange}
+                    fullWidth
+                  />
+
+                  {formik.errors.title && formik.touched.title ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.title}</p>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    id="author"
+                    label="Author"
+                    color="secondary"
+                    key="author"
+                    value={formik.values.author}
                     onChange={formik.handleChange}
                     fullWidth
                   />
