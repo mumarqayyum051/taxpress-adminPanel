@@ -40,7 +40,7 @@ import ServiceTypes from './pages/ServiceType/ServiceTypes';
 
 export default function App() {
   const protectedRoutes = [
-    { path: '/app', element: <DashboardApp /> },
+    { path: 'app', element: <DashboardApp /> },
     { path: 'blog', element: <Blog /> },
     { path: 'addBlog', element: <AddBlog /> },
     { path: 'editBlog', element: <EditBlog /> },
@@ -73,7 +73,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
             </Route>
             <Route element={<RequireAuth />}>
-              <Route path="/" element={<DashboardLayout />}>
+              <Route element={<DashboardLayout />}>
                 {protectedRoutes.map((route) => (
                   // eslint-disable-next-line react/jsx-key
                   <Route path={route.path} element={route.element} />
@@ -82,6 +82,7 @@ export default function App() {
             </Route>
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" />} />
+            <Route path="/" element={<Navigate to="/app" />} />
           </Route>
         </Route>
       </Routes>
