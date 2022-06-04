@@ -30,6 +30,7 @@ import USERLIST from '../../_mock/user';
 import Actions from './Actions';
 import MemberAvatar from './Avatar';
 import Social from './Social';
+import Loader from '../../components/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +72,7 @@ function applySortFilter(array, comparator, query) {
 export default function Team() {
   const { _getAllMembers } = TeamService;
   const { fileURL } = environment;
-
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [alert, setAlert] = useState({
@@ -86,6 +87,7 @@ export default function Team() {
   }, []);
 
   const getAllMembers = () => {
+    setIsLoading(true);
     _getAllMembers()
       .then((res) => {
         if (res.status === 200) {
@@ -94,7 +96,8 @@ export default function Team() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(setIsLoading(false));
   };
   useEffect(() => {
     const arr = applySortFilter(result, getComparator('asc', 'name'), filterName);
@@ -125,8 +128,6 @@ export default function Team() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const isUserNotFound = filteredCases.length === 0;
 
   return (
     <Page title="User">
@@ -175,17 +176,21 @@ export default function Team() {
                           <Social id={id} social={row} />
                         </TableCell>
                         <TableCell align="right">
-                          <Actions
-                            id={id}
-                            onDelete={() => {
-                              getAllMembers();
-                              setAlert({
-                                open: true,
-                                message: 'Case Deleted Successfully',
-                                severity: 'success',
-                              });
-                            }}
-                          />
+                          {isLoading ? (
+                            <Loader />
+                          ) : (
+                            <Actions
+                              id={id}
+                              onDelete={() => {
+                                getAllMembers();
+                                setAlert({
+                                  open: true,
+                                  message: 'Team member has been deleted successfully',
+                                  severity: 'success',
+                                });
+                              }}
+                            />
+                          )}
                         </TableCell>
                       </TableRow>
                     );

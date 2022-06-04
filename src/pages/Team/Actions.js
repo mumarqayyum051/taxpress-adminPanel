@@ -5,12 +5,12 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 // component
 import Iconify from '../../components/Iconify';
 import CaseLawService from '../../services/CaseLawService';
-import StatuteService from '../../services/StatuteService';
+import TeamService from '../../services/TeamService';
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
   const ref = useRef(null);
-  const { _deleteStatute } = StatuteService;
+  const { _deleteMember } = TeamService;
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('delete');
-              _deleteStatute(props.id)
+              _deleteMember(props.id)
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {
