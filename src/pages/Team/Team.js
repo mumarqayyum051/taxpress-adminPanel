@@ -24,10 +24,12 @@ import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
-import StatusesService from '../../services/StatuteService';
+import TeamService from '../../services/TeamService';
 import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
+import MemberAvatar from './Avatar';
+import Social from './Social';
 
 // ----------------------------------------------------------------------
 
@@ -67,8 +69,9 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function Team() {
-  const { _getAllStatutes } = StatusesService;
-  const [cases, setCases] = useState([]);
+  const { _getAllMembers } = TeamService;
+  const { fileURL } = environment;
+
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [alert, setAlert] = useState({
@@ -76,18 +79,17 @@ export default function Team() {
     message: '',
     severity: 'success',
   });
-  const { fileURL } = environment;
-  const [statutes, setStatutes] = useState([]);
+  const [result, setResult] = useState([]);
 
   useEffect(() => {
-    getAllStatutes();
+    getAllMembers();
   }, []);
 
-  const getAllStatutes = () => {
-    _getAllStatutes()
+  const getAllMembers = () => {
+    _getAllMembers()
       .then((res) => {
         if (res.status === 200) {
-          setStatutes(res.data.data);
+          setResult(res.data.data);
         }
       })
       .catch((err) => {
@@ -95,8 +97,7 @@ export default function Team() {
       });
   };
   useEffect(() => {
-    console.log(cases);
-    const arr = applySortFilter(statutes, getComparator('asc', 'name'), filterName);
+    const arr = applySortFilter(result, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
@@ -106,7 +107,7 @@ export default function Team() {
 
       setFilteredCases(arr);
     }
-  }, [statutes]);
+  }, [result]);
 
   const [page, setPage] = useState(0);
 
@@ -132,15 +133,15 @@ export default function Team() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Statutes
+            Team Members
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/addStatute"
+            to="/team/addMember"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Add Statute
+            Add Member
           </Button>
         </Stack>
 
@@ -150,39 +151,34 @@ export default function Team() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left">#</TableCell>
-                    <TableCell align="left" sx={{ width: '50%' }}>
-                      Law/Statute
-                    </TableCell>
-                    <TableCell align="left">Chapter</TableCell>
-                    <TableCell align="left">Section</TableCell>
-                    <TableCell align="left">File</TableCell>
+                    <TableCell>#</TableCell>
+                    <TableCell>Profile Picture</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Designation</TableCell>
+                    <TableCell>Social</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     // eslint-disable-next-line camelcase
-                    const { id, law_or_statute, chapter, section, file } = row;
+                    const { id, name, designation, file } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{i + 1}</TableCell>
-
-                        <TableCell align="left" sx={{ width: '50%' }}>
-                          {law_or_statute}
+                        <TableCell>{i + 1}</TableCell>
+                        <TableCell>
+                          <MemberAvatar profilePicture={fileURL + file} />
                         </TableCell>
-                        <TableCell align="left">{chapter}</TableCell>
-                        <TableCell align="left">{section}</TableCell>
-                        <TableCell align="left">
-                          <Button variant="contained" href={fileURL + file} target="_blank" download>
-                            View
-                          </Button>
+                        <TableCell>{name}</TableCell>
+                        <TableCell>{designation}</TableCell>
+                        <TableCell>
+                          <Social id={id} social={row} />
                         </TableCell>
                         <TableCell align="right">
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllStatutes();
+                              getAllMembers();
                               setAlert({
                                 open: true,
                                 message: 'Case Deleted Successfully',
@@ -207,7 +203,7 @@ export default function Team() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={statutes.length}
+            count={result.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

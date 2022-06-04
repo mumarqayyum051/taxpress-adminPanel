@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { css } from '@emotion/react';
 import ClipLoader from 'react-spinners/ClipLoader';
-
+import './Loader.css';
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
   margin: 0 auto;
@@ -23,8 +23,11 @@ function Loader() {
   const [color, setColor] = useState('#ffffff');
 
   return (
-    <div style={loaderParent}>
-      <ClipLoader color={color} loading={loading} css={override} size={150} />
+    // <div style={loaderParent}>
+    //   <ClipLoader color={color} loading={loading} css={override} size={150} />
+    // </div>
+    <div className="loading">
+      <div className="loader" />
     </div>
   );
 }
