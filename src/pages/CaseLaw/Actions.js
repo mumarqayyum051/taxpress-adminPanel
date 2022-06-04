@@ -55,7 +55,7 @@ export default function UserMoreMenu(props) {
           />
         </MenuItem>
 
-        <MenuItem to={('/caselaws/editCase', { state: { modalMode: 1 } })} sx={{ color: 'text.secondary' }}>
+        <MenuItem sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
@@ -63,7 +63,7 @@ export default function UserMoreMenu(props) {
             primary="Edit"
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
-              navigate('/editCase', { state: { id: props.id } });
+              navigate('/caselaws/editCase', { state: { id: props.id } });
             }}
           />
         </MenuItem>
