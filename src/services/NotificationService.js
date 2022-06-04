@@ -5,8 +5,7 @@ const _getAllNotifications = () => _get('/notifications/getAllNotifications');
 const _deleteNotification = (notificationID) => _delete(`/notifications/deleteNotification/${notificationID}`);
 const _getNotificationTypes = () => _get('/notifications/getNotificationTypes');
 const _getAllNotificationTypes = () => _get('/notifications/getNotificationTypes');
-const _deleteNotificationType = (notificationTypeID) =>
-  _delete(`/notifications/deleteNotificationType/${notificationTypeID}`);
+const _deleteNotificationType = (id) => _delete(`/notifications/deleteNotificationType/${id}`);
 const _addNotificationType = (notificationTypeData) =>
   _post('/notifications/createNotificationType', notificationTypeData);
 const NotificationService = {

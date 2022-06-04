@@ -68,8 +68,8 @@ const AddNotification = () => {
   const formik = useFormik({
     initialValues: {
       law_or_statute_id: '',
-      notificationTypeId: '',
-      sroNO: '',
+      notification_type_id: '',
+      sro_no: '',
       year: '',
       dated: '',
       subject: '',
@@ -77,8 +77,8 @@ const AddNotification = () => {
     },
     validationSchema: yup.object({
       law_or_statute_id: yup.string().required('Law or Statute is required'),
-      notificationTypeId: yup.string().required('Notification Type is required'),
-      sroNO: yup.string().required('SRO No is required'),
+      notification_type_id: yup.string().required('Notification Type is required'),
+      sro_no: yup.string().required('SRO No is required'),
       year: yup.string().required('Year is required'),
       dated: yup.string().required('Date is required'),
       subject: yup.string().required('Subject is required'),
@@ -106,7 +106,7 @@ const AddNotification = () => {
                 open: false,
                 message: '',
               });
-              // navigate('/notifications');
+              navigate('/notifications');
             }, 2000);
           }
         })
@@ -162,32 +162,32 @@ const AddNotification = () => {
                     <Select
                       labelId="notification"
                       id="notification"
-                      value={formik.values.notificationTypeId}
-                      label="Statute"
+                      value={formik.values.notification_type_id}
+                      label="Notification Type"
                       onChange={(event) => {
                         console.log(event.target.value);
-                        formik.setFieldValue('notificationTypeId', event.target.value);
+                        formik.setFieldValue('notification_type_id', event.target.value);
                       }}
                     >
                       {notificationTypes.map((notificationType) => (
                         <MenuItem value={notificationType.id} key={notificationType.id}>
-                          {notificationType.notificationCategoryName}
+                          {notificationType.title}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
-                  {formik.errors.notificationTypeId && formik.touched.notificationTypeId ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.notificationTypeId}</p>
+                  {formik.errors.notification_type_id && formik.touched.notification_type_id ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.notification_type_id}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
                   <TextField
-                    id="sroNO"
+                    id="sro_no"
                     label="SRO No"
                     color="secondary"
-                    key="sroNO"
+                    key="sro_no"
                     type="number"
-                    value={formik.values.sroNO}
+                    value={formik.values.sro_no}
                     InputProps={{
                       inputProps: {
                         type: 'number',
@@ -198,8 +198,8 @@ const AddNotification = () => {
                     fullWidth
                   />
 
-                  {formik.errors.sroNO && formik.touched.sroNO ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.sroNO}</p>
+                  {formik.errors.sro_no && formik.touched.sro_no ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.sro_no}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={6} md={6}>
@@ -308,15 +308,22 @@ const AddNotification = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.law_or_statute_id}</p>
                   ) : null}
                 </Grid>
-
                 <Grid item xs={12} md={12}>
                   <FileBase64
                     onDone={(event) => {
                       console.log(event);
                       if (event.name.includes('pdf')) {
                         formik.setFieldValue('file', event.base64);
+                        setFileError('');
                       } else {
+                        formik.setFieldValue('file', '');
+
                         setFileError('Please upload a pdf file');
+                        setAlert({
+                          open: true,
+                          message: 'Please attach a pdf file',
+                          severity: 'info',
+                        });
                       }
                     }}
                     ref={uploader}

@@ -29,10 +29,10 @@ const AddNotificationType = () => {
 
   const formik = useFormik({
     initialValues: {
-      notificationCategoryName: '',
+      title: '',
     },
     validationSchema: yup.object({
-      notificationCategoryName: yup.string().required('Category  is required'),
+      title: yup.string().required('Category  is required'),
     }),
 
     onSubmit: (values) => {
@@ -75,15 +75,15 @@ const AddNotificationType = () => {
                   <TextField
                     label="Category"
                     color="secondary"
-                    id="notificationCategoryName"
+                    id="title"
                     type="text"
-                    key="notificationCategoryName"
-                    value={formik.values.notificationCategoryName}
+                    key="title"
+                    value={formik.values.title}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.notificationCategoryName && formik.touched.notificationCategoryName ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.notificationCategoryName}</p>
+                  {formik.errors.title && formik.touched.title ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.title}</p>
                   ) : null}
                 </Grid>
 

@@ -53,7 +53,7 @@ export default function App() {
     { path: 'dictionary', element: <Dictionary /> },
     { path: 'addDictionary', element: <AddDictionary /> },
     { path: 'notifications', element: <Notifications /> },
-    { path: 'addNotification', element: <AddNotification /> },
+    { path: 'notifications/addNotification', element: <AddNotification /> },
     { path: 'notificationsType', element: <NotificationType /> },
     { path: 'addNotificationType', element: <AddNotificationType /> },
     { path: 'addOrdinance', element: <AddOrdinance /> },

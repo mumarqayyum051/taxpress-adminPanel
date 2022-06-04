@@ -162,6 +162,7 @@ const AddDictionary = () => {
                       console.log(event);
                       if (event.name.includes('pdf')) {
                         formik.setFieldValue('file', event.base64);
+                        setFileError('');
                       } else {
                         setFileError('Please upload a pdf file');
                       }

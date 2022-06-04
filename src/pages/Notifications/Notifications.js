@@ -153,7 +153,7 @@ export default function Notifications() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/addNotification"
+            to="/notifications/addNotification"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add Notification
@@ -171,7 +171,6 @@ export default function Notifications() {
                     <TableCell>Notification</TableCell>
                     <TableCell sx={{ width: '15%' }}>SRO NO</TableCell>
                     <TableCell>Subject</TableCell>
-                    <TableCell>Year</TableCell>
                     <TableCell>Dated</TableCell>
                     <TableCell>Law/Statute</TableCell>
                     <TableCell>File</TableCell>
@@ -184,11 +183,11 @@ export default function Notifications() {
                     const {
                       id,
 
-                      sroNO,
+                      sro_no,
                       subject,
                       year,
                       dated,
-                      notificationCategoryName,
+                      title,
                       law_or_statute,
                       file,
                     } = row;
@@ -196,15 +195,14 @@ export default function Notifications() {
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{notificationCategoryName}</TableCell>
-                        <TableCell align="left">{sroNO}</TableCell>
+                        <TableCell align="left">{title}</TableCell>
+                        <TableCell align="left">{sro_no}</TableCell>
                         <TableCell align="left">{subject}</TableCell>
-                        <TableCell align="left">{year}</TableCell>
                         <TableCell align="left">{dated}</TableCell>
                         <TableCell align="left">{law_or_statute}</TableCell>
                         <TableCell align="left">
-                          <Button size="small" href={fileURL + file} target="_blank" download>
-                            View File
+                          <Button variant="contained" href={fileURL + file} target="_blank" download>
+                            View
                           </Button>
                         </TableCell>
                         {/* <TableCell align="right">

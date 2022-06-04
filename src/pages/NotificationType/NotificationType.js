@@ -159,13 +159,13 @@ export default function NotificationType() {
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
                     // eslint-disable-next-line camelcase
-                    const { id, notificationCategoryName } = row;
+                    const { id, title } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left" sx={{ width: '50%' }}>
-                          {notificationCategoryName}
+                          {title}
                         </TableCell>
 
                         <TableCell align="right">
