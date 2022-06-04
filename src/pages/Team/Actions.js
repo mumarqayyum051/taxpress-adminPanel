@@ -65,7 +65,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('sdadasda', props.id);
-              navigate('/editStatute', { state: { id: props.id } });
+              navigate('/team/editMember', { state: { id: props.id } });
             }}
           />
         </MenuItem>

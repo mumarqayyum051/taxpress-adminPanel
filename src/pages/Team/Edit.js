@@ -1,6 +1,6 @@
+import { LoadingButton } from '@mui/lab';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
@@ -9,19 +9,18 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
-import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
-import { LoadingButton } from '@mui/lab';
+import React, { useEffect, useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
-import NotificationService from '../../services/NotificationService';
+import { useNavigate, useLocation } from 'react-router-dom';
+import * as yup from 'yup';
 import TeamService from '../../services/TeamService';
 
 const EditMember = () => {
-  const { _editMember } = TeamService;
+  const { _editMember, _getMember } = TeamService;
   const navigate = useNavigate();
   const uploader = useRef();
-
+  const { state } = useLocation();
+  const { id } = state;
   const [setFile, setFileError] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,13 +51,13 @@ const EditMember = () => {
 
     onSubmit: (values) => {
       console.log(values);
-      _editMember(formik.values)
+      _editMember(formik.values, id)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             setAlert({
               open: true,
-              message: 'Member details has been updated',
+              message: 'Member has been added to the team',
             });
 
             setTimeout(() => {
@@ -86,12 +85,28 @@ const EditMember = () => {
     },
   });
 
+  useEffect(() => {
+    _getMember(id)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+        setAlert({
+          open: true,
+          message: err?.response?.data?.message,
+          severity: 'error',
+        });
+      })
+      .finally(() => {});
+  }, []);
+
   return (
     <Container>
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Add Member
+            Edit Member
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>

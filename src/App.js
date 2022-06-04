@@ -38,6 +38,7 @@ import Statutes from './pages/Statutes/Statutes';
 import ServiceTypes from './pages/ServiceType/ServiceTypes';
 import Team from './pages/Team/Team';
 import AddMember from './pages/Team/Add';
+import EditMember from './pages/Team/Edit';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
     { path: 'blog/editBlog', element: <EditBlog /> },
     { path: 'team', element: <Team /> },
     { path: 'team/addMember', element: <AddMember /> },
+    { path: 'team/editMember', element: <EditMember /> },
     { path: 'caselaws', element: <CaseLaw /> },
     { path: 'caselaws/addCase', element: <AddCase /> },
     { path: 'caselaws/editCase', element: <EditCase /> },
