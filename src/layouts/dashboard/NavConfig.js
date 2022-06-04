@@ -27,6 +27,11 @@ const navConfig = [
     icon: getIcon('eva:file-text-fill'),
   },
   {
+    title: 'team',
+    path: '/team',
+    icon: getIcon('fluent:people-team-16-filled'),
+  },
+  {
     title: 'notifications',
     path: '/notifications',
     icon: getIcon('ant-design:notification-filled'),

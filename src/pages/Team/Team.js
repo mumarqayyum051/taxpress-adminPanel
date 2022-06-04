@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // material
 import {
   Button,
@@ -22,11 +23,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
-import SearchNotFound from '../../components/SearchNotFound';
-import DictionaryService from '../../services/DictionaryService';
-import USERLIST from '../../_mock/user';
 import environment from '../../environment/env';
-
+import StatusesService from '../../services/StatuteService';
+import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
 
@@ -67,26 +66,28 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Dictionary() {
-  const { _getAllDictionarys } = DictionaryService;
+export default function Team() {
+  const { _getAllStatutes } = StatusesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
-  const { fileURL } = environment;
-
   const [alert, setAlert] = useState({
     open: false,
     message: '',
+    severity: 'success',
   });
+  const { fileURL } = environment;
+  const [statutes, setStatutes] = useState([]);
+
   useEffect(() => {
-    getAllWords();
+    getAllStatutes();
   }, []);
 
-  const getAllWords = () => {
-    _getAllDictionarys()
+  const getAllStatutes = () => {
+    _getAllStatutes()
       .then((res) => {
         if (res.status === 200) {
-          setCases(res.data.data);
+          setStatutes(res.data.data);
         }
       })
       .catch((err) => {
@@ -95,7 +96,7 @@ export default function Dictionary() {
   };
   useEffect(() => {
     console.log(cases);
-    const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
+    const arr = applySortFilter(statutes, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
@@ -105,7 +106,7 @@ export default function Dictionary() {
 
       setFilteredCases(arr);
     }
-  }, [cases]);
+  }, [statutes]);
 
   const [page, setPage] = useState(0);
 
@@ -131,48 +132,64 @@ export default function Dictionary() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Dictionary
+            Statutes
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/addDictionary"
+            to="/addStatute"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Add Word
+            Add Statute
           </Button>
         </Stack>
 
         <Card>
-          {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>#</TableCell>
-                    <TableCell align="left">Word</TableCell>
-                    <TableCell align="left">Meaning</TableCell>
+                    <TableCell align="left">#</TableCell>
+                    <TableCell align="left" sx={{ width: '50%' }}>
+                      Law/Statute
+                    </TableCell>
+                    <TableCell align="left">Chapter</TableCell>
+                    <TableCell align="left">Section</TableCell>
                     <TableCell align="left">File</TableCell>
-                    {/* <TableCell align="left">Methods</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    console.log(row);
-                    const { id, word, meaning, file } = row;
+                    // eslint-disable-next-line camelcase
+                    const { id, law_or_statute, chapter, section, file } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell component="th" scope="row">
-                          {i + 1}
+                        <TableCell align="left">{i + 1}</TableCell>
+
+                        <TableCell align="left" sx={{ width: '50%' }}>
+                          {law_or_statute}
                         </TableCell>
-                        <TableCell align="left">{word}</TableCell>
-                        <TableCell align="left">{meaning}</TableCell>
+                        <TableCell align="left">{chapter}</TableCell>
+                        <TableCell align="left">{section}</TableCell>
                         <TableCell align="left">
                           <Button variant="contained" href={fileURL + file} target="_blank" download>
                             View
                           </Button>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllStatutes();
+                              setAlert({
+                                open: true,
+                                message: 'Case Deleted Successfully',
+                                severity: 'success',
+                              });
+                            }}
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -183,16 +200,6 @@ export default function Dictionary() {
                     </TableRow>
                   )}
                 </TableBody>
-
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -200,7 +207,7 @@ export default function Dictionary() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={cases.length}
+            count={statutes.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

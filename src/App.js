@@ -36,6 +36,7 @@ import AddStatutes from './pages/Statutes/Add';
 import EditStatute from './pages/Statutes/Edit';
 import Statutes from './pages/Statutes/Statutes';
 import ServiceTypes from './pages/ServiceType/ServiceTypes';
+import Team from './pages/Team/Team';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -44,6 +45,7 @@ export default function App() {
     { path: 'blog', element: <Blog /> },
     { path: 'blog/addBlog', element: <AddBlog /> },
     { path: 'blog/editBlog', element: <EditBlog /> },
+    { path: 'team', element: <Team /> },
     { path: 'caselaws', element: <CaseLaw /> },
     { path: 'caselaws/addCase', element: <AddCase /> },
     { path: 'caselaws/editCase', element: <EditCase /> },
