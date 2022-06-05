@@ -30,29 +30,28 @@ export default function UserMoreMenu(props) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem
+          sx={{ color: 'text.secondary' }}
+          onClick={() => {
+            console.log('delete');
+            _deleteCase(props.id)
+              .then((res) => {
+                console.log(res);
+                if (res.status === 200) {
+                  props.onDelete();
+
+                  setIsOpen(false);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }}
+        >
           <ListItemIcon>
             <Iconify icon="eva:trash-2-outline" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText
-            primary="Delete"
-            primaryTypographyProps={{ variant: 'body2' }}
-            onClick={() => {
-              console.log('delete');
-              _deleteCase(props.id)
-                .then((res) => {
-                  console.log(res);
-                  if (res.status === 200) {
-                    props.onDelete();
-
-                    setIsOpen(false);
-                  }
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }}
-          />
+          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <MenuItem sx={{ color: 'text.secondary' }}>

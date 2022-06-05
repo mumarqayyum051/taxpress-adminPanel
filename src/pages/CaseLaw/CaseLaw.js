@@ -19,6 +19,7 @@ import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -70,10 +71,18 @@ export default function CaseLaw() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
-  const [alert, setAlert] = useState({
-    open: false,
-    message: '',
-  });
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
+
   const { fileURL } = environment;
 
   useEffect(() => {
@@ -89,6 +98,7 @@ export default function CaseLaw() {
       })
       .catch((err) => {
         console.log(err);
+        notify(err?.response?.data?.message, 'error');
       });
   };
   useEffect(() => {
@@ -115,12 +125,6 @@ export default function CaseLaw() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -131,8 +135,6 @@ export default function CaseLaw() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const isUserNotFound = filteredCases.length === 0;
 
   return (
     <Page title="User">
@@ -185,10 +187,7 @@ export default function CaseLaw() {
                             id={id}
                             onDelete={() => {
                               getAllCases();
-                              setAlert({
-                                open: true,
-                                message: 'Case Deleted Successfully',
-                              });
+                              notify('Case has been deleted successfully', 'success');
                             }}
                           />
                         </TableCell>
@@ -215,38 +214,7 @@ export default function CaseLaw() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
-        ,
-        {alert
-          ? [
-              <Snackbar
-                open={alert.open}
-                autoHideDuration={6000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                TransitionComponent="SlideTransition"
-                onClose={() => {
-                  setAlert({
-                    open: false,
-                    message: '',
-                  });
-                }}
-                key="Snackbar"
-              >
-                <Alert
-                  onClose={() => {
-                    setAlert({
-                      open: false,
-                      message: '',
-                    });
-                  }}
-                  severity={alert.severity}
-                  sx={{ width: '100%' }}
-                  key="alert"
-                >
-                  {alert.message}
-                </Alert>
-              </Snackbar>,
-            ]
-          : null}
+        <ToastContainer />
       </Container>
     </Page>
   );
