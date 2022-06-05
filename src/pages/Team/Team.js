@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 /* eslint-disable camelcase */
 // material
 import {
@@ -13,14 +14,21 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { ReactNotifications } from 'react-notifications-component';
+import { Store } from 'react-notifications-component';
+
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 // components
+// eslint-disable-next-line import/no-duplicates
+
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import Iconify from '../../components/Iconify';
+
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
@@ -82,9 +90,26 @@ export default function Team() {
   });
   const [result, setResult] = useState([]);
 
+  const react_notification_class = `
+  position:absolute;
+  top:0;
+  right:0;
+  z-index:9999;
+  `;
   useEffect(() => {
     getAllMembers();
   }, []);
+  const notify = () =>
+    toast(alert.message, {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type: alert.severity,
+    });
 
   const getAllMembers = () => {
     setIsLoading(true);
@@ -132,6 +157,8 @@ export default function Team() {
   return (
     <Page title="User">
       <Container>
+        {alert ? <ToastContainer /> : null}
+
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Team Members
@@ -145,7 +172,6 @@ export default function Team() {
             Add Member
           </Button>
         </Stack>
-
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -188,6 +214,7 @@ export default function Team() {
                                   message: 'Team member has been deleted successfully',
                                   severity: 'success',
                                 });
+                                notify();
                               }}
                             />
                           )}
@@ -215,37 +242,6 @@ export default function Team() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
-        {alert
-          ? [
-              <Snackbar
-                open={alert.open}
-                autoHideDuration={6000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                TransitionComponent="SlideTransition"
-                onClose={() => {
-                  setAlert({
-                    open: false,
-                    message: '',
-                  });
-                }}
-                key="Snackbar"
-              >
-                <Alert
-                  onClose={() => {
-                    setAlert({
-                      open: false,
-                      message: '',
-                    });
-                  }}
-                  severity={alert.severity}
-                  sx={{ width: '100%' }}
-                  key="alert"
-                >
-                  {alert.message}
-                </Alert>
-              </Snackbar>,
-            ]
-          : null}
       </Container>
     </Page>
   );

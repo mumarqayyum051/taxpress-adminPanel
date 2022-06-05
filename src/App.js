@@ -2,6 +2,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './Layout';
 import Router from './routes';
+import 'react-toastify/dist/ReactToastify.css';
 // theme
 import ThemeProvider from './theme';
 // components
