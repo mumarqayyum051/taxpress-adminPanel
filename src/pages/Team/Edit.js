@@ -9,10 +9,15 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useEffect, useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as yup from 'yup';
+import { toast, ToastContainer } from 'react-toastify';
+import environment from '../../environment/env';
 import TeamService from '../../services/TeamService';
 
 const EditMember = () => {
@@ -21,6 +26,7 @@ const EditMember = () => {
   const uploader = useRef();
   const { state } = useLocation();
   const { id } = state;
+  const { fileURL } = environment;
   const [setFile, setFileError] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +36,18 @@ const EditMember = () => {
     message: '',
     severity: 'success',
   });
+
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -55,10 +73,7 @@ const EditMember = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Member has been added to the team',
-            });
+            notify('Member details have been updated', 'success');
 
             setTimeout(() => {
               navigate('/team');
@@ -89,6 +104,9 @@ const EditMember = () => {
     _getMember(id)
       .then((response) => {
         console.log(response);
+        if (response.status === 200) {
+          formik.setValues(response?.data?.data);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -205,25 +223,44 @@ const EditMember = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onDone={(event) => {
-                      console.log(event);
-                      if (event.name.includes('jpg') || event.name.includes('png') || event.name.includes('jpeg')) {
-                        formik.setFieldValue('file', event.base64);
-                        setFileError('');
-                      } else {
-                        formik.setFieldValue('file', '');
-                        setFileError('Please upload a jpg, jpeg or png file');
-                        setAlert({
-                          open: true,
-                          message: 'Please upload a jpg, jpeg or png file',
-                          severity: 'info',
-                        });
-                      }
-                    }}
-                    ref={uploader}
-                  />
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                  {!formik.values?.file?.startsWith('uploads') ? (
+                    <>
+                      <FileBase64
+                        onDone={(event) => {
+                          console.log(event);
+                          if (event.name.includes('jpg') || event.name.includes('png') || event.name.includes('jpeg')) {
+                            formik.setFieldValue('file', event.base64);
+                            setFileError('');
+                          } else {
+                            formik.setFieldValue('file', '');
+                            setFileError('Please upload a jpg, jpeg or png file');
+                            notify('Please upload a jpg, jpeg or png file', 'warning');
+                          }
+                        }}
+                        ref={uploader}
+                      />
+                      {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="contained" href={fileURL + formik.values.file} target="_blank" download>
+                        View file
+                      </Button>
+                      {/* <IconButton aria-label="delete" href={fileURL + formik.values.file} target="_blank" download>
+                          <PictureAsPdfIcon fontSize="inherit" />
+                        </IconButton> */}
+
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        onClick={() => {
+                          formik.setFieldValue('file', '');
+                        }}
+                      >
+                        <DeleteIcon fontSize="inherit" />
+                      </IconButton>
+                    </>
+                  )}
                 </Grid>
                 {/* <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
@@ -251,37 +288,7 @@ const EditMember = () => {
           </Box>
         </CardContent>
       </Card>
-      {alert
-        ? [
-            <Snackbar
-              open={alert.open}
-              autoHideDuration={6000}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              TransitionComponent="SlideTransition"
-              onClose={() => {
-                setAlert({
-                  open: false,
-                  message: '',
-                });
-              }}
-              key="Snackbar"
-            >
-              <Alert
-                onClose={() => {
-                  setAlert({
-                    open: false,
-                    message: '',
-                  });
-                }}
-                severity={alert.severity}
-                sx={{ width: '100%' }}
-                key="alert"
-              >
-                {alert.message}
-              </Alert>
-            </Snackbar>,
-          ]
-        : null}
+      <ToastContainer />
     </Container>
   );
 };

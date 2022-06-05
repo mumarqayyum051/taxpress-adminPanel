@@ -263,37 +263,7 @@ const EditStatute = () => {
           </Box>
         </CardContent>
       </Card>
-      {alert
-        ? [
-            <Snackbar
-              open={alert.open}
-              autoHideDuration={6000}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              TransitionComponent="SlideTransition"
-              onClose={() => {
-                setAlert({
-                  open: false,
-                  message: '',
-                });
-              }}
-              key="Snackbar"
-            >
-              <Alert
-                onClose={() => {
-                  setAlert({
-                    open: false,
-                    message: '',
-                  });
-                }}
-                severity={alert.severity}
-                sx={{ width: '100%' }}
-                key="alert"
-              >
-                {alert.message}
-              </Alert>
-            </Snackbar>,
-          ]
-        : null}
+      <ToastContainer />
     </Container>
   );
 };

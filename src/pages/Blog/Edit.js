@@ -8,6 +8,7 @@ import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
+import { toast, ToastContainer } from 'react-toastify';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -43,7 +44,6 @@ const EditBlog = () => {
     getBlog();
   }, []);
   const uploader = useRef();
-  const allowedFormates = ['jpeg', 'png', 'jpg'];
   const [setFile, setFileError] = useState('');
   const [alert, setAlert] = React.useState({
     open: false,
@@ -51,6 +51,17 @@ const EditBlog = () => {
     severity: 'success',
   });
 
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -195,11 +206,7 @@ const EditBlog = () => {
                           } else {
                             formik.setFieldValue('file', '');
                             setFileError('Please upload a jpg, jpeg or png file');
-                            setAlert({
-                              open: true,
-                              message: 'Please upload a jpg, jpeg or png file',
-                              severity: 'info',
-                            });
+                            notify('Please upload a jpg, jpeg or png file', 'warning');
                           }
                         }}
                         ref={uploader}
@@ -237,37 +244,7 @@ const EditBlog = () => {
           </Box>
         </CardContent>
       </Card>
-      {alert
-        ? [
-            <Snackbar
-              open={alert.open}
-              autoHideDuration={6000}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              TransitionComponent="SlideTransition"
-              onClose={() => {
-                setAlert({
-                  open: false,
-                  message: '',
-                });
-              }}
-              key="Snackbar"
-            >
-              <Alert
-                onClose={() => {
-                  setAlert({
-                    open: false,
-                    message: '',
-                  });
-                }}
-                severity={alert.severity}
-                sx={{ width: '100%' }}
-                key="alert"
-              >
-                {alert.message}
-              </Alert>
-            </Snackbar>,
-          ]
-        : null}
+      <ToastContainer />
     </Container>
   );
 };
