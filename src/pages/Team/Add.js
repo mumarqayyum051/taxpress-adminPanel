@@ -1,20 +1,17 @@
-import Alert from '@mui/material/Alert';
+import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
-import { LoadingButton } from '@mui/lab';
 import FileBase64 from 'react-file-base64';
-import NotificationService from '../../services/NotificationService';
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import * as yup from 'yup';
 import TeamService from '../../services/TeamService';
 
 const AddMember = () => {
@@ -31,6 +28,17 @@ const AddMember = () => {
     message: '',
     severity: 'success',
   });
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -56,10 +64,7 @@ const AddMember = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Member has been added to the team',
-            });
+            notify('A member has been added to the team', 'success');
 
             setTimeout(() => {
               navigate('/team');
@@ -236,37 +241,7 @@ const AddMember = () => {
           </Box>
         </CardContent>
       </Card>
-      {alert
-        ? [
-            <Snackbar
-              open={alert.open}
-              autoHideDuration={6000}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              TransitionComponent="SlideTransition"
-              onClose={() => {
-                setAlert({
-                  open: false,
-                  message: '',
-                });
-              }}
-              key="Snackbar"
-            >
-              <Alert
-                onClose={() => {
-                  setAlert({
-                    open: false,
-                    message: '',
-                  });
-                }}
-                severity={alert.severity}
-                sx={{ width: '100%' }}
-                key="alert"
-              >
-                {alert.message}
-              </Alert>
-            </Snackbar>,
-          ]
-        : null}
+      <ToastContainer />
     </Container>
   );
 };

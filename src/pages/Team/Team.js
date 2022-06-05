@@ -90,25 +90,20 @@ export default function Team() {
   });
   const [result, setResult] = useState([]);
 
-  const react_notification_class = `
-  position:absolute;
-  top:0;
-  right:0;
-  z-index:9999;
-  `;
   useEffect(() => {
     getAllMembers();
   }, []);
-  const notify = () =>
-    toast(alert.message, {
+
+  const notify = (message, type) =>
+    toast(message, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      type: alert.severity,
+      type,
     });
 
   const getAllMembers = () => {
@@ -157,8 +152,6 @@ export default function Team() {
   return (
     <Page title="User">
       <Container>
-        {alert ? <ToastContainer /> : null}
-
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Team Members
@@ -209,12 +202,8 @@ export default function Team() {
                               id={id}
                               onDelete={() => {
                                 getAllMembers();
-                                setAlert({
-                                  open: true,
-                                  message: 'Team member has been deleted successfully',
-                                  severity: 'success',
-                                });
-                                notify();
+
+                                notify('Team member has been deleted successfully', 'success');
                               }}
                             />
                           )}
@@ -242,6 +231,7 @@ export default function Team() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <ToastContainer />
       </Container>
     </Page>
   );

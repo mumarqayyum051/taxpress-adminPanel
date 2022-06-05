@@ -1,26 +1,19 @@
-/* eslint-disable import/no-duplicates */
-import { ReactNotifications } from 'react-notifications-component';
-import { Store } from 'react-notifications-component';
-import { useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Toast = ({ message, type }) => {
-  useEffect(() => {
-    Store.addNotification({
-      title: 'Wonderful!',
-      message,
+  const notify = () =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
       type,
-      insert: 'top',
-      container: 'bottom-right',
-      animationIn: ['animate__animated', 'animate__fadeIn'],
-      animationOut: ['animate__animated', 'animate__fadeOut'],
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-      },
     });
-  }, []);
 
-  return <ReactNotifications />;
+  return <ToastContainer />;
 };
 
 export default Toast;
