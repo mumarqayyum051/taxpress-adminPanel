@@ -460,17 +460,7 @@ const AddCase = () => {
                   </Button>
                 </Grid> */}
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <LoadingButton
-                    size="medium"
-                    type="submit"
-                    onClick={() => {
-                      if (formik.isValid) {
-                        formik.handleSubmit();
-                      }
-                    }}
-                    variant="contained"
-                    loading={isSubmitting}
-                  >
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit
                   </LoadingButton>
                 </Grid>
