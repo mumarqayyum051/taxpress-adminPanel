@@ -4,6 +4,7 @@ import 'simplebar/src/simplebar.css';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import 'react-notifications-component/dist/theme.css';
 
 //
 import App from './App';
