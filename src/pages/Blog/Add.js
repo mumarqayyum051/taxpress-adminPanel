@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { toast, ToastContainer } from 'react-toastify';
+import { LoadingButton } from '@mui/lab';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
@@ -35,6 +37,18 @@ const AddBlog = () => {
   const allowedFormates = ['jpeg', 'png', 'jpg'];
   const [setFile, setFileError] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -70,16 +84,8 @@ const AddBlog = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Blog created successfully',
-            });
-
+            notify('Blog created successfully', 'success');
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/blog');
             }, 2000);
           }
@@ -177,11 +183,8 @@ const AddBlog = () => {
                       } else {
                         formik.setFieldValue('file', '');
                         setFileError('Please upload a jpg, jpeg or png file');
-                        setAlert({
-                          open: true,
-                          message: 'Please upload a jpg, jpeg or png file',
-                          severity: 'info',
-                        });
+
+                        notify('Please upload a jpg, jpeg or png file', 'warning');
                       }
                     }}
                     ref={uploader}

@@ -1,5 +1,8 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
+import { toast, ToastContainer } from 'react-toastify';
+import { LoadingButton } from '@mui/lab';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -30,7 +33,18 @@ const EditStatute = () => {
   const { id } = state;
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       law_or_statute: '',
@@ -51,55 +65,39 @@ const EditStatute = () => {
 
     onSubmit: (values) => {
       setFileError('');
-      setAlert({
-        open: false,
-        message: '',
-        severity: '',
-      });
+      setIsSubmitting(true);
+
       console.log(values);
       if (!formik.isValid) {
         console.log(values);
-        setAlert({
-          open: true,
-          message: 'Please fill all the fields',
-          severity: 'warning',
-        });
       }
       if (!values.file) {
         setFileError('Please select a file');
+
         return;
       }
 
       if (!values.file.includes('pdf')) {
         setFileError('Please attach a pdf file');
-        setAlert({
-          open: true,
-          message: 'Please attach a pdf file only',
-          severity: 'info',
-        });
+        notify('Please attach a PDF file', 'warning');
+
         return;
       }
       _editStatute(formik.values, id)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Statute updated successfully',
-            });
+            notify('Statute updated successfully', 'success');
 
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/statutes');
             }, 2000);
           }
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
+        .finally(setIsSubmitting(false));
     },
   });
 
@@ -156,7 +154,6 @@ const EditStatute = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.chapter}</p>
                   ) : null}
                 </Grid>
-
                 <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 1"
@@ -215,11 +212,7 @@ const EditStatute = () => {
                             formik.setFieldValue('file', '');
 
                             setFileError('Please upload a pdf file');
-                            setAlert({
-                              open: true,
-                              message: 'Please attach a pdf file',
-                              severity: 'info',
-                            });
+                            notify('Please attach a pdf file', 'warning');
                           }
                         }}
                         ref={uploader}
@@ -231,9 +224,6 @@ const EditStatute = () => {
                       <Button variant="contained" href={fileURL + formik.values.file} target="_blank" download>
                         View file
                       </Button>
-                      {/* <IconButton aria-label="delete" href={fileURL + formik.values.file} target="_blank" download>
-                          <PictureAsPdfIcon fontSize="inherit" />
-                        </IconButton> */}
 
                       <IconButton
                         aria-label="delete"
@@ -247,12 +237,12 @@ const EditStatute = () => {
                     </>
                   )}
                 </Grid>
-
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
-                    Update
-                  </Button>
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
+                    Submit
+                  </LoadingButton>
                 </Grid>
+                ;
               </Grid>
             </form>
           </Box>

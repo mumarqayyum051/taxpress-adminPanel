@@ -2,6 +2,8 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import { LoadingButton } from '@mui/lab';
+
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -13,14 +15,25 @@ import React, { useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { toast, ToastContainer } from 'react-toastify';
 import StatuteService from '../../services/StatuteService';
 
 const AddStatute = () => {
   const { _addStatute } = StatuteService;
   const navigate = useNavigate();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const uploader = useRef();
-  const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
 
   const formik = useFormik({
@@ -42,7 +55,7 @@ const AddStatute = () => {
 
     onSubmit: (values) => {
       setFileError('');
-
+      setIsSubmitting(true);
       console.log(values);
       if (!values.file) {
         setFileError('Please select a file');
@@ -57,23 +70,17 @@ const AddStatute = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Statute added successfully',
-            });
-
+            notify('Statute added successfully', 'success');
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/statutes');
             }, 2000);
           }
         })
         .catch((err) => {
           console.log(err);
-        });
+          notify(err?.response?.data?.message, 'error');
+        })
+        .finally(setIsSubmitting(false));
     },
   });
 
@@ -118,7 +125,6 @@ const AddStatute = () => {
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.chapter}</p>
                   ) : null}
                 </Grid>
-
                 <Grid item xs={6} md={6}>
                   <TextField
                     label="Search 1"
@@ -175,23 +181,25 @@ const AddStatute = () => {
                         formik.setFieldValue('file', '');
 
                         setFileError('Please upload a pdf file');
-                        setAlert({
-                          open: true,
-                          message: 'Please attach a pdf file',
-                          severity: 'info',
-                        });
+
+                        notify('Please attach a pdf file', 'warning');
                       }
                     }}
                     ref={uploader}
                   />
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
-
-                <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                {/* <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
                     Submit
                   </Button>
+                </Grid> */}
+                <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
+                    Submit
+                  </LoadingButton>
                 </Grid>
+                ;
               </Grid>
             </form>
           </Box>
