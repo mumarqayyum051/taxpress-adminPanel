@@ -8,6 +8,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { LoadingButton } from '@mui/lab';
 
+import { ToastContainer, toast } from 'react-toastify';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -17,7 +18,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { ToastContainer, toast } from 'react-toastify';
 import { COURTS, MONTHS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';

@@ -11,6 +11,9 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
+import { LoadingButton } from '@mui/lab';
+
+import { ToastContainer, toast } from 'react-toastify';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
@@ -31,6 +34,8 @@ const EditCase = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { id } = state;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     console.log('Component Initiated');
     console.log('Component Initiated');
@@ -45,6 +50,17 @@ const EditCase = () => {
 
   const { fileURL } = environment;
 
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       year_or_vol: '',
@@ -88,7 +104,7 @@ const EditCase = () => {
 
     onSubmit: (values) => {
       setFileError('');
-
+      setIsSubmitting(true);
       console.log(values);
       if (!values.file) {
         setFileError('Please select a file');
@@ -105,23 +121,18 @@ const EditCase = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Case updated successfully',
-            });
+            notify('Case updated successfully', 'success');
 
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/caselaws');
             }, 2000);
           }
         })
         .catch((err) => {
           console.log(err);
-        });
+          notify(err?.response?.data?.message, 'error');
+        })
+        .finally(setIsSubmitting(false));
     },
   });
 
@@ -487,8 +498,14 @@ const EditCase = () => {
                         <FileBase64
                           onChange={onFileUpload}
                           onDone={(event) => {
-                            console.log(event.base64);
-                            formik.setFieldValue('file', event.base64);
+                            console.log(event);
+                            if (event.name.includes('pdf')) {
+                              formik.setFieldValue('file', event.base64);
+                              setFileError(null);
+                            } else {
+                              setFileError('Please upload a pdf file');
+                              notify('Please upload a pdf file', 'warning');
+                            }
                           }}
                           ref={uploader}
                         />
@@ -515,10 +532,25 @@ const EditCase = () => {
                       </>
                     )}
                   </Grid>
-                  <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                  {/* <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                     <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
                       Update
                     </Button>
+                  </Grid> */}
+                  <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                    <LoadingButton
+                      size="medium"
+                      type="submit"
+                      onClick={() => {
+                        if (formik.isValid) {
+                          formik.handleSubmit();
+                        }
+                      }}
+                      variant="contained"
+                      loading={isSubmitting}
+                    >
+                      Submit
+                    </LoadingButton>
                   </Grid>
                 </Grid>
               </form>

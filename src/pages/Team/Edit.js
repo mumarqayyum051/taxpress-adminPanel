@@ -260,7 +260,7 @@ const EditMember = () => {
                     variant="contained"
                     loading={isSubmitting}
                   >
-                    Submit
+                    Update
                   </LoadingButton>
                 </Grid>
               </Grid>
