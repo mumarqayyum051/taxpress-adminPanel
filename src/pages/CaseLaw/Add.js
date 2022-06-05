@@ -6,6 +6,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import { LoadingButton } from '@mui/lab';
+
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -15,6 +17,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { ToastContainer, toast } from 'react-toastify';
 import { COURTS, MONTHS } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
@@ -28,10 +31,20 @@ const AddCase = () => {
     getStatutes();
   }, []);
   const uploader = useRef();
-  const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
   const [statutes, setStatutes] = useState([]);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       year_or_vol: '',
@@ -81,43 +94,25 @@ const AddCase = () => {
         setFileError('Please select a file');
         return;
       }
+      setIsSubmitting(true);
 
       _addCase(formik.values)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Case added successfully',
-            });
-
+            notify('Case has been added', 'success');
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/caselaws');
             }, 2000);
           }
         })
         .catch((err) => {
           console.log(err);
-        });
+          notify(err?.response?.data?.message, 'error');
+        })
+        .finally(setIsSubmitting(false));
     },
   });
-
-  const onFileUpload = (event) => {
-    console.log(event.target.files[0]);
-    setFileError('');
-    const fileFormate = event.target.files[0].name.split('.').pop();
-    console.log(fileFormate);
-    const isValidFormate = allowedFormates.filter((formate) => formate === fileFormate).length;
-    if (isValidFormate === 0) {
-      setFileError('Please upload a pdf file');
-      uploader.current.value = '';
-      formik.setFieldValue('file', '');
-    }
-  };
 
   const getStatutes = () => {
     _getStatutesOnly()
@@ -452,16 +447,32 @@ const AddCase = () => {
                         setFileError(null);
                       } else {
                         setFileError('Please upload a pdf file');
+                        notify('Please upload a pdf file', 'warning');
                       }
                     }}
                     ref={uploader}
                   />{' '}
                   {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
                 </Grid>
-                <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                {/* <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
                     Submit
                   </Button>
+                </Grid> */}
+                <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
+                  <LoadingButton
+                    size="medium"
+                    type="submit"
+                    onClick={() => {
+                      if (formik.isValid) {
+                        formik.handleSubmit();
+                      }
+                    }}
+                    variant="contained"
+                    loading={isSubmitting}
+                  >
+                    Submit
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>

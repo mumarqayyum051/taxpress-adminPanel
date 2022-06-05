@@ -55,6 +55,8 @@ const AddMember = () => {
 
     onSubmit: (values) => {
       console.log(values);
+      setIsSubmitting(true);
+
       _addMember(formik.values)
         .then((res) => {
           console.log(res);
@@ -208,7 +210,6 @@ const AddMember = () => {
                     type="submit"
                     onClick={() => {
                       if (formik.isValid) {
-                        setIsSubmitting(true);
                         formik.handleSubmit();
                       }
                     }}
