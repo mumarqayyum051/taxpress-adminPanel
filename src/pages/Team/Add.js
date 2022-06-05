@@ -68,20 +68,11 @@ const AddMember = () => {
         })
         .catch((err) => {
           console.log(err);
-          setAlert({
-            open: true,
-            message: err?.response?.data?.message,
-            severity: 'error',
-          });
+
+          notify(err?.response?.data?.message, 'error');
         })
         .finally(() => {
           setIsSubmitting(false);
-          setTimeout(() => {
-            setAlert({
-              open: false,
-              message: '',
-            });
-          }, 2000);
         });
     },
   });
@@ -199,11 +190,7 @@ const AddMember = () => {
                       } else {
                         formik.setFieldValue('file', '');
                         setFileError('Please upload a jpg, jpeg or png file');
-                        setAlert({
-                          open: true,
-                          message: 'Please upload a jpg, jpeg or png file',
-                          severity: 'info',
-                        });
+                        notify('Please upload a jpg, jpeg or png file', 'warning');
                       }
                     }}
                     ref={uploader}

@@ -76,20 +76,10 @@ const EditMember = () => {
         })
         .catch((err) => {
           console.log(err);
-          setAlert({
-            open: true,
-            message: err?.response?.data?.message,
-            severity: 'error',
-          });
         })
         .finally(() => {
           setIsSubmitting(false);
-          setTimeout(() => {
-            setAlert({
-              open: false,
-              message: '',
-            });
-          }, 2000);
+          setTimeout(() => {}, 2000);
         });
     },
   });
@@ -104,11 +94,6 @@ const EditMember = () => {
       })
       .catch((err) => {
         console.log(err);
-        setAlert({
-          open: true,
-          message: err?.response?.data?.message,
-          severity: 'error',
-        });
       })
       .finally(() => {});
   }, []);
