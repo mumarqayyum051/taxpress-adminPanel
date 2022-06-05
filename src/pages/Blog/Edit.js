@@ -45,11 +45,6 @@ const EditBlog = () => {
   }, []);
   const uploader = useRef();
   const [setFile, setFileError] = useState('');
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
 
   const notify = (message, type) =>
     toast(message, {

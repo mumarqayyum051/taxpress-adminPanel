@@ -31,11 +31,7 @@ const AddCase = () => {
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
   const [statutes, setStatutes] = useState([]);
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+
   const formik = useFormik({
     initialValues: {
       year_or_vol: '',

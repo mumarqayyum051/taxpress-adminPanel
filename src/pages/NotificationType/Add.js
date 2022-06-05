@@ -21,11 +21,6 @@ const AddNotificationType = () => {
   const allowedFormates = ['pdf'];
   const [data, setData] = useState([]);
   const [statutes, setStatutes] = useState([]);
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
 
   const formik = useFormik({
     initialValues: {

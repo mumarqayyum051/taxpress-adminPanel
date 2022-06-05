@@ -29,11 +29,7 @@ const Add = () => {
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
   const [highlights, setHighlights] = useState(['']);
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+
   const formik = useFormik({
     initialValues: {
       type: '',

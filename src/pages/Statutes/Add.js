@@ -22,11 +22,7 @@ const AddStatute = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+
   const formik = useFormik({
     initialValues: {
       law_or_statute: '',

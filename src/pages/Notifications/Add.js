@@ -30,11 +30,6 @@ const AddNotification = () => {
   const [setFile, setFileError] = useState('');
   const [notificationTypes, setNotificationTypes] = useState([]);
   const [statutes, setStatutes] = useState([]);
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
 
   useEffect(() => {
     getNotificationTypes();

@@ -30,11 +30,6 @@ const EditStatute = () => {
   const { id } = state;
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
 
   const formik = useFormik({
     initialValues: {

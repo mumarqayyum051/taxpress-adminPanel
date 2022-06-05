@@ -31,12 +31,6 @@ const EditMember = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
-
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',

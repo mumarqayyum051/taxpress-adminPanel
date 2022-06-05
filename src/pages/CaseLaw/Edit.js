@@ -42,11 +42,7 @@ const EditCase = () => {
   const [setFile, setFileError] = useState('');
   const [statutes, setStatutes] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+
   const { fileURL } = environment;
 
   const formik = useFormik({

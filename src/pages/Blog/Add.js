@@ -34,11 +34,6 @@ const AddBlog = () => {
   const uploader = useRef();
   const allowedFormates = ['jpeg', 'png', 'jpg'];
   const [setFile, setFileError] = useState('');
-  const [alert, setAlert] = React.useState({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
 
   const formik = useFormik({
     initialValues: {
