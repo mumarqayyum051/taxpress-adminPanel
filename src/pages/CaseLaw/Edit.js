@@ -44,7 +44,11 @@ const EditCase = () => {
   const [setFile, setFileError] = useState('');
   const [statutes, setStatutes] = useState([]);
   const [isLoading, setisLoading] = useState(false);
+  const [hasFile, setHasFile] = useState(false);
 
+  useEffect(() => {
+    setisLoading(false);
+  }, []);
   const { fileURL } = environment;
 
   const notify = (message, type) =>
@@ -80,23 +84,24 @@ const EditCase = () => {
       file: '',
     },
     validationSchema: yup.object({
-      year_or_vol: yup.string().required('Required'),
-      pageNo: yup.number().required('Required a number'),
-      month: yup.string().required('Required'),
-      law_or_statute: yup.object().required('Required'),
-      section: yup.string().required('Required'),
-      section2: yup.string().required('Required'),
-      court: yup.string().required('Required'),
-      caseNo: yup.string().required('Required'),
-      dated: yup.string().required('Required'),
-      textSearch1: yup.string().required('Required'),
-      textSearch2: yup.string().required('Required'),
-      phraseSearch: yup.string().required('Required'),
-      judge: yup.string().required('Required'),
-      lawyer: yup.string().required('Required'),
-      journals: yup.string().required('Required'),
-      appellant_or_opponent: yup.string().required('Required'),
-      principleOfCaseLaws: yup.string().required('Required'),
+      year_or_vol: yup.string().required('Year or Vol is required'),
+      pageNo: yup.string().required('Page No is required'),
+      month: yup.string().required('Month is required'),
+      law_or_statute_id: yup.string().required('Law or Statute is required'),
+      section: yup.string().required('Section is required'),
+      section2: yup.string().required('Section2 is required'),
+      court: yup.string().required('Court is required'),
+      caseNo: yup.string().required('Case No is required'),
+      dated: yup.string().required('Dated is required'),
+      textSearch1: yup.string().required('Text Search1 is required'),
+      textSearch2: yup.string().required('Text Search2 is required'),
+      phraseSearch: yup.string().required('Phrase Search is required'),
+      judge: yup.string().required('Judge is required'),
+      lawyer: yup.string().required('Lawyer is required'),
+      journals: yup.string().required('Journals is required'),
+      appellant_or_opponent: yup.string().required('Appellant or Opponent is required'),
+      principleOfCaseLaws: yup.string().required('Principle of Case Laws is required'),
+      file: yup.string().required('File is required'),
     }),
 
     onSubmit: (values) => {
@@ -108,18 +113,33 @@ const EditCase = () => {
         return;
       }
 
-      if (!values.file.includes('pdf')) {
-        setFileError('Please attach a pdf file');
-        return;
-      }
-      values.law_or_statute = values.law_or_statute.id;
+      const formData = new FormData();
+      formData.append('file', values.file);
+      formData.append('year_or_vol', values.year_or_vol);
+      formData.append('pageNo', values.pageNo);
+      formData.append('month', values.month);
+      formData.append('law_or_statute_id', values.law_or_statute_id);
+      formData.append('section', values.section);
+      formData.append('section2', values.section2);
+      formData.append('court', values.court);
+      formData.append('caseNo', values.caseNo);
+      formData.append('dated', values.dated);
+      formData.append('textSearch1', values.textSearch1);
+      formData.append('textSearch2', values.textSearch2);
+      formData.append('phraseSearch', values.phraseSearch);
+      formData.append('judge', values.judge);
+      formData.append('lawyer', values.lawyer);
+      formData.append('journals', values.journals);
+      formData.append('appellant_or_opponent', values.appellant_or_opponent);
+      formData.append('principleOfCaseLaws', values.principleOfCaseLaws);
       // values.court = values.court.id;
-      _updateCase(formik.values, id)
+      setIsSubmitting(true);
+      _updateCase(formData, id)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             notify('Case updated successfully', 'success');
-
+            setIsSubmitting(false);
             setTimeout(() => {
               navigate('/caselaws');
             }, 2000);
@@ -127,6 +147,8 @@ const EditCase = () => {
         })
         .catch((err) => {
           console.log(err);
+          setIsSubmitting(false);
+
           notify(err?.response?.data?.message, 'error');
         })
         .finally(setIsSubmitting(false));
@@ -172,7 +194,7 @@ const EditCase = () => {
           if (res.data.data.length) {
             const response = res.data.data[0];
             console.log(res.data.data[0]);
-
+            setHasFile(true);
             await formik.setValues(response);
             const court = _.findIndex(COURTS, ['label', response.court]);
             console.log(court);
@@ -490,38 +512,37 @@ const EditCase = () => {
                     ) : null}
                   </Grid>
                   <Grid item xs={12} md={12}>
-                    {!formik.values.file.startsWith('uploads') ? (
+                    {!hasFile ? (
                       <>
-                        <FileBase64
-                          onChange={onFileUpload}
-                          onDone={(event) => {
-                            console.log(event);
-                            if (event.name.includes('pdf')) {
-                              formik.setFieldValue('file', event.base64);
-                              setFileError(null);
-                            } else {
-                              setFileError('Please upload a pdf file');
-                              notify('Please upload a pdf file', 'warning');
+                        <input
+                          type="file"
+                          onChange={(e) => {
+                            console.log(e);
+                            if (e.target.files[0].type !== 'application/pdf') {
+                              notify('Please upload only pdf file', 'warning');
+                              uploader.current.value = '';
+                              return;
                             }
+                            formik.setFieldValue('file', e.target.files[0]);
                           }}
+                          accept="application/pdf"
                           ref={uploader}
                         />
-                        {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                        {formik.errors.file && formik.touched.file ? (
+                          <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                        ) : null}
                       </>
                     ) : (
                       <>
                         <Button variant="contained" href={fileURL + formik.values.file} target="_blank" download>
                           View file
                         </Button>
-                        {/* <IconButton aria-label="delete" href={fileURL + formik.values.file} target="_blank" download>
-                          <PictureAsPdfIcon fontSize="inherit" />
-                        </IconButton> */}
-
                         <IconButton
                           aria-label="delete"
                           size="small"
                           onClick={() => {
                             formik.setFieldValue('file', '');
+                            setHasFile(false);
                           }}
                         >
                           <DeleteIcon fontSize="inherit" />
@@ -535,18 +556,8 @@ const EditCase = () => {
                     </Button>
                   </Grid> */}
                   <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                    <LoadingButton
-                      size="medium"
-                      type="submit"
-                      onClick={() => {
-                        if (formik.isValid) {
-                          formik.handleSubmit();
-                        }
-                      }}
-                      variant="contained"
-                      loading={isSubmitting}
-                    >
-                      Submit
+                    <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
+                      Update
                     </LoadingButton>
                   </Grid>
                 </Grid>
