@@ -69,8 +69,8 @@ const EditCase = () => {
       court: '',
       caseNo: '',
       dated: '',
-      text_search_1: '',
-      text_search_2: '',
+      textSearch1: '',
+      textSearch2: '',
       phraseSearch: '',
       judge: '',
       lawyer: '',
@@ -89,8 +89,8 @@ const EditCase = () => {
       court: yup.string().required('Required'),
       caseNo: yup.string().required('Required'),
       dated: yup.string().required('Required'),
-      text_search_1: yup.string().required('Required'),
-      text_search_2: yup.string().required('Required'),
+      textSearch1: yup.string().required('Required'),
+      textSearch2: yup.string().required('Required'),
       phraseSearch: yup.string().required('Required'),
       judge: yup.string().required('Required'),
       lawyer: yup.string().required('Required'),
@@ -273,30 +273,30 @@ const EditCase = () => {
                     <TextField
                       label="Search 1"
                       color="secondary"
-                      id="text_search_1"
+                      id="textSearch1"
                       type="text"
-                      key="text_search_1"
-                      value={formik.values.text_search_1}
+                      key="textSearch1"
+                      value={formik.values.textSearch1}
                       onChange={formik.handleChange}
                       fullWidth
                     />
-                    {formik.errors.text_search_1 && formik.touched.text_search_1 ? (
-                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.text_search_1}</p>
+                    {formik.errors.textSearch1 && formik.touched.textSearch1 ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch1}</p>
                     ) : null}
                   </Grid>
                   <Grid item xs={12} md={4}>
                     <TextField
                       label="Search 2"
                       color="secondary"
-                      id="text_search_2"
+                      id="textSearch2"
                       type="text"
-                      key="text_search_2"
-                      value={formik.values.text_search_2}
+                      key="textSearch2"
+                      value={formik.values.textSearch2}
                       onChange={formik.handleChange}
                       fullWidth
                     />
-                    {formik.errors.text_search_2 && formik.touched.text_search_2 ? (
-                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.text_search_2}</p>
+                    {formik.errors.textSearch2 && formik.touched.textSearch2 ? (
+                      <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.textSearch2}</p>
                     ) : null}
                   </Grid>
                   <Grid item xs={12} md={4}>
