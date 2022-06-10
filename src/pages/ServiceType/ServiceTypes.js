@@ -19,7 +19,7 @@ import Snackbar from '@mui/material/Snackbar';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
@@ -74,7 +74,7 @@ const ServiceTypes = () => {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
-
+  const navigate = useNavigate();
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -162,6 +162,7 @@ const ServiceTypes = () => {
                     <TableCell align="left">#</TableCell>
                     <TableCell align="left">Title</TableCell>
                     <TableCell align="left">Associate to</TableCell>
+                    <TableCell align="left">Create Service</TableCell>
 
                     {/* <TableCell align="right">Action</TableCell> */}
                   </TableRow>
@@ -169,12 +170,24 @@ const ServiceTypes = () => {
                 <TableBody>
                   {filteredCases
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(({ id, title, service }, i) => (
+                    .map(({ id, title, service, serviceId }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left">{title}</TableCell>
                         <TableCell align="left">{service}</TableCell>
-
+                        <TableCell align="left">
+                          <Button
+                            variant="contained"
+                            target="_blank"
+                            onClick={() => {
+                              navigate('/serviceTypes/serviceDetails/addServiceDetail', {
+                                state: { service, serviceId, subService: title, subServiceId: id },
+                              });
+                            }}
+                          >
+                            Go
+                          </Button>
+                        </TableCell>
                         <TableCell align="right">
                           <Actions
                             id={id}

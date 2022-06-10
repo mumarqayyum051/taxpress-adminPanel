@@ -66,6 +66,7 @@ const navConfig = [
     path: '/serviceTypes',
     icon: getIcon('carbon:types'),
   },
+
   {
     title: 'dictionary',
     path: '/dictionary',

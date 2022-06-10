@@ -56,16 +56,7 @@ const Add = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Aded successfully',
-            });
-
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/ordinance');
             }, 2000);
           }
@@ -125,11 +116,11 @@ const Add = () => {
                         key={`name${index}`}
                         name={`name${index}`}
                         onChange={(e) => {
-                          setHighlights([
-                            ...highlights.slice(0, index),
-                            { id: index, name: e.target.value },
-                            ...highlights.slice(index + 1),
-                          ]);
+                          const newHighlights = highlights;
+                          newHighlights[index] = e.target.value;
+                          setHighlights(newHighlights);
+
+                          console.log(highlights);
                         }}
                         fullWidth
                       />
@@ -162,8 +153,32 @@ const Add = () => {
                     //     </Grid>
                     // ) : (
                     //   ''
-                    // )}
-                    // </>,
+                    <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'grey' }}>
+                      <IconButton
+                        aria-label="Add"
+                        onClick={() => {
+                          setHighlights([...highlights, '']);
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Grid>,
+                    <>
+                      {index !== 0 ? (
+                        <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              setHighlights(highlights.filter((item, i) => i !== index));
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      ) : (
+                        ''
+                      )}
+                    </>,
                   ]
                 )}
 
@@ -178,11 +193,6 @@ const Add = () => {
                         formik.setFieldValue('file', '');
 
                         setFileError('Please upload a pdf file');
-                        setAlert({
-                          open: true,
-                          message: 'Please attach a pdf file',
-                          severity: 'info',
-                        });
                       }
                     }}
                     ref={uploader}
@@ -200,7 +210,6 @@ const Add = () => {
           </Box>
         </CardContent>
       </Card>
-      <ToastContainer />
     </Container>
   );
 };

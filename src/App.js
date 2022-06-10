@@ -46,6 +46,8 @@ import Insights from './pages/Insights/Insights';
 import AddInsight from './pages/Insights/Add';
 import Services from './pages/Services/Services';
 import AddServices from './pages/Services/Add';
+import ServiceDetail from './pages/ServiceDetail/ServiceDetail';
+import AddServiceDetail from './pages/ServiceDetail/Add';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -79,6 +81,8 @@ export default function App() {
     { path: 'insights/addInsight', element: <AddInsight /> },
     { path: 'services', element: <Services /> },
     { path: 'services/addService', element: <AddServices /> },
+    { path: 'serviceTypes/serviceDetails', element: <ServiceDetail /> },
+    { path: 'serviceTypes/serviceDetails/addServiceDetail', element: <AddServiceDetail /> },
   ];
   return (
     <ThemeProvider>
