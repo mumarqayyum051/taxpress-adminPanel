@@ -74,7 +74,7 @@ export default function App() {
     { path: 'ordinanceDetail', element: <OrdinanceDetail /> },
     { path: 'ordinanceDetail/addOrdinanceDetails', element: <AddOrdinanceDetails /> },
     { path: 'serviceTypes', element: <ServiceTypes /> },
-    { path: 'addServiceType', element: <AddServiceType /> },
+    { path: 'serviceTypes/addServiceType', element: <AddServiceType /> },
     { path: 'insights', element: <Insights /> },
     { path: 'insights/addInsight', element: <AddInsight /> },
     { path: 'services', element: <Services /> },

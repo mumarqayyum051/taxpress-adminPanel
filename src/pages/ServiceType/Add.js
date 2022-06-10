@@ -1,38 +1,47 @@
 /* eslint-disable react/jsx-key */
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Alert from '@mui/material/Alert';
+import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
-import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
-import React, { useRef, useState } from 'react';
-import FileBase64 from 'react-file-base64';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
-import { ToastContainer, toast } from 'react-toastify';
-import { LoadingButton } from '@mui/lab';
-
-import { ORDINANCE } from '../../constants/constants';
-import OrdinanceService from '../../services/OrdinanceService';
+import ServicesService from '../../services/ServicesService';
+import ServiceTypeService from '../../services/ServiceTypeService';
 
 const Add = () => {
-  const { _addOrdinance } = OrdinanceService;
+  const { _createServiceType } = ServiceTypeService;
+  const { _getAllServices } = ServicesService;
   const navigate = useNavigate();
 
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
   const [highlights, setHighlights] = useState(['']);
+  const [result, setResult] = useState([]);
 
+  useEffect(() => {
+    getAllServices();
+  }, []);
+
+  const getAllServices = async () => {
+    try {
+      const result = await _getAllServices();
+      if (result.status === 200) {
+        setResult(result?.data?.data);
+      }
+    } catch (e) {
+      console.log(e);
+      notify('Error while fetching data', 'error');
+    }
+  };
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -48,25 +57,25 @@ const Add = () => {
 
   const formik = useFormik({
     initialValues: {
-      detail: '',
-      type_name: '',
+      title: '',
+      registration_service_id: '',
     },
     validationSchema: yup.object({
-      type_name: yup.string().required('Type is required'),
-      detail: yup.string().required('Detail is required'),
+      registration_service_id: yup.string().required('Please select a service'),
+      title: yup.string().required('Please enter a title'),
     }),
     onSubmit: (values) => {
       console.log(values);
 
       setIsSubmitting(true);
-      _addOrdinance({ highlights, ...formik.values })
+      _createServiceType({ highlights, ...formik.values })
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             setIsSubmitting(false);
-            notify(`${formik.values.type_name} added successfully`, 'success');
+            notify(`Service Type added successfully`, 'success');
             setTimeout(() => {
-              navigate('/ordinance');
+              navigate('/serviceTypes');
             }, 2000);
           }
         })
@@ -83,7 +92,7 @@ const Add = () => {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Add Act, Ordinance, Rule{' '}
+            Creaet Service Type{' '}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -91,20 +100,20 @@ const Add = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={12}>
                   <TextField
-                    id="type_name"
+                    id="registration_service_id"
                     select
-                    label="Type"
+                    label="Service"
+                    placeholder="Select Service"
                     color="secondary"
-                    key="type_name"
-                    value={formik.values.type_name}
+                    key="registration_service_id"
                     onChange={(e) => {
-                      formik.setFieldValue('type_name', e.target.value);
+                      formik.setFieldValue('registration_service_id', e.target.value);
                     }}
                     fullWidth
                   >
-                    {ORDINANCE.map((option) => (
-                      <MenuItem key={option.label} value={option.label}>
-                        {option.label}
+                    {result.map((option) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.title}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -114,14 +123,17 @@ const Add = () => {
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <TextField
-                    id="detail"
-                    label="Detail"
+                    id="title"
+                    label="Title"
                     color="secondary"
-                    key="detail"
-                    value={formik.values.detail}
+                    key="title"
+                    value={formik.values.title}
                     onChange={formik.handleChange}
                     fullWidth
                   />
+                  {formik.errors.title && formik.touched.title ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.title}</p>
+                  ) : null}
                 </Grid>
 
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">

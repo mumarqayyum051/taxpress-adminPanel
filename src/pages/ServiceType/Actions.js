@@ -6,12 +6,13 @@ import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/mat
 import Iconify from '../../components/Iconify';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
-import OrdinanceService from '../../services/OrdinanceService';
+import ServiceTypeService from '../../services/ServiceTypeService';
+
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
   const ref = useRef(null);
-  const { _deleteOrdinanceDetail } = OrdinanceService;
+  const { _deleteServiceType } = ServiceTypeService;
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('delete');
-              _deleteOrdinanceDetail(props.id)
+              _deleteServiceType(props.id)
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {

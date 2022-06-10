@@ -27,6 +27,8 @@ import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
 import OrdinanceService from '../../services/OrdinanceService';
 import USERLIST from '../../_mock/user';
+
+import ServiceTypeService from '../../services/ServiceTypeService';
 // mock
 import Actions from './Actions';
 
@@ -68,7 +70,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 const ServiceTypes = () => {
-  const { _getAllOrdinance } = OrdinanceService;
+  const { _getAllServiceTypes } = ServiceTypeService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -88,11 +90,11 @@ const ServiceTypes = () => {
   const [statutes, setStatutes] = useState([]);
 
   useEffect(() => {
-    getAllOrdinance();
+    getAllServicesTypes();
   }, []);
 
-  const getAllOrdinance = () => {
-    _getAllOrdinance()
+  const getAllServicesTypes = () => {
+    _getAllServiceTypes()
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data);
@@ -134,19 +136,17 @@ const ServiceTypes = () => {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - statutes.length) : 0;
 
-  const isUserNotFound = filteredCases.length === 0;
-
   return (
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Act, Ordinance, Rule
+            Service Types
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/ordinance/addOrdinance"
+            to="/serviceTypes/addServiceType"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add
@@ -160,10 +160,8 @@ const ServiceTypes = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">#</TableCell>
-                    <TableCell align="left">Type Name</TableCell>
-                    <TableCell align="left" sx={{ width: '50%' }}>
-                      Detail
-                    </TableCell>
+                    <TableCell align="left">Title</TableCell>
+                    <TableCell align="left">Associate to</TableCell>
 
                     {/* <TableCell align="right">Action</TableCell> */}
                   </TableRow>
@@ -171,17 +169,17 @@ const ServiceTypes = () => {
                 <TableBody>
                   {filteredCases
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(({ id, detail, type_name }, i) => (
+                    .map(({ id, title, service }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{type_name}</TableCell>
-                        <TableCell align="left">{detail}</TableCell>
+                        <TableCell align="left">{title}</TableCell>
+                        <TableCell align="left">{service}</TableCell>
 
                         <TableCell align="right">
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllOrdinance();
+                              getAllServicesTypes();
                               notify('Deleted Successfully', 'success');
                             }}
                           />
