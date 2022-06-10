@@ -57,9 +57,14 @@ const navConfig = [
     icon: getIcon('ic:outline-insights'),
   },
   {
+    title: 'Services',
+    path: '/services',
+    icon: getIcon('carbon:ibm-security-services'),
+  },
+  {
     title: 'Service Type',
     path: '/serviceTypes',
-    icon: getIcon('carbon:ibm-security-services'),
+    icon: getIcon('carbon:types'),
   },
   {
     title: 'dictionary',

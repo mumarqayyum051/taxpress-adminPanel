@@ -141,7 +141,7 @@ const Ordinance = () => {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Act, Ordinance, Rule
+            Act, Ordinance, Rule
           </Typography>
           <Button
             variant="contained"

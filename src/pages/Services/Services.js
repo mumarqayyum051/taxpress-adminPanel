@@ -67,8 +67,8 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const ServiceTypes = () => {
-  const { _getAllOrdinance } = OrdinanceService;
+const Services = () => {
+  const { _getOrdinanceDetail } = OrdinanceService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -88,11 +88,11 @@ const ServiceTypes = () => {
   const [statutes, setStatutes] = useState([]);
 
   useEffect(() => {
-    getAllOrdinance();
+    getAllOrdinanceDetails();
   }, []);
 
-  const getAllOrdinance = () => {
-    _getAllOrdinance()
+  const getAllOrdinanceDetails = () => {
+    _getOrdinanceDetail()
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data);
@@ -134,19 +134,17 @@ const ServiceTypes = () => {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - statutes.length) : 0;
 
-  const isUserNotFound = filteredCases.length === 0;
-
   return (
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Add Act, Ordinance, Rule
+            Oversease and Normal Services
           </Typography>
           <Button
             variant="contained"
             component={RouterLink}
-            to="/ordinance/addOrdinance"
+            to="/services/addService"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add
@@ -160,10 +158,9 @@ const ServiceTypes = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">#</TableCell>
-                    <TableCell align="left">Type Name</TableCell>
-                    <TableCell align="left" sx={{ width: '50%' }}>
-                      Detail
-                    </TableCell>
+                    <TableCell align="left">Title</TableCell>
+                    <TableCell align="left">Associated to</TableCell>
+                    <TableCell align="left">File </TableCell>
 
                     {/* <TableCell align="right">Action</TableCell> */}
                   </TableRow>
@@ -171,17 +168,22 @@ const ServiceTypes = () => {
                 <TableBody>
                   {filteredCases
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(({ id, detail, type_name }, i) => (
+                    .map(({ id, detail, title, file, type_name }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{type_name}</TableCell>
-                        <TableCell align="left">{detail}</TableCell>
+                        <TableCell align="left">{title}</TableCell>
 
+                        <TableCell align="left">{detail}</TableCell>
+                        <TableCell align="left">
+                          <Button size="small" variant="contained" href={fileURL + file} target="_blank" download>
+                            <span>View File</span>
+                          </Button>
+                        </TableCell>
                         <TableCell align="right">
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllOrdinance();
+                              getAllOrdinanceDetails();
                               notify('Deleted Successfully', 'success');
                             }}
                           />
@@ -214,4 +216,4 @@ const ServiceTypes = () => {
   );
 };
 
-export default ServiceTypes;
+export default Services;

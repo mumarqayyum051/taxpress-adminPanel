@@ -22,3 +22,4 @@ export const COURTS = [
 ];
 
 export const ORDINANCE = [{ label: 'Act' }, { label: 'Ordinance' }, { label: 'Rule' }];
+export const SUPER_CATEGORIES = [{ label: 'Normal Services' }, { label: 'Oversease Services' }];

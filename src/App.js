@@ -44,6 +44,8 @@ import AddMember from './pages/Team/Add';
 import EditMember from './pages/Team/Edit';
 import Insights from './pages/Insights/Insights';
 import AddInsight from './pages/Insights/Add';
+import Services from './pages/Services/Services';
+import AddServices from './pages/Services/Add';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -75,6 +77,8 @@ export default function App() {
     { path: 'addServiceType', element: <AddServiceType /> },
     { path: 'insights', element: <Insights /> },
     { path: 'insights/addInsight', element: <AddInsight /> },
+    { path: 'services', element: <Services /> },
+    { path: 'services/addService', element: <AddServices /> },
   ];
   return (
     <ThemeProvider>
