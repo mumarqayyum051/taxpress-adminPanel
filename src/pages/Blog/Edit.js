@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
+import { LoadingButton } from '@mui/lab';
 import Grid from '@mui/material/Grid';
 import { toast, ToastContainer } from 'react-toastify';
 import InputLabel from '@mui/material/InputLabel';
@@ -48,6 +49,7 @@ const EditBlog = () => {
   }, []);
   const uploader = useRef();
   const [setFile, setFileError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const notify = (message, type) =>
     toast(message, {
@@ -83,18 +85,21 @@ const EditBlog = () => {
     }),
 
     onSubmit: (values) => {
-      setFileError('');
+      const formData = new FormData();
+      formData.append('title', values.title);
+      formData.append('paragraph', values.paragraph);
+      formData.append('short_paragraph', values.short_paragraph);
+      formData.append('author', values.author);
+      formData.append('date', values.date);
+      formData.append('file', values.file);
 
-      console.log(values);
-      if (!values.file) {
-        setFileError('Please upload a jpg, jpeg or png file');
-        return;
-      }
-
-      _editBlog(formik.values, id)
+      setIsSubmitting(true);
+      _editBlog(formData, id)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
+            notify('Blog Updated Successfully', 'success');
+            setIsSubmitting(false);
             setTimeout(() => {
               navigate('/blog');
             }, 2000);
@@ -102,6 +107,9 @@ const EditBlog = () => {
         })
         .catch((err) => {
           console.log(err);
+          setIsSubmitting(false);
+
+          notify(err?.message, 'error');
         });
     },
   });
@@ -189,15 +197,17 @@ const EditBlog = () => {
                       <input
                         type="file"
                         onChange={(e) => {
-                          console.log(e);
-                          if (e.target.files[0].type !== 'application/pdf') {
-                            notify('Please upload only pdf file', 'warning');
+                          // allow png, jpg, jpeg
+                          console.log(e.target.files[0].type);
+                          const fileType = e.target.files[0].type;
+                          if (fileType === 'image/jpeg' || fileType === 'image/png' || fileType === 'image/jpg') {
+                            formik.setFieldValue('file', e.target.files[0]);
+                          } else {
+                            notify('Please upload jpg or png file', 'warning');
                             uploader.current.value = '';
-                            return;
                           }
-                          formik.setFieldValue('file', e.target.files[0]);
                         }}
-                        accept="application/pdf"
+                        accept="image/apng, image/avif, image/gif, image/jpeg, image/png"
                         ref={uploader}
                       />
                       {formik.errors.file && formik.touched.file ? (
@@ -223,9 +233,9 @@ const EditBlog = () => {
                   )}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Update
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>
