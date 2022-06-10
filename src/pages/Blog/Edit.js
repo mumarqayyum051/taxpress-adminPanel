@@ -30,12 +30,15 @@ const EditBlog = () => {
   const { state } = useLocation();
   const { id } = state;
   const { fileURL } = environment;
+  const [hasFile, setHasFile] = useState(false);
+
   useEffect(() => {
     const getBlog = async () => {
       try {
         const blog = await _getSingleBlog(id);
         console.log(blog);
-        formik.setValues(blog?.data?.data);
+        formik.setValues(blog?.data?.data[0]);
+        setHasFile(true);
       } catch (err) {
         console.log(err);
       }
@@ -92,16 +95,7 @@ const EditBlog = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Blog updated successfully',
-            });
-
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/blog');
             }, 2000);
           }
@@ -190,38 +184,37 @@ const EditBlog = () => {
                 </Grid>
 
                 <Grid item xs={12} md={12}>
-                  {!formik.values?.file?.startsWith('uploads') ? (
+                  {!hasFile ? (
                     <>
-                      <FileBase64
-                        onDone={(event) => {
-                          console.log(event);
-                          if (event.name.includes('jpg') || event.name.includes('png') || event.name.includes('jpeg')) {
-                            formik.setFieldValue('file', event.base64);
-                            setFileError('');
-                          } else {
-                            formik.setFieldValue('file', '');
-                            setFileError('Please upload a jpg, jpeg or png file');
-                            notify('Please upload a jpg, jpeg or png file', 'warning');
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          console.log(e);
+                          if (e.target.files[0].type !== 'application/pdf') {
+                            notify('Please upload only pdf file', 'warning');
+                            uploader.current.value = '';
+                            return;
                           }
+                          formik.setFieldValue('file', e.target.files[0]);
                         }}
+                        accept="application/pdf"
                         ref={uploader}
                       />
-                      {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                      {formik.errors.file && formik.touched.file ? (
+                        <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                      ) : null}
                     </>
                   ) : (
                     <>
                       <Button variant="contained" href={fileURL + formik.values.file} target="_blank" download>
                         View file
                       </Button>
-                      {/* <IconButton aria-label="delete" href={fileURL + formik.values.file} target="_blank" download>
-                          <PictureAsPdfIcon fontSize="inherit" />
-                        </IconButton> */}
-
                       <IconButton
                         aria-label="delete"
                         size="small"
                         onClick={() => {
                           formik.setFieldValue('file', '');
+                          setHasFile(false);
                         }}
                       >
                         <DeleteIcon fontSize="inherit" />

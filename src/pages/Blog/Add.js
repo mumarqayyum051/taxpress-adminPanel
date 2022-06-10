@@ -72,15 +72,16 @@ const AddBlog = () => {
     }),
 
     onSubmit: (values) => {
-      setFileError('');
+      const formData = new FormData();
+      formData.append('title', values.title);
+      formData.append('paragraph', values.paragraph);
+      formData.append('short_paragraph', values.short_paragraph);
+      formData.append('author', values.author);
+      formData.append('date', values.date);
+      formData.append('file', values.file);
 
-      console.log(values);
-      if (!values.file) {
-        setFileError('Please upload a jpg, jpeg or png file');
-        return;
-      }
-
-      _createBlog(formik.values)
+      setIsSubmitting(true);
+      _createBlog(formData)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {

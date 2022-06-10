@@ -1,4 +1,5 @@
 import { Card, CardContent, Grid, Alert, Snackbar, Box, Link, Avatar } from '@mui/material';
+import { toast, ToastContainer } from 'react-toastify';
 // material
 import { useState } from 'react';
 import { alpha, styled } from '@mui/material/styles';
@@ -159,7 +160,7 @@ export default function BlogPostCard(props) {
           >
             {title}
           </Typography>
-          <span style={{ fontSize: 12, color: 'white' }}>{format(new Date(date), 'MMM dd, yyyy')}</span>
+          <span style={{ fontSize: 12, color: 'white' }}>{format(new Date(date), 'dd MMM, yyyy')}</span>
         </CardContent>
       </Card>
       <ToastContainer />
