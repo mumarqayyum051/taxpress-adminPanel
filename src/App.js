@@ -42,6 +42,8 @@ import ServiceTypes from './pages/ServiceType/ServiceTypes';
 import Team from './pages/Team/Team';
 import AddMember from './pages/Team/Add';
 import EditMember from './pages/Team/Edit';
+import Insights from './pages/Insights/Insights';
+import AddInsight from './pages/Insights/Add';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -71,6 +73,8 @@ export default function App() {
     { path: 'ordinanceDetail/addOrdinanceDetails', element: <AddOrdinanceDetails /> },
     { path: 'serviceTypes', element: <ServiceTypes /> },
     { path: 'addServiceType', element: <AddServiceType /> },
+    { path: 'insights', element: <Insights /> },
+    { path: 'insights/addInsight', element: <AddInsight /> },
   ];
   return (
     <ThemeProvider>
