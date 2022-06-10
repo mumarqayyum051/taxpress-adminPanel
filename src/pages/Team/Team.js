@@ -14,8 +14,6 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { ReactNotifications } from 'react-notifications-component';
-import { Store } from 'react-notifications-component';
 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';

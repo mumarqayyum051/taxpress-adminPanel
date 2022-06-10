@@ -146,7 +146,7 @@ const Ordinance = () => {
           <Button
             variant="contained"
             component={RouterLink}
-            to="/addOrdinance"
+            to="/ordinance/addOrdinance"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add

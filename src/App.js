@@ -30,6 +30,8 @@ import AddNotificationType from './pages/NotificationType/Add';
 import NotificationType from './pages/NotificationType/NotificationType';
 import AddOrdinance from './pages/Ordinance2/Add';
 import Ordinance from './pages/Ordinance2/Ordinance2';
+import OrdinanceDetail from './pages/OrdinanceDetails/OrdinanceDetail';
+import AddOrdinanceDetails from './pages/OrdinanceDetails/Add';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';
 import AddServiceType from './pages/ServiceType/Add';
@@ -63,8 +65,10 @@ export default function App() {
     { path: 'notifications/addNotification', element: <AddNotification /> },
     { path: 'notificationsType', element: <NotificationType /> },
     { path: 'addNotificationType', element: <AddNotificationType /> },
-    { path: 'addOrdinance', element: <AddOrdinance /> },
+    { path: 'ordinance/addOrdinance', element: <AddOrdinance /> },
     { path: 'ordinance', element: <Ordinance /> },
+    { path: 'ordinanceDetail', element: <OrdinanceDetail /> },
+    { path: 'ordinanceDetail/addOrdinanceDetails', element: <AddOrdinanceDetails /> },
     { path: 'serviceTypes', element: <ServiceTypes /> },
     { path: 'addServiceType', element: <AddServiceType /> },
   ];
