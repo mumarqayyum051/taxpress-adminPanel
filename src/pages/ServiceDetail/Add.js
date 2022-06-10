@@ -35,9 +35,6 @@ const Add = () => {
   const [result, setResult] = useState([]);
   const { state } = useLocation();
   const { service, subService, serviceId, subServiceId } = state;
-  useEffect(() => {
-    console.log(service, subService, subServiceId);
-  }, []);
   const override = css`
     display: block;
     margin: 0 auto;
@@ -90,7 +87,7 @@ const Add = () => {
             setIsSubmitting(false);
             notify(`Service Created successfully`, 'success');
             setTimeout(() => {
-              navigate('/serviceTypes/serviceDetails');
+              navigate('/serviceTypes/serviceDetails', { state: { service, subService, serviceId, subServiceId } });
             }, 2000);
           }
         })

@@ -174,22 +174,25 @@ const AddBlog = () => {
                 </Grid>
 
                 <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onDone={(event) => {
-                      console.log(event);
-                      if (event.name.includes('jpg') || event.name.includes('png') || event.name.includes('jpeg')) {
-                        formik.setFieldValue('file', event.base64);
-                        setFileError('');
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      // allow png, jpg, jpeg
+                      console.log(e.target.files[0].type);
+                      const fileType = e.target.files[0].type;
+                      if (fileType === 'image/jpeg' || fileType === 'image/png' || fileType === 'image/jpg') {
+                        formik.setFieldValue('file', e.target.files[0]);
                       } else {
-                        formik.setFieldValue('file', '');
-                        setFileError('Please upload a jpg, jpeg or png file');
-
-                        notify('Please upload a jpg, jpeg or png file', 'warning');
+                        notify('Please upload jpg or png file', 'warning');
+                        uploader.current.value = '';
                       }
                     }}
+                    accept="image/apng, image/avif, image/gif, image/jpeg, image/png"
                     ref={uploader}
                   />
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                  {formik.errors.file && formik.touched.file ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                  ) : null}{' '}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>

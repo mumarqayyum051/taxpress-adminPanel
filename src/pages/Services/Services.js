@@ -26,6 +26,7 @@ import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
 import OrdinanceService from '../../services/OrdinanceService';
+import ServicesService from '../../services/ServicesService';
 import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
@@ -68,7 +69,7 @@ function applySortFilter(array, comparator, query) {
 }
 
 const Services = () => {
-  const { _getOrdinanceDetail } = OrdinanceService;
+  const { _getAllServices } = ServicesService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -88,11 +89,11 @@ const Services = () => {
   const [statutes, setStatutes] = useState([]);
 
   useEffect(() => {
-    getAllOrdinanceDetails();
+    getAllServices();
   }, []);
 
-  const getAllOrdinanceDetails = () => {
-    _getOrdinanceDetail()
+  const getAllServices = () => {
+    _getAllServices()
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data);
@@ -159,7 +160,7 @@ const Services = () => {
                   <TableRow>
                     <TableCell align="left">#</TableCell>
                     <TableCell align="left">Title</TableCell>
-                    <TableCell align="left">Associated to</TableCell>
+                    <TableCell align="left">Description</TableCell>
                     <TableCell align="left">File </TableCell>
 
                     {/* <TableCell align="right">Action</TableCell> */}
@@ -168,12 +169,12 @@ const Services = () => {
                 <TableBody>
                   {filteredCases
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(({ id, detail, title, file, type_name }, i) => (
+                    .map(({ id, description, title, file, type_name }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left">{title}</TableCell>
 
-                        <TableCell align="left">{detail}</TableCell>
+                        <TableCell align="left">{description}</TableCell>
                         <TableCell align="left">
                           <Button size="small" variant="contained" href={fileURL + file} target="_blank" download>
                             <span>View File</span>
@@ -183,7 +184,7 @@ const Services = () => {
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllOrdinanceDetails();
+                              getAllServices();
                               notify('Deleted Successfully', 'success');
                             }}
                           />

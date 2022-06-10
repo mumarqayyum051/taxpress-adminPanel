@@ -178,9 +178,8 @@ const ServiceTypes = () => {
                         <TableCell align="left">
                           <Button
                             variant="contained"
-                            target="_blank"
                             onClick={() => {
-                              navigate('/serviceTypes/serviceDetails/addServiceDetail', {
+                              navigate('/serviceTypes/serviceDetails', {
                                 state: { service, serviceId, subService: title, subServiceId: id },
                               });
                             }}

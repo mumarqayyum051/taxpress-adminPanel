@@ -81,7 +81,7 @@ const Add = () => {
         })
         .catch((err) => {
           setIsSubmitting(false);
-          notify(err?.response?.data?.message, 'error');
+          notify(err?.message, 'error');
           console.log(err);
         });
     },
@@ -157,14 +157,17 @@ const Add = () => {
                   <input
                     type="file"
                     onChange={(e) => {
-                      if (e.target.files[0].type !== 'application/pdf') {
-                        notify('Please upload only pdf file', 'warning');
+                      // allow png, jpg, jpeg
+                      console.log(e.target.files[0].type);
+                      const fileType = e.target.files[0].type;
+                      if (fileType === 'image/jpeg' || fileType === 'image/png' || fileType === 'image/jpg') {
+                        formik.setFieldValue('file', e.target.files[0]);
+                      } else {
+                        notify('Please upload jpg or png file', 'warning');
                         uploader.current.value = '';
-                        return;
                       }
-                      formik.setFieldValue('file', e.target.files[0]);
                     }}
-                    accept="application/pdf"
+                    accept="image/apng, image/avif, image/gif, image/jpeg, image/png"
                     ref={uploader}
                   />
                   {formik.errors.file && formik.touched.file ? (
