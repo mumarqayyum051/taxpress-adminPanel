@@ -12,6 +12,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Box,
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
@@ -19,7 +20,7 @@ import Snackbar from '@mui/material/Snackbar';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
@@ -72,12 +73,12 @@ function applySortFilter(array, comparator, query) {
 
 const ServiceDetail = () => {
   const { _getAllServices } = ServiceDetailService;
+  const { superCategory, type } = useParams();
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const { service, subService, serviceId, subServiceId } = state;
+
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -143,19 +144,40 @@ const ServiceDetail = () => {
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            {service}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+            <Typography variant="h4">List of Services</Typography>
+            <Typography sx={{ fontSize: 12 }} color="text.primary">
+              {superCategory}
+              {' > '} {type?.split('_').join(' ')}
+            </Typography>
+          </Box>
           <Button
             variant="contained"
-            onClick={navigate('/serviceTypes/addServiceDetail', {
-              state: { service, serviceId, subService, subServiceId },
-            })}
+            component={RouterLink}
+            to="/serviceTypes/addServiceType"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add
           </Button>
         </Stack>
+        {/* <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+            List of Services
+          </Typography>
+          <Typography sx={{ fontSize: 12 }} color="text.primary" gutterBottom>
+            {superCategory}
+            {' > '} {type}
+          </Typography>
+          <Button
+            variant="contained"
+            // onClick={navigate('/serviceTypes/addServiceDetail', {
+            //   state: { service, serviceId, subService, subServiceId },
+            // })}
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Add
+          </Button>
+        </Stack> */}
 
         <Card>
           <Scrollbar>
@@ -166,7 +188,7 @@ const ServiceDetail = () => {
                     <TableCell align="left">#</TableCell>
                     <TableCell align="left">Title</TableCell>
                     <TableCell align="left">Associate to</TableCell>
-                    <TableCell align="left">Create Service</TableCell>
+                    {/* <TableCell align="left">Create Service</TableCell> */}
 
                     {/* <TableCell align="right">Action</TableCell> */}
                   </TableRow>
@@ -174,11 +196,11 @@ const ServiceDetail = () => {
                 <TableBody>
                   {filteredCases
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(({ id, title, service, subService, completionTime, fee, serviceId }, i) => (
+                    .map(({ id, title, service, superCategory }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left">{title}</TableCell>
-                        <TableCell align="left">{service}</TableCell>
+                        <TableCell align="left">{superCategory}</TableCell>
 
                         <TableCell align="right">
                           <Actions

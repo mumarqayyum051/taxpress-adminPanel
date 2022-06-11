@@ -162,7 +162,7 @@ const ServiceTypes = () => {
                     <TableCell align="left">#</TableCell>
                     <TableCell align="left">Title</TableCell>
                     <TableCell align="left">Associate to</TableCell>
-                    <TableCell align="left">Create Service</TableCell>
+                    {/* <TableCell align="left">Create Service</TableCell> */}
 
                     {/* <TableCell align="right">Action</TableCell> */}
                   </TableRow>
@@ -170,12 +170,12 @@ const ServiceTypes = () => {
                 <TableBody>
                   {filteredCases
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(({ id, title, service, serviceId }, i) => (
+                    .map(({ id, title, service, superCategory, serviceId }, i) => (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
                         <TableCell align="left">{title}</TableCell>
-                        <TableCell align="left">{service}</TableCell>
-                        <TableCell align="left">
+                        <TableCell align="left">{superCategory}</TableCell>
+                        {/* <TableCell align="left">
                           <Button
                             variant="contained"
                             onClick={() => {
@@ -186,10 +186,12 @@ const ServiceTypes = () => {
                           >
                             Go
                           </Button>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell align="right">
                           <Actions
                             id={id}
+                            title={title}
+                            superCategory={superCategory}
                             onDelete={() => {
                               getAllServicesTypes();
                               notify('Deleted Successfully', 'success');

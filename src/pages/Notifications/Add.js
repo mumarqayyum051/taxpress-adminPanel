@@ -14,6 +14,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import FileBase64 from 'react-file-base64';
@@ -91,16 +93,7 @@ const AddNotification = () => {
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Notification added successfully',
-            });
-
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/notifications');
             }, 2000);
           }
@@ -314,11 +307,6 @@ const AddNotification = () => {
                         formik.setFieldValue('file', '');
 
                         setFileError('Please upload a pdf file');
-                        setAlert({
-                          open: true,
-                          message: 'Please attach a pdf file',
-                          severity: 'info',
-                        });
                       }
                     }}
                     ref={uploader}

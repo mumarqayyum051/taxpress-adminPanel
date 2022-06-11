@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
 import Loader2 from '../../components/Loader2';
-import { SUPER_CATEGORIES } from '../../constants/constants';
+import { SUPER_CATEGORIES, SERVICE_CATEGORIES } from '../../constants/constants';
 import ServicesService from '../../services/ServicesService';
 
 const Add = () => {
@@ -53,12 +53,14 @@ const Add = () => {
       title: '',
       description: '',
       superCategory: '',
+      serviceCategory: '',
     },
     validationSchema: yup.object({
       title: yup.string().required('Title is required'),
       file: yup.string().required('File is required'),
       description: yup.string().required('Short Paragraph is required'),
       superCategory: yup.string().required('Super Category is required'),
+      serviceCategory: yup.string().required('Service Category is required'),
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -67,6 +69,7 @@ const Add = () => {
       formData.append('title', values.title);
       formData.append('superCategory', values.superCategory);
       formData.append('description', values.description);
+      formData.append('serviceCategory', values.serviceCategory);
       setIsSubmitting(true);
       _createService(formData)
         .then((res) => {
@@ -122,8 +125,31 @@ const Add = () => {
                       </MenuItem>
                     ))}
                   </TextField>
-                  {formik.errors.month && formik.touched.month ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.month}</p>
+                  {formik.errors.superCategory && formik.touched.superCategory ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.superCategory}</p>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    id="serviceCategory"
+                    select
+                    label="Service Category"
+                    color="secondary"
+                    key="serviceCategory"
+                    value={formik.values.serviceCategory}
+                    onChange={(e) => {
+                      formik.setFieldValue('serviceCategory', e.target.value);
+                    }}
+                    fullWidth
+                  >
+                    {SERVICE_CATEGORIES.map((option) => (
+                      <MenuItem key={option.label} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  {formik.errors.serviceCategory && formik.touched.serviceCategory ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.serviceCategory}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>

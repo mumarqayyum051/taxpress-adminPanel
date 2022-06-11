@@ -81,8 +81,9 @@ export default function App() {
     { path: 'insights/addInsight', element: <AddInsight /> },
     { path: 'services', element: <Services /> },
     { path: 'services/addService', element: <AddServices /> },
-    { path: 'serviceTypes/serviceDetails', element: <ServiceDetail /> },
-    { path: 'serviceTypes/addServiceDetail', element: <AddServiceDetail /> },
+    { path: 'serviceDetails', element: <ServiceDetail /> },
+    { path: 'serviceDetails/:superCategory/:type', element: <ServiceDetail /> },
+    { path: 'addServiceDetail', element: <AddServiceDetail /> },
   ];
   return (
     <ThemeProvider>

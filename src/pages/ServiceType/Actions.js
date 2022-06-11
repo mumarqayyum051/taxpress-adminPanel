@@ -36,6 +36,20 @@ export default function UserMoreMenu(props) {
       >
         <MenuItem sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
+            <Iconify icon="logos:createjs" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText
+            primary="Create Service"
+            primaryTypographyProps={{ variant: 'body2' }}
+            onClick={() => {
+              const title = props.title.split(' ').join('_');
+              const superCategory = props.superCategory.split(' ').join('_');
+              navigate(`/serviceDetails/${superCategory}/${title}`);
+            }}
+          />
+        </MenuItem>
+        <MenuItem sx={{ color: 'text.secondary' }}>
+          <ListItemIcon>
             <Iconify icon="eva:trash-2-outline" width={24} height={24} />
           </ListItemIcon>
           <ListItemText

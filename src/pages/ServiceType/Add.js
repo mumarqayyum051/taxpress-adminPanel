@@ -9,10 +9,12 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
+import { SUPER_CATEGORIES } from '../../constants/constants';
 import ServicesService from '../../services/ServicesService';
 import ServiceTypeService from '../../services/ServiceTypeService';
 
@@ -58,17 +60,17 @@ const Add = () => {
   const formik = useFormik({
     initialValues: {
       title: '',
-      registration_service_id: '',
+      superCategory: '',
     },
     validationSchema: yup.object({
-      registration_service_id: yup.string().required('Please select a service'),
+      superCategory: yup.string().required('Super Category is required'),
       title: yup.string().required('Please enter a title'),
     }),
     onSubmit: (values) => {
       console.log(values);
 
       setIsSubmitting(true);
-      _createServiceType({ highlights, ...formik.values })
+      _createServiceType(formik.values)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
@@ -92,7 +94,7 @@ const Add = () => {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Creaet Service Type{' '}
+            Create Service Type{' '}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -100,25 +102,25 @@ const Add = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={12}>
                   <TextField
-                    id="registration_service_id"
+                    id="superCategory"
                     select
-                    label="Service"
-                    placeholder="Select Service"
+                    label="Super Category"
                     color="secondary"
-                    key="registration_service_id"
+                    key="superCategory"
+                    value={formik.values.superCategory}
                     onChange={(e) => {
-                      formik.setFieldValue('registration_service_id', e.target.value);
+                      formik.setFieldValue('superCategory', e.target.value);
                     }}
                     fullWidth
                   >
-                    {result.map((option) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.title}
+                    {SUPER_CATEGORIES.map((option) => (
+                      <MenuItem key={option.label} value={option.value}>
+                        {option.label}
                       </MenuItem>
                     ))}
                   </TextField>
-                  {formik.errors.month && formik.touched.month ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.month}</p>
+                  {formik.errors.superCategory && formik.touched.superCategory ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.superCategory}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>

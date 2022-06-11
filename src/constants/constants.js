@@ -22,4 +22,11 @@ export const COURTS = [
 ];
 
 export const ORDINANCE = [{ label: 'Act' }, { label: 'Ordinance' }, { label: 'Rule' }];
-export const SUPER_CATEGORIES = [{ label: 'Normal Services' }, { label: 'Oversease Services' }];
+export const SUPER_CATEGORIES = [
+  { label: 'Normal Services', value: 'Normal' },
+  { label: 'Oversease Services', value: 'Oversease' },
+];
+export const SERVICE_CATEGORIES = [
+  { label: 'Registration Service', value: 'registration_service' },
+  { label: 'Income Tax Service', value: 'incomeTax_service' },
+];
