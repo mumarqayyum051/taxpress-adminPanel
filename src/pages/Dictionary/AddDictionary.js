@@ -60,7 +60,7 @@ const AddDictionary = () => {
       formData.append('sld', values.sld);
       formData.append('file', values.file);
       setIsSubmitting(true);
-      _addDictionary(formik.values)
+      _addDictionary(formData)
         .then((res) => {
           console.log(res);
           setIsSubmitting(false);
