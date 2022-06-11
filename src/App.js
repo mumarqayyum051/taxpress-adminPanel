@@ -83,7 +83,8 @@ export default function App() {
     { path: 'services/addService', element: <AddServices /> },
     { path: 'serviceDetails', element: <ServiceDetail /> },
     { path: 'serviceDetails/:superCategory/:type', element: <ServiceDetail /> },
-    { path: 'addServiceDetail', element: <AddServiceDetail /> },
+    { path: 'serviceTypes/addServiceDetail', element: <AddServiceDetail /> },
+    { path: 'serviceTypes/addServiceDetail/:superCategory/:type', element: <AddServiceDetail /> },
   ];
   return (
     <ThemeProvider>

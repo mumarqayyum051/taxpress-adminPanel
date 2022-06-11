@@ -1,6 +1,5 @@
-import Alert from '@mui/material/Alert';
+import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
@@ -9,16 +8,13 @@ import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
-import FileBase64 from 'react-file-base64';
 import NotificationService from '../../services/NotificationService';
 import StatuteService from '../../services/StatuteService';
 
@@ -62,6 +58,19 @@ const AddNotification = () => {
         console.log(err);
       });
   };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       law_or_statute_id: '',
@@ -82,16 +91,19 @@ const AddNotification = () => {
     }),
 
     onSubmit: (values) => {
-      setFileError('');
-      console.log(values);
-      if (!values.file) {
-        setFileError('Please select a file');
-        return;
-      }
-
-      _addNotification(formik.values)
+      const formData = new FormData();
+      formData.append('law_or_statute_id', values.law_or_statute_id);
+      formData.append('notification_type_id', values.notification_type_id);
+      formData.append('sro_no', values.sro_no);
+      formData.append('year', values.year);
+      formData.append('dated', values.dated);
+      formData.append('subject', values.subject);
+      formData.append('file', values.file);
+      setIsSubmitting(true);
+      _addNotification(formData)
         .then((res) => {
           console.log(res);
+          setIsSubmitting(false);
           if (res.status === 200) {
             setTimeout(() => {
               navigate('/notifications');
@@ -99,40 +111,13 @@ const AddNotification = () => {
           }
         })
         .catch((err) => {
+          setIsSubmitting(false);
+
           console.log(err);
         });
     },
   });
 
-  const onFileUpload = (event) => {
-    console.log(event.target.files[0]);
-    setFileError('');
-    const fileFormate = event.target.files[0].name.split('.').pop();
-    console.log(fileFormate);
-    const isValidFormate = allowedFormates.filter((formate) => formate === fileFormate).length;
-    if (isValidFormate === 0) {
-      setFileError('Please upload a pdf file');
-      uploader.current.value = '';
-      return;
-    }
-
-    // formik.setFieldValue('file', event.target.files[0]);
-    // fileToBase64(event);
-    fileToBase64(event.target.files[0], (result) => {
-      formik.setFieldValue('file', result);
-      console.log(result);
-    });
-  };
-  const fileToBase64 = async (file, cb) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      cb(reader.result);
-    };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
-  };
   return (
     <Container>
       <Card sx={{ minWidth: 275 }}>
@@ -297,26 +282,27 @@ const AddNotification = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onDone={(event) => {
-                      console.log(event);
-                      if (event.name.includes('pdf')) {
-                        formik.setFieldValue('file', event.base64);
-                        setFileError('');
-                      } else {
-                        formik.setFieldValue('file', '');
-
-                        setFileError('Please upload a pdf file');
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      if (e.target.files[0].type !== 'application/pdf') {
+                        notify('Please upload only pdf file', 'warning');
+                        uploader.current.value = '';
+                        return;
                       }
+                      formik.setFieldValue('file', e.target.files[0]);
                     }}
+                    accept="application/pdf"
                     ref={uploader}
                   />
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                  {formik.errors.file && formik.touched.file ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                  ) : null}{' '}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>

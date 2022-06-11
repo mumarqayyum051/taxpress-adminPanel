@@ -153,8 +153,9 @@ const ServiceDetail = () => {
           </Box>
           <Button
             variant="contained"
-            component={RouterLink}
-            to="/serviceTypes/addServiceType"
+            onClick={() => {
+              navigate(`/serviceTypes/addServiceDetail/${superCategory}/${type}`);
+            }}
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             Add

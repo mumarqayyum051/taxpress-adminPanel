@@ -3,8 +3,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { ToastContainer, toast } from 'react-toastify';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import { LoadingButton } from '@mui/lab';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -19,11 +21,22 @@ import DictionaryService from '../../services/DictionaryService';
 const AddDictionary = () => {
   const { _addDictionary } = DictionaryService;
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       word: '',
@@ -35,57 +48,36 @@ const AddDictionary = () => {
       word: yup.string().required('Word is required'),
       meaning: yup.string().required('Meaning is required'),
       sld: yup.number().required('SLD is required'),
+      file: yup.string().required('File is required'),
     }),
 
     onSubmit: (values) => {
       setFileError('');
 
-      console.log(values);
-      if (!values.file) {
-        setFileError('Please select a file');
-        return;
-      }
-
-      if (!values.file.includes('pdf')) {
-        setFileError('Please attach a pdf file');
-        return;
-      }
+      const formData = new FormData();
+      formData.append('word', values.word);
+      formData.append('meaning', values.meaning);
+      formData.append('sld', values.sld);
+      formData.append('file', values.file);
+      setIsSubmitting(true);
       _addDictionary(formik.values)
         .then((res) => {
           console.log(res);
+          setIsSubmitting(false);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Word has been added to the dictionary',
-            });
-
+            notify(`Dictionary Created successfully`, 'success');
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/dictionary');
             }, 2000);
           }
         })
         .catch((err) => {
+          setIsSubmitting(false);
+          notify(err?.message, 'error');
           console.log(err);
         });
     },
   });
-
-  const onFileUpload = (event) => {
-    console.log(event.target.files[0]);
-    setFileError('');
-    const fileFormate = event.target.files[0].name.split('.').pop();
-    console.log(fileFormate);
-    const isValidFormate = allowedFormates.filter((formate) => formate === fileFormate).length;
-    if (isValidFormate === 0) {
-      setFileError('Please upload a pdf file');
-      formik.setFieldValue('file', '');
-      uploader.current.value = '';
-    }
-  };
 
   return (
     <Container>
@@ -153,24 +145,27 @@ const AddDictionary = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onDone={(event) => {
-                      console.log(event);
-                      if (event.name.includes('pdf')) {
-                        formik.setFieldValue('file', event.base64);
-                        setFileError('');
-                      } else {
-                        setFileError('Please upload a pdf file');
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      if (e.target.files[0].type !== 'application/pdf') {
+                        notify('Please upload only pdf file', 'warning');
+                        uploader.current.value = '';
+                        return;
                       }
+                      formik.setFieldValue('file', e.target.files[0]);
                     }}
+                    accept="application/pdf"
                     ref={uploader}
                   />
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                  {formik.errors.file && formik.touched.file ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                  ) : null}{' '}
                 </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>

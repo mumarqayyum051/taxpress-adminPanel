@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useFormik } from 'formik';
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
 import IconButton from '@mui/material/IconButton';
@@ -34,7 +34,9 @@ const Add = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
   const { state } = useLocation();
-  const { service, subService, serviceId, subServiceId } = state;
+  const { superCategory, type } = useParams();
+
+  // const { service, subService, serviceId, subServiceId } = state;
   const override = css`
     display: block;
     margin: 0 auto;
@@ -60,25 +62,27 @@ const Add = () => {
       fee: '',
       highlights: '',
       completionTime: '',
-      registration_service_id: serviceId,
-      registration_type_id: subServiceId,
+      superCategory,
+      type: type?.split('_').join(' '),
     },
     validationSchema: yup.object({
       title: yup.string().required('Title is required'),
       file: yup.string().required('File is required'),
       // highlights: yup.string().required('Please enter at lease one highlight'),
       fee: yup.number().required('Please enter a number figure'),
+      superCategory: yup.string().required('Please select a super category'),
+      type: yup.string().required('Please select a type'),
     }),
     onSubmit: (values) => {
       console.log(values);
       const formData = new FormData();
-      formData.append('file', values.file);
+      // formData.append('file', values.file);
       formData.append('title', values.title);
       formData.append('highlights', JSON.stringify(highlights));
       formData.append('fee', values.fee);
       formData.append('completionTime', values.completionTime);
-      formData.append('registration_service_id', values.registration_service_id);
-      formData.append('registration_type_id', values.registration_type_id);
+      formData.append('superCategory', values.superCategory);
+      formData.append('type', values.type);
       setIsSubmitting(true);
       _createServiceDetail(formData)
         .then((res) => {
@@ -87,7 +91,7 @@ const Add = () => {
             setIsSubmitting(false);
             notify(`Service Created successfully`, 'success');
             setTimeout(() => {
-              navigate('/serviceTypes/serviceDetails', { state: { service, subService, serviceId, subServiceId } });
+              navigate(`/serviceDetails/${superCategory}/${type}`);
             }, 2000);
           }
         })
@@ -112,8 +116,8 @@ const Add = () => {
             Create Service
           </Typography>
           <Typography sx={{ fontSize: 12 }} color="text.primary" gutterBottom>
-            {service}
-            {' > '} {subService}
+            {superCategory}
+            {' > '} {type}
           </Typography>
           <Box sx={{ flexGrow: 1 }}>
             <form onSubmit={formik.handleSubmit}>
@@ -218,7 +222,7 @@ const Add = () => {
                   ]
                 )}
 
-                <Grid item xs={12} md={12}>
+                {/* <Grid item xs={12} md={12}>
                   <input
                     type="file"
                     onChange={(e) => {
@@ -235,7 +239,7 @@ const Add = () => {
                   {formik.errors.file && formik.touched.file ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
                   ) : null}{' '}
-                </Grid>
+                </Grid> */}
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit
