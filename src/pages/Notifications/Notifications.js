@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 // components
 import TableHead from '@mui/material/TableHead';
+import { toast, ToastContainer } from 'react-toastify';
 import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
@@ -82,6 +83,17 @@ export default function Notifications() {
     getAllCases();
   }, []);
 
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const getAllCases = () => {
     _getAllNotifications()
       .then((res) => {
@@ -205,9 +217,15 @@ export default function Notifications() {
                             View
                           </Button>
                         </TableCell>
-                        {/* <TableCell align="right">
-                          <Actions id={id} onDelete={getAllCases} />
-                        </TableCell> */}
+                        <TableCell align="right">
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllCases();
+                              notify('Deleted Successfully', 'success');
+                            }}
+                          />
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -241,6 +259,7 @@ export default function Notifications() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <ToastContainer />
       </Container>
     </Page>
   );

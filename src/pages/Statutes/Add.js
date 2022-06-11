@@ -51,26 +51,28 @@ const AddStatute = () => {
       section: yup.string().required('Section is required'),
       textSearch1: yup.string().required('Text Search 1 is required'),
       textSearch2: yup.string().required('Text Search 2 is required'),
+      file: yup.string().required('File is required'),
     }),
 
     onSubmit: (values) => {
-      setFileError('');
-      setIsSubmitting(true);
       console.log(values);
-      if (!values.file) {
-        setFileError('Please select a file');
-        return;
-      }
+      const formData = new FormData();
 
-      if (!values.file.includes('pdf')) {
-        setFileError('Please attach a pdf file');
-        return;
-      }
-      _addStatute(formik.values)
+      formData.append('law_or_statute', values.law_or_statute);
+      formData.append('chapter', values.chapter);
+      formData.append('section', values.section);
+      formData.append('textSearch1', values.textSearch1);
+      formData.append('textSearch2', values.textSearch2);
+      formData.append('file', values.file);
+      setIsSubmitting(true);
+
+      _addStatute(formData)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
             notify('Statute added successfully', 'success');
+            setIsSubmitting(false);
+
             setTimeout(() => {
               navigate('/statutes');
             }, 2000);
@@ -78,9 +80,10 @@ const AddStatute = () => {
         })
         .catch((err) => {
           console.log(err);
+          setIsSubmitting(false);
+
           notify(err?.response?.data?.message, 'error');
-        })
-        .finally(setIsSubmitting(false));
+        });
     },
   });
 
@@ -171,23 +174,22 @@ const AddStatute = () => {
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <FileBase64
-                    onDone={(event) => {
-                      console.log(event);
-                      if (event.name.includes('pdf')) {
-                        formik.setFieldValue('file', event.base64);
-                        setFileError('');
-                      } else {
-                        formik.setFieldValue('file', '');
-
-                        setFileError('Please upload a pdf file');
-
-                        notify('Please attach a pdf file', 'warning');
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      if (e.target.files[0].type !== 'application/pdf') {
+                        notify('Please upload only pdf file', 'warning');
+                        uploader.current.value = '';
+                        return;
                       }
+                      formik.setFieldValue('file', e.target.files[0]);
                     }}
+                    accept="application/pdf"
                     ref={uploader}
                   />
-                  {setFile ? <p style={{ color: 'red', fontSize: 12 }}>{setFile}</p> : null}
+                  {formik.errors.file && formik.touched.file ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                  ) : null}{' '}
                 </Grid>
                 {/* <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>

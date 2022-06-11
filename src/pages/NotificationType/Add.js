@@ -4,10 +4,14 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
+import { LoadingButton } from '@mui/lab';
+
 import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { toast, ToastContainer } from 'react-toastify';
+
 import { useFormik } from 'formik';
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +26,19 @@ const AddNotificationType = () => {
   const [data, setData] = useState([]);
   const [statutes, setStatutes] = useState([]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -31,25 +48,23 @@ const AddNotificationType = () => {
     }),
 
     onSubmit: (values) => {
+      setIsSubmitting(true);
+
       _addNotificationType(formik.values)
         .then((res) => {
           console.log(res);
+          setIsSubmitting(true);
           if (res.status === 200) {
-            setAlert({
-              open: true,
-              message: 'Notification type created successfully',
-            });
-
+            setIsSubmitting(false);
+            notify('Notification Type Added Successfully', 'success');
             setTimeout(() => {
-              setAlert({
-                open: false,
-                message: '',
-              });
               navigate('/notificationsType');
             }, 2000);
           }
         })
         .catch((err) => {
+          setIsSubmitting(false);
+          notify(err.message, 'error');
           console.log(err);
         });
     },
@@ -83,9 +98,9 @@ const AddNotificationType = () => {
                 </Grid>
 
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
+                  <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>

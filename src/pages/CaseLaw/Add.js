@@ -62,6 +62,7 @@ const AddCase = () => {
       judge: '',
       lawyer: '',
       journals: '',
+      shortParagraph: '',
       appellant_or_opponent: '',
       principleOfCaseLaws: '',
       file: '',
@@ -85,6 +86,7 @@ const AddCase = () => {
       journals: yup.string().required('Journals is required'),
       appellant_or_opponent: yup.string().required('Appellant or Opponent is required'),
       principleOfCaseLaws: yup.string().required('Principle of Case Laws is required'),
+      shortParagraph: yup.string().required('Short Paragraph is required'),
       file: yup.string().required('File is required'),
     }),
 
@@ -116,6 +118,7 @@ const AddCase = () => {
       formData.append('journals', values.journals);
       formData.append('appellant_or_opponent', values.appellant_or_opponent);
       formData.append('principleOfCaseLaws', values.principleOfCaseLaws);
+      formData.append('shortParagraph', values.shortParagraph);
       setIsSubmitting(true);
       _addCase(formData)
         .then((res) => {
@@ -457,6 +460,23 @@ const AddCase = () => {
                   />
                   {formik.errors.principleOfCaseLaws && formik.touched.principleOfCaseLaws ? (
                     <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.principleOfCaseLaws}</p>
+                  ) : null}
+                </Grid>
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    label="Short Paragraph"
+                    color="secondary"
+                    id="shortParagraph"
+                    type="text"
+                    key="shortParagraph"
+                    rows={3}
+                    value={formik.values.shortParagraph}
+                    onChange={formik.handleChange}
+                    multiline
+                    fullWidth
+                  />
+                  {formik.errors.shortParagraph && formik.touched.shortParagraph ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.shortParagraph}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>

@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 // components
 import TableHead from '@mui/material/TableHead';
+import { toast, ToastContainer } from 'react-toastify';
 import Page from '../../components/Page';
 import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
@@ -82,7 +83,17 @@ export default function NotificationType() {
   useEffect(() => {
     getNotificationTypes();
   }, []);
-
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const getNotificationTypes = () => {
     _getAllNotificationTypes()
       .then((res) => {
@@ -169,7 +180,13 @@ export default function NotificationType() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <Actions id={id} onDelete={getNotificationTypes} />
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getNotificationTypes();
+                              notify('Deleted Successfully', 'success');
+                            }}
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -194,6 +211,7 @@ export default function NotificationType() {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Card>
+        <ToastContainer />
       </Container>
     </Page>
   );

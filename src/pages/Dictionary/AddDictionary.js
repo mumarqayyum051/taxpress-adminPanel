@@ -65,7 +65,7 @@ const AddDictionary = () => {
           console.log(res);
           setIsSubmitting(false);
           if (res.status === 200) {
-            notify(`Dictionary Created successfully`, 'success');
+            notify(`Word has been added successfully`, 'success');
             setTimeout(() => {
               navigate('/dictionary');
             }, 2000);
