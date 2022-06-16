@@ -72,6 +72,11 @@ const navConfig = [
     path: '/dictionary',
     icon: getIcon('heroicons-solid:library'),
   },
+  {
+    title: 'appointments',
+    path: '/appointments',
+    icon: getIcon('teenyicons:appointments-outline'),
+  },
 
   // {
   //   title: 'login',
