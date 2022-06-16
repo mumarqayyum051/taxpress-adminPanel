@@ -30,3 +30,8 @@ export const SERVICE_CATEGORIES = [
   { label: 'Registration Service', value: 'registration_service' },
   { label: 'Income Tax Service', value: 'incomeTax_service' },
 ];
+
+export const APPOINTMENT_TYPES = [
+  { label: 'Physical Appointment', value: 'physical_appointment' },
+  { label: 'Call Appointment', value: 'call_appointment' },
+];
