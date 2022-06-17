@@ -82,6 +82,11 @@ const navConfig = [
     path: '/appointments',
     icon: getIcon('teenyicons:appointments-outline'),
   },
+  {
+    title: 'backgrounds',
+    path: '/backgrounds',
+    icon: getIcon('icon-park-outline:background-color'),
+  },
 
   // {
   //   title: 'login',
