@@ -46,12 +46,14 @@ const AddCase = () => {
       progress: undefined,
       type,
     });
+  const date = new Date();
+
   const formik = useFormik({
     initialValues: {
-      startTime: '',
-      endTime: '',
+      startTime: date.toLocaleTimeString('en-GB'),
+      endTime: date.toLocaleTimeString('en-GB'),
       consultant: '',
-      appointmentType: APPOINTMENT_TYPES[0],
+      appointmentType: '',
     },
 
     validationSchema: yup.object({
@@ -61,23 +63,16 @@ const AddCase = () => {
     }),
 
     onSubmit: (values) => {
-      setFileError('');
-
       console.log(values);
-      if (!values.file) {
-        setFileError('Please select a file');
-        return;
-      }
-
       setIsSubmitting(true);
-      _addCase(formik.values)
+      _createAppointment(formik.values)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            notify('Case has been added', 'success');
+            notify('Appointment Slot has been added', 'success');
             setIsSubmitting(false);
             setTimeout(() => {
-              navigate('/caselaws');
+              navigate('/appointments');
             }, 2000);
           }
         })
@@ -104,7 +99,7 @@ const AddCase = () => {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
                       onChange={(e) => {
-                        console.log(e);
+                        formik.setFieldValue('startTime', e.toLocaleTimeString('en-GB'));
                       }}
                       label="Start Time"
                       renderInput={(params) => <TextField {...params} fullWidth />}
@@ -115,7 +110,7 @@ const AddCase = () => {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
                       onChange={(e) => {
-                        console.log(e);
+                        formik.setFieldValue('endTime', e.toLocaleTimeString('en-GB'));
                       }}
                       label="End Time"
                       renderInput={(params) => <TextField {...params} fullWidth />}
@@ -144,6 +139,7 @@ const AddCase = () => {
                     label="Appointment Type"
                     color="secondary"
                     key="appointmentType"
+                    placeholder="Select Appointment Type"
                     value={formik.values.appointmentType}
                     onChange={(event) => {
                       formik.setFieldValue('appointmentType', event.target.value);

@@ -14,14 +14,18 @@ import {
 } from '@mui/material';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
+import { format, compareAsc } from 'date-fns';
+import * as moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
 import CaseLawService from '../../services/CaseLawService';
+import AppointmentsService from '../../services/AppointmentsService';
 import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
@@ -63,8 +67,8 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function CaseLaw() {
-  const { _getAllCases } = CaseLawService;
+export default function Appointments() {
+  const { _getAllAppointmentSlots } = AppointmentsService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -83,11 +87,11 @@ export default function CaseLaw() {
   const { fileURL } = environment;
 
   useEffect(() => {
-    getAllCases();
+    getAllAppointmentSlots();
   }, []);
 
-  const getAllCases = () => {
-    _getAllCases()
+  const getAllAppointmentSlots = () => {
+    _getAllAppointmentSlots()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -157,34 +161,35 @@ export default function CaseLaw() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">#</TableCell>
-                    <TableCell align="left">Court</TableCell>
-                    <TableCell align="left">Lawyer</TableCell>
-                    <TableCell align="left">Judge</TableCell>
-                    <TableCell>File</TableCell>
+                    <TableCell align="left">Start Time</TableCell>
+                    <TableCell align="left">End Time</TableCell>
+                    <TableCell align="left">Consultant</TableCell>
+                    <TableCell align="left">Appointment Type</TableCell>
+                    <TableCell align="left">Booked</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
-                    const { id, pageNo, court, lawyer, judge, caseNo, file } = row;
+                    const { id, startTime, endTime, consultant, booked, appointmentType } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{court}</TableCell>
-                        <TableCell align="left">{lawyer}</TableCell>
-                        <TableCell align="left">{judge}</TableCell>
+                        <TableCell align="left">{startTime}</TableCell>
+                        <TableCell align="left">{endTime}</TableCell>
+                        <TableCell align="left">{consultant}</TableCell>
                         <TableCell align="left">
-                          <Button size="small" variant="contained" href={fileURL + file} target="_blank" download>
-                            <span>View File</span>
-                          </Button>
+                          {appointmentType === 'call_appointment' ? 'Call Appointment' : 'Physical Appointment'}
                         </TableCell>
+                        <TableCell align="left">{booked}</TableCell>
+
                         <TableCell align="right">
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllCases();
-                              notify('Case has been deleted successfully', 'success');
+                              getAllAppointmentSlots();
+                              notify('Appointment Slot has been deleted successfully', 'success');
                             }}
                           />
                         </TableCell>
