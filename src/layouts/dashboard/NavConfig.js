@@ -73,6 +73,11 @@ const navConfig = [
     icon: getIcon('heroicons-solid:library'),
   },
   {
+    title: 'appointment slots',
+    path: '/appointmentSlots',
+    icon: getIcon('teenyicons:appointments-outline'),
+  },
+  {
     title: 'appointments',
     path: '/appointments',
     icon: getIcon('teenyicons:appointments-outline'),

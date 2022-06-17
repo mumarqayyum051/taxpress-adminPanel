@@ -48,8 +48,9 @@ import Services from './pages/Services/Services';
 import AddServices from './pages/Services/Add';
 import ServiceDetail from './pages/ServiceDetail/ServiceDetail';
 import AddServiceDetail from './pages/ServiceDetail/Add';
+import AppointmentSlots from './pages/AppointmentSlots/AppointmentSlots';
+import AddSlot from './pages/AppointmentSlots/Add';
 import Appointments from './pages/Appointments/Appointments';
-import AddSlot from './pages/Appointments/Add';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -87,8 +88,9 @@ export default function App() {
     { path: 'serviceDetails/:superCategory/:type', element: <ServiceDetail /> },
     { path: 'serviceTypes/addServiceDetail', element: <AddServiceDetail /> },
     { path: 'serviceTypes/addServiceDetail/:superCategory/:type', element: <AddServiceDetail /> },
+    { path: 'appointmentSlots', element: <AppointmentSlots /> },
+    { path: 'appointmentSlots/addSlot', element: <AddSlot /> },
     { path: 'appointments', element: <Appointments /> },
-    { path: 'appointments/addSlot', element: <AddSlot /> },
   ];
   return (
     <ThemeProvider>

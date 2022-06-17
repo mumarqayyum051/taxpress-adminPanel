@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable camelcase */
 // material
 import {
   Button,
@@ -12,14 +10,13 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
-  Chip,
   Typography,
   Box,
 } from '@mui/material';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { format, compareAsc } from 'date-fns';
-import moment from 'moment';
+import * as moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -123,7 +120,7 @@ function InfoModal(props) {
 }
 
 export default function Appointments() {
-  const { _getAllAppointments } = AppointmentsService;
+  const { _getAllAppointmentSlots, _deleteAllAppointmentSlots } = AppointmentsService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -144,12 +141,12 @@ export default function Appointments() {
   const { fileURL } = environment;
 
   useEffect(() => {
-    getAllAppointments();
+    getAllAppointmentSlots();
   }, []);
 
-  const getAllAppointments = () => {
+  const getAllAppointmentSlots = () => {
     setLoading(true);
-    _getAllAppointments()
+    _getAllAppointmentSlots()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -208,7 +205,7 @@ export default function Appointments() {
         ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Appointments
+            Appointment Slots
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -233,77 +230,45 @@ export default function Appointments() {
                     <TableCell align="left">#</TableCell>
                     <TableCell align="left">Start Time</TableCell>
                     <TableCell align="left">End Time</TableCell>
-                    <TableCell align="left">Type</TableCell>
-                    <TableCell align="left">Name</TableCell>
-                    <TableCell align="left">Phone</TableCell>
-                    {/* <TableCell align="left">Email</TableCell> */}
-                    <TableCell align="left">Date</TableCell>
-                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left">Consultant</TableCell>
+                    <TableCell align="left">Appointments</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     // console.log(row);
-                    const {
-                      appointmentType,
-
-                      client_email,
-                      client_name,
-                      client_phone,
-                      date,
-                      startTime,
-                      endTime,
-                      id,
-                      status,
-                    } = row;
+                    const { id, startTime, endTime, consultant, NoOfAppointments } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">
-                          {new Date(`1994/01/01 ${startTime}`).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
+                        <TableCell align="left">{startTime}</TableCell>
+                        <TableCell align="left">{endTime}</TableCell>
+                        <TableCell align="left">{consultant}</TableCell>
+                        <TableCell align="left">{NoOfAppointments}</TableCell>
+                        {/* <TableCell align="left">
+                          {appointmentType === 'call_appointment' ? 'Call Appointment' : 'Physical Appointment'}
                         </TableCell>
-                        <TableCell align="left">
-                          {new Date(`1994/01/01 ${endTime}`).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </TableCell>
-                        <TableCell align="left">
-                          {appointmentType === 'physical_appointment'
-                            ? 'Physical'
-                            : appointmentType === 'call_appointment'
-                            ? 'Call'
-                            : null}
-                        </TableCell>
-                        <TableCell align="left">{client_name}</TableCell>
-                        <TableCell align="left">{client_phone}</TableCell>
-                        {/* <TableCell align="left">{client_email}</TableCell> */}
-                        <TableCell align="left">{moment(date).format('DD-MMM-YYYY')}</TableCell>
-                        <TableCell align="left">
-                          <Chip
-                            label={status}
-                            color={
-                              status === 'Completed'
-                                ? 'success'
-                                : status === 'Canceled'
-                                ? 'error'
-                                : status === 'Pending'
-                                ? 'primary'
-                                : 'primary'
-                            }
-                          />
-                        </TableCell>
-
+                        <TableCell align="left">{booked}</TableCell>
+                        {booked === 'Yes' ? (
+                          <TableCell align="center">
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                setShowModal(true);
+                              }}
+                              startIcon={<Iconify icon="eva:info-outline" />}
+                            >
+                              View
+                            </Button>
+                          </TableCell>
+                        ) : null} */}
                         <TableCell align="right">
                           <Actions
                             id={id}
-                            onStatusChange={() => {
-                              getAllAppointments();
-                              notify('Appointment status has been updated successfully', 'success');
+                            onDelete={() => {
+                              getAllAppointmentSlots();
+                              notify('Appointment Slot has been deleted successfully', 'success');
                             }}
                           />
                         </TableCell>

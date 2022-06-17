@@ -12,7 +12,7 @@ export default function UserMoreMenu(props) {
   const ref = useRef(null);
   const navigate = useNavigate();
   const { _deleteCase } = CaseLawService;
-  const { _changeAppointmentStatus } = AppointmentsService;
+  const { _deleteAppointmentSlot } = AppointmentsService;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,12 +37,11 @@ export default function UserMoreMenu(props) {
         <MenuItem
           sx={{ color: 'text.secondary' }}
           onClick={() => {
-            console.log('delete');
-            _changeAppointmentStatus({ status: 'Completed' }, props.id)
+            _deleteAppointmentSlot(props.id)
               .then((res) => {
                 console.log(res);
                 if (res.status === 200) {
-                  props.onStatusChange();
+                  props.onDelete();
 
                   setIsOpen(false);
                 }
@@ -53,32 +52,9 @@ export default function UserMoreMenu(props) {
           }}
         >
           <ListItemIcon>
-            <Iconify icon="carbon:task-complete" width={24} height={24} />
+            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Completed" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
-        <MenuItem
-          sx={{ color: 'text.secondary' }}
-          onClick={() => {
-            console.log('delete');
-            _changeAppointmentStatus({ status: 'Canceled' }, props.id)
-              .then((res) => {
-                console.log(res);
-                if (res.status === 200) {
-                  props.onStatusChange();
-
-                  setIsOpen(false);
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }}
-        >
-          <ListItemIcon>
-            <Iconify icon="material-symbols:cancel-presentation" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Canceled" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </Container>
