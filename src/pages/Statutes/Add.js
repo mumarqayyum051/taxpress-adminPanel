@@ -35,6 +35,7 @@ const AddStatute = () => {
     });
   const uploader = useRef();
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {

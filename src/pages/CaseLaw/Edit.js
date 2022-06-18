@@ -42,6 +42,8 @@ const EditCase = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const [statutes, setStatutes] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [hasFile, setHasFile] = useState(false);

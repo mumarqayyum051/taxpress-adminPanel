@@ -33,6 +33,8 @@ const AddBackground = () => {
   useEffect(() => {}, []);
   const uploader = useRef();
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const [statutes, setStatutes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const notify = (message, type) =>

@@ -36,6 +36,7 @@ const AddBlog = () => {
   const uploader = useRef();
   const allowedFormates = ['jpeg', 'png', 'jpg'];
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const notify = (message, type) =>

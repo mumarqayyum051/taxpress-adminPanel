@@ -33,6 +33,8 @@ const EditStatute = () => {
   const { id } = state;
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const notify = (message, type) =>
     toast(message, {

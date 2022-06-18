@@ -26,6 +26,8 @@ const AddDictionary = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',

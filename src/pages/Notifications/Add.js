@@ -26,6 +26,8 @@ const AddNotification = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const [notificationTypes, setNotificationTypes] = useState([]);
   const [statutes, setStatutes] = useState([]);
 

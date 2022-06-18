@@ -31,6 +31,8 @@ const Add = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const [highlights, setHighlights] = useState(['']);
 
   const notify = (message, type) =>

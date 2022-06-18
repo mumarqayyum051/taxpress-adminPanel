@@ -100,6 +100,8 @@ export default function Dictionary() {
   }, []);
 
   const getAboutus = () => {
+    setLoading(true);
+
     _getAboutus()
       .then((res) => {
         if (res.status === 200) {

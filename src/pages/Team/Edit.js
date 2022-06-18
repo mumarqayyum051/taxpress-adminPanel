@@ -28,6 +28,8 @@ const EditMember = () => {
   const { id } = state;
   const { fileURL } = environment;
   const [setFile, setFileError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const [hasFile, setHasFile] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,10 +110,11 @@ const EditMember = () => {
         }
       })
       .catch((err) => {
-        console.log(err);          setLoading(false);
+        console.log(err);
+        setLoading(false);
 
         notify(err?.message, 'error');
-      });
+      })
       .finally(() => {});
   }, []);
 

@@ -113,10 +113,11 @@ export default function Team() {
         }
       })
       .catch((err) => {
-        console.log(err);          setLoading(false);
+        console.log(err);
+        setLoading(false);
 
         notify(err?.message, 'error');
-      });
+      })
       .finally(setIsLoading(false));
   };
   useEffect(() => {
