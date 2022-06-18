@@ -79,10 +79,10 @@ export default function Dictionary() {
     message: '',
   });
   useEffect(() => {
-    getAllWords();
+    getHeroSection();
   }, []);
 
-  const getAllWords = () => {
+  const getHeroSection = () => {
     _getAllDictionarys()
       .then((res) => {
         if (res.status === 200) {
