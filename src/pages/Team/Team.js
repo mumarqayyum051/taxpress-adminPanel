@@ -113,8 +113,10 @@ export default function Team() {
         }
       })
       .catch((err) => {
-        console.log(err);
-      })
+        console.log(err);          setLoading(false);
+
+        notify(err?.message, 'error');
+      });
       .finally(setIsLoading(false));
   };
   useEffect(() => {
@@ -150,6 +152,12 @@ export default function Team() {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Team Members

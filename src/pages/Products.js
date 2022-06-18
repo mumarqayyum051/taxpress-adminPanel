@@ -23,10 +23,15 @@ export default function EcommerceShop() {
   return (
     <Page title="Dashboard: Products">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Typography variant="h4" sx={{ mb: 5 }}>
           Products
         </Typography>
-
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
             <ProductFilterSidebar
@@ -37,7 +42,6 @@ export default function EcommerceShop() {
             <ProductSort />
           </Stack>
         </Stack>
-
         <ProductList products={PRODUCTS} />
         <ProductCartWidget />
       </Container>

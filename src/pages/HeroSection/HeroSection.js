@@ -100,10 +100,14 @@ export default function Dictionary() {
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
+
+        notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -142,6 +146,12 @@ export default function Dictionary() {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Hero Section
@@ -157,7 +167,6 @@ export default function Dictionary() {
             </Button>
           ) : null}
         </Stack>
-
         <Card>
           {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>

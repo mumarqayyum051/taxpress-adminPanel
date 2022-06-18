@@ -27,6 +27,8 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import AboutusService from '../../services/AboutusService';
 import USERLIST from '../../_mock/user';
+import Loader2 from '../../components/Loader2';
+
 import environment from '../../environment/env';
 
 // mock
@@ -74,6 +76,8 @@ export default function Dictionary() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const { fileURL } = environment;
 
   const notify = (message, type) =>
@@ -100,10 +104,14 @@ export default function Dictionary() {
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
+
+        notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -142,6 +150,12 @@ export default function Dictionary() {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             About us Section
@@ -157,7 +171,6 @@ export default function Dictionary() {
             </Button>
           ) : null}
         </Stack>
-
         <Card>
           {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>

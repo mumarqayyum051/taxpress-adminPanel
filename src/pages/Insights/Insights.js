@@ -103,6 +103,9 @@ const Insights = () => {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
+
+        notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -139,6 +142,12 @@ const Insights = () => {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Research & Insights
@@ -152,7 +161,6 @@ const Insights = () => {
             Add
           </Button>
         </Stack>
-
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

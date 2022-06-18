@@ -103,6 +103,9 @@ export default function NotificationType() {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
+
+        notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -141,6 +144,12 @@ export default function NotificationType() {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Notification Types
@@ -154,7 +163,6 @@ export default function NotificationType() {
             Add Notification Type
           </Button>
         </Stack>
-
         <Card>
           {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>

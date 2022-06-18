@@ -107,6 +107,9 @@ const ServiceDetail = () => {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
+
+        notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -143,6 +146,12 @@ const ServiceDetail = () => {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
             <Typography variant="h4">List of Services</Typography>
@@ -179,7 +188,6 @@ const ServiceDetail = () => {
             Add
           </Button>
         </Stack> */}
-
         <Card>
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

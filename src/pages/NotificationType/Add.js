@@ -72,6 +72,12 @@ const AddNotificationType = () => {
 
   return (
     <Container>
+      {' '}
+      {loading ? (
+        <>
+          <Loader2 />
+        </>
+      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

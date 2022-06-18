@@ -86,6 +86,12 @@ export default function Register() {
         )}
 
         <Container>
+          {' '}
+          {loading ? (
+            <>
+              <Loader2 />
+            </>
+          ) : null}
           <ContentStyle>
             <Typography variant="h4" gutterBottom>
               Get started absolutely free.

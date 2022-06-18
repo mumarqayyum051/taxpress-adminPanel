@@ -34,6 +34,12 @@ export default function Blog() {
   return (
     <Page title="Dashboard: Blog">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Blogs
@@ -47,7 +53,6 @@ export default function Blog() {
             New Post
           </Button>
         </Stack>
-
         {posts.length > 0 ? (
           <Grid container spacing={3}>
             {posts.map((post, index) => (

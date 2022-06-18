@@ -215,6 +215,12 @@ const EditCase = () => {
   };
   return (
     <Container>
+      {' '}
+      {loading ? (
+        <>
+          <Loader2 />
+        </>
+      ) : null}
       {!isLoading ? (
         <Card sx={{ minWidth: 275 }}>
           <CardContent>

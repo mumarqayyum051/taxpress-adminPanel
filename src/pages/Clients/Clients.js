@@ -156,6 +156,12 @@ export default function Clients() {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         {loading ? (
           <>
             <Loader2 />

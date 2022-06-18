@@ -21,6 +21,12 @@ export default function UserMoreMenu(props) {
   }, []);
   return (
     <Container>
+      {' '}
+      {loading ? (
+        <>
+          <Loader2 />
+        </>
+      ) : null}
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
         <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
       </IconButton>

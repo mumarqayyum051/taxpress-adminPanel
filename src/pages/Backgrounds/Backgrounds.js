@@ -122,6 +122,7 @@ export default function Appointments() {
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -146,6 +147,8 @@ export default function Appointments() {
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
+          setLoading(false);
+
           setLoading(false);
         }
       })
@@ -199,6 +202,7 @@ export default function Appointments() {
             <Loader2 />
           </>
         ) : null}
+
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Backgrounds and Paths

@@ -154,6 +154,8 @@ export default function Appointments() {
         if (res.status === 200) {
           setCases(res.data.data);
           setLoading(false);
+
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -201,6 +203,12 @@ export default function Appointments() {
   return (
     <Page title="User">
       <Container>
+        {' '}
+        {loading ? (
+          <>
+            <Loader2 />
+          </>
+        ) : null}
         {loading ? (
           <>
             <Loader2 />

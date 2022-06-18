@@ -92,6 +92,12 @@ const Add = () => {
 
   return (
     <Container>
+      {' '}
+      {loading ? (
+        <>
+          <Loader2 />
+        </>
+      ) : null}
       {loading ? (
         <>
           <Loader2 />
