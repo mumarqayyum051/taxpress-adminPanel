@@ -16,6 +16,8 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 // components
 import TableHead from '@mui/material/TableHead';
+import { ToastContainer, toast } from 'react-toastify';
+
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -23,7 +25,7 @@ import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
-import DictionaryService from '../../services/DictionaryService';
+import HeroSectionService from '../../services/HeroSectionService';
 import USERLIST from '../../_mock/user';
 import environment from '../../environment/env';
 
@@ -68,12 +70,23 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function Dictionary() {
-  const { _getAllDictionarys } = DictionaryService;
+  const { _getHeroSection } = HeroSectionService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const { fileURL } = environment;
 
+  const notify = (message, type) =>
+    toast(message, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      type,
+    });
   const [alert, setAlert] = useState({
     open: false,
     message: '',
@@ -83,7 +96,7 @@ export default function Dictionary() {
   }, []);
 
   const getHeroSection = () => {
-    _getAllDictionarys()
+    _getHeroSection()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -131,16 +144,18 @@ export default function Dictionary() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Dictionary
+            Hero Section
           </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/addDictionary"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            Add Word
-          </Button>
+          {filteredCases.length === 0 ? (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/heroSection/addHeroSection"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              Update Hero Section
+            </Button>
+          ) : null}
         </Stack>
 
         <Card>
@@ -151,28 +166,31 @@ export default function Dictionary() {
                 <TableHead>
                   <TableRow>
                     <TableCell>#</TableCell>
-                    <TableCell align="left">Word</TableCell>
-                    <TableCell align="left">Meaning</TableCell>
-                    <TableCell align="left">File</TableCell>
+                    <TableCell align="left">Label</TableCell>
+                    <TableCell align="left">Link</TableCell>
                     {/* <TableCell align="left">Methods</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
-                    const { id, word, meaning, file } = row;
+                    const { id, btnLink, btnText } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell component="th" scope="row">
                           {i + 1}
                         </TableCell>
-                        <TableCell align="left">{word}</TableCell>
-                        <TableCell align="left">{meaning}</TableCell>
-                        <TableCell align="left">
-                          <Button variant="contained" href={fileURL + file} target="_blank" download>
-                            View
-                          </Button>
+                        <TableCell align="left">{btnText}</TableCell>
+                        <TableCell align="left">{btnLink}</TableCell>
+                        <TableCell align="right">
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getHeroSection();
+                              notify('Deleted Successfully', 'success');
+                            }}
+                          />
                         </TableCell>
                       </TableRow>
                     );
@@ -239,6 +257,7 @@ export default function Dictionary() {
             ]
           : null}
       </Container>
+      <ToastContainer />
     </Page>
   );
 }

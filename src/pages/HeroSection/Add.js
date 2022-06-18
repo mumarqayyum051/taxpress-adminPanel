@@ -16,10 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import FileBase64 from 'react-file-base64';
 
-import DictionaryService from '../../services/DictionaryService';
+import HeroSectionService from '../../services/HeroSectionService';
 
 const AddDictionary = () => {
-  const { _addDictionary } = DictionaryService;
+  const { _createHeroSection } = HeroSectionService;
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,35 +39,24 @@ const AddDictionary = () => {
     });
   const formik = useFormik({
     initialValues: {
-      word: '',
-      meaning: '',
-      sld: '',
-      file: '',
+      btnLink: '',
+      btnText: '',
     },
     validationSchema: yup.object({
-      word: yup.string().required('Word is required'),
-      meaning: yup.string().required('Meaning is required'),
-      sld: yup.number().required('SLD is required'),
-      file: yup.string().required('File is required'),
+      btnLink: yup.string().required('Required'),
+      btnText: yup.string().required('Required'),
     }),
 
     onSubmit: (values) => {
-      setFileError('');
-
-      const formData = new FormData();
-      formData.append('word', values.word);
-      formData.append('meaning', values.meaning);
-      formData.append('sld', values.sld);
-      formData.append('file', values.file);
       setIsSubmitting(true);
-      _addDictionary(formData)
+      _createHeroSection(values)
         .then((res) => {
           console.log(res);
           setIsSubmitting(false);
           if (res.status === 200) {
-            notify(`Word has been added successfully`, 'success');
+            notify(`Hero section will now be updated in a whlie`, 'success');
             setTimeout(() => {
-              navigate('/dictionary');
+              navigate('/herosection');
             }, 2000);
           }
         })
@@ -84,7 +73,7 @@ const AddDictionary = () => {
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Add Dictionary{' '}
+            Change Hero Section
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
@@ -92,76 +81,35 @@ const AddDictionary = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={12}>
                   <TextField
-                    label="SLD"
+                    label="Label"
                     color="secondary"
-                    id="sld"
+                    id="btnText"
                     type="text"
-                    key="sld"
-                    value={formik.values.sld}
+                    key="btnText"
+                    value={formik.values.btnText}
                     onChange={formik.handleChange}
-                    InputProps={{
-                      inputProps: {
-                        type: 'number',
-                        min: 0,
-                      },
-                    }}
                     fullWidth
                   />
-                  {formik.errors.sld && formik.touched.sld ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.sld}</p>
+                  {formik.errors.btnText && formik.touched.btnText ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.btnText}</p>
                   ) : null}
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <TextField
-                    label="Word"
+                    label="Link"
                     color="secondary"
-                    id="word"
+                    id="btnLink"
                     type="text"
-                    key="word"
-                    value={formik.values.word}
+                    key="btnLink"
+                    value={formik.values.btnLink}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.word && formik.touched.word ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.word}</p>
+                  {formik.errors.btnLink && formik.touched.btnLink ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.btnLink}</p>
                   ) : null}
                 </Grid>
 
-                <Grid item xs={12} md={12}>
-                  <TextField
-                    label="Meaning"
-                    color="secondary"
-                    id="meaning"
-                    type="text"
-                    key="meaning"
-                    rows={3}
-                    value={formik.values.meaning}
-                    onChange={formik.handleChange}
-                    multiline
-                    fullWidth
-                  />
-                  {formik.errors.meaning && formik.touched.meaning ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.meaning}</p>
-                  ) : null}
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <input
-                    type="file"
-                    onChange={(e) => {
-                      if (e.target.files[0].type !== 'application/pdf') {
-                        notify('Please upload only pdf file', 'warning');
-                        uploader.current.value = '';
-                        return;
-                      }
-                      formik.setFieldValue('file', e.target.files[0]);
-                    }}
-                    accept="application/pdf"
-                    ref={uploader}
-                  />
-                  {formik.errors.file && formik.touched.file ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
-                  ) : null}{' '}
-                </Grid>
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit

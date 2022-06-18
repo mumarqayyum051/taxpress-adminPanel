@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // component
 import Iconify from '../../components/Iconify';
-import DictionaryService from '../../services/DictionaryService';
+import HeroSectionService from '../../services/HeroSectionService';
+
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
-  const { _deleteDictionary } = DictionaryService;
+  const { _deleteHeroSection } = HeroSectionService;
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function UserMoreMenu(props) {
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
               console.log('delete');
-              _deleteDictionary(props.id)
+              _deleteHeroSection(props.id)
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {
@@ -53,13 +54,6 @@ export default function UserMoreMenu(props) {
                 });
             }}
           />
-        </MenuItem>
-
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
-          <ListItemIcon>
-            <Iconify icon="eva:edit-fill" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>
