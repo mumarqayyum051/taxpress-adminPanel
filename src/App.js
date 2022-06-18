@@ -53,6 +53,13 @@ import AddSlot from './pages/AppointmentSlots/Add';
 import Appointments from './pages/Appointments/Appointments';
 import Backgrounds from './pages/Backgrounds/Backgrounds';
 import AddBackground from './pages/Backgrounds/Add';
+import HeroSection from './pages/HeroSection/HeroSection';
+import AddHeroSection from './pages/HeroSection/Add';
+import Aboutus from './pages/Aboutus/Aboutus';
+import AddAboutus from './pages/Aboutus/Add';
+import Clients from './pages/Clients/Clients';
+import AddClient from './pages/Clients/Add';
+
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -95,6 +102,12 @@ export default function App() {
     { path: 'appointments', element: <Appointments /> },
     { path: 'backgrounds', element: <Backgrounds /> },
     { path: 'backgrounds/addBackground', element: <AddBackground /> },
+    { path: 'heroSection', element: <HeroSection /> },
+    { path: 'heroSection/addHeroSection', element: <AddHeroSection /> },
+    { path: 'aboutus', element: <Aboutus /> },
+    { path: 'aboutus/addAboutus', element: <AddAboutus /> },
+    { path: 'clients', element: <Clients /> },
+    { path: 'clients/addClient', element: <AddClient /> },
   ];
   return (
     <ThemeProvider>

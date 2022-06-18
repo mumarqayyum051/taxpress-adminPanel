@@ -87,6 +87,21 @@ const navConfig = [
     path: '/backgrounds',
     icon: getIcon('icon-park-outline:background-color'),
   },
+  {
+    title: 'hero section',
+    path: '/herosection',
+    icon: getIcon('fa:header'),
+  },
+  {
+    title: 'about us',
+    path: '/aboutus',
+    icon: getIcon('akar-icons:info'),
+  },
+  {
+    title: 'clients',
+    path: '/clients',
+    icon: getIcon('raphael:customer'),
+  },
 
   // {
   //   title: 'login',
