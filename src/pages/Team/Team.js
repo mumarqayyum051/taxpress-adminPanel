@@ -17,6 +17,8 @@ import {
 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import Loader2 from '../../components/Loader2';
+
 // components
 // eslint-disable-next-line import/no-duplicates
 

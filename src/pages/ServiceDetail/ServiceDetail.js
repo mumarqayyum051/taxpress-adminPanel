@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import Loader2 from '../../components/Loader2';
+
 // components
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
