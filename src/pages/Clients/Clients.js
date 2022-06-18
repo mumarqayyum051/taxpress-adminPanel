@@ -1,6 +1,7 @@
+/* eslint-disable import/no-duplicates */
+/* eslint-disable camelcase */
 // material
 import {
-  Box,
   Button,
   Card,
   Container,
@@ -13,22 +14,31 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import Modal from '@mui/material/Modal';
+
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+
+// components
+// eslint-disable-next-line import/no-duplicates
+
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import Loader2 from '../../components/Loader2';
-
 import Iconify from '../../components/Iconify';
+
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
-import AppointmentsService from '../../services/AppointmentsService';
+import ClientService from '../../services/ClientService';
 import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
+import MemberAvatar from './ClientAvatar';
+
+import Loader from '../../components/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -50,17 +60,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 function applySortFilter(array, comparator, query) {
   console.log(array);
   if (!array.length) {
@@ -78,50 +77,24 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function InfoModal(props) {
-  const [open, setOpen] = useState(props.showModal);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  console.log('Modal Rendered');
-  useEffect(() => {
-    console.log(props.showModal);
-    if (props.showModal) {
-      handleOpen();
-    } else {
-      handleClose();
-    }
-  }, [props.showModal, open]);
-  return (
-    <div>
-      <Modal
-        open={open}
-        onClose={(e) => {
-          props.onClose();
-          handleClose();
-        }}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
-    </div>
-  );
-}
-
-export default function Appointments() {
-  const { _getAllAppointmentSlots, _deleteAllAppointmentSlots } = AppointmentsService;
-  const [cases, setCases] = useState([]);
+export default function Clients() {
+  const { _getAllClients } = ClientService;
+  const { fileURL } = environment;
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState([]);
+
+  useEffect(() => {
+    getClients();
+  }, []);
+
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -134,31 +107,24 @@ export default function Appointments() {
       type,
     });
 
-  const { fileURL } = environment;
-
-  useEffect(() => {
-    getAllAppointmentSlots();
-  }, []);
-
-  const getAllAppointmentSlots = () => {
+  const getClients = () => {
+    setIsLoading(true);
     setLoading(true);
-    _getAllAppointmentSlots()
+    _getAllClients()
       .then((res) => {
         if (res.status === 200) {
-          setCases(res.data.data);
+          setResult(res.data.data);
           setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
         setLoading(false);
-
-        notify(err?.response?.data?.message, 'error');
-      });
+      })
+      .finally(setIsLoading(false));
   };
   useEffect(() => {
-    console.log(cases);
-    const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
+    const arr = applySortFilter(result, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
       setisCaseNotFound(true);
@@ -168,13 +134,9 @@ export default function Appointments() {
 
       setFilteredCases(arr);
     }
-  }, [cases]);
+  }, [result]);
 
   const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState('asc');
-
-  const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
 
@@ -201,70 +163,56 @@ export default function Appointments() {
         ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Backgrounds and Paths
+            Clients
           </Typography>
-
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to="/backgrounds/addBackground"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              sx={{ marginLeft: 2 }}
-            >
-              Add Background
-            </Button>
-          </Box>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/clients/addClient"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Add Client
+          </Button>
         </Stack>
         <Card>
-          {/* <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} /> */}
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left">#</TableCell>
-                    <TableCell align="left">Start Time</TableCell>
-                    <TableCell align="left">End Time</TableCell>
-                    <TableCell align="left">Consultant</TableCell>
-                    <TableCell align="left">Appointments</TableCell>
+                    <TableCell>#</TableCell>
+                    <TableCell>Profile Picture</TableCell>
+                    <TableCell>Client Name</TableCell>
+                    <TableCell>Client Designation</TableCell>
+                    <TableCell>Review</TableCell>
+                    <TableCell sx={{ width: '20%' }}>Feedback</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // console.log(row);
-                    const { id, startTime, endTime, consultant, NoOfAppointments } = row;
+                    // eslint-disable-next-line camelcase
+                    const { id, comment, review, clientDesignation, clientName, file, reviewTitle } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
-                        <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{startTime}</TableCell>
-                        <TableCell align="left">{endTime}</TableCell>
-                        <TableCell align="left">{consultant}</TableCell>
-                        <TableCell align="left">{NoOfAppointments}</TableCell>
-                        {/* <TableCell align="left">
-                          {appointmentType === 'call_appointment' ? 'Call Appointment' : 'Physical Appointment'}
+                        <TableCell>{i + 1}</TableCell>
+                        <TableCell>
+                          <MemberAvatar profilePicture={fileURL + file} clientName={clientName} />
                         </TableCell>
-                        <TableCell align="left">{booked}</TableCell>
-                        {booked === 'Yes' ? (
-                          <TableCell align="center">
-                            <Button
-                              variant="contained"
-                              onClick={() => {
-                                setShowModal(true);
-                              }}
-                              startIcon={<Iconify icon="eva:info-outline" />}
-                            >
-                              View
-                            </Button>
-                          </TableCell>
-                        ) : null} */}
+                        <TableCell>{clientName}</TableCell>
+                        <TableCell>{clientDesignation}</TableCell>
+                        <TableCell>{review}</TableCell>
+                        <TableCell sx={{ width: '20%' }}>
+                          {comment && comment?.length > 50 ? `${comment.slice(0, 80)}...` : comment}
+                        </TableCell>
+
                         <TableCell align="right">
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllAppointmentSlots();
-                              notify('Appointment Slot has been deleted successfully', 'success');
+                              getClients();
+
+                              notify('Client has been deleted successfully', 'success');
                             }}
                           />
                         </TableCell>
@@ -284,7 +232,7 @@ export default function Appointments() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={cases.length || 0}
+            count={result.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -292,13 +240,6 @@ export default function Appointments() {
           />
         </Card>
         <ToastContainer />
-        <InfoModal
-          showModal={showModal}
-          onClose={() => {
-            console.log('onclose');
-            setShowModal(false);
-          }}
-        />
       </Container>
     </Page>
   );
