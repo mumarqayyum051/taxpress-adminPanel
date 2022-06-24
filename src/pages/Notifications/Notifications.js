@@ -99,12 +99,10 @@ export default function Notifications() {
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
-          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -157,7 +155,6 @@ export default function Notifications() {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -166,11 +163,6 @@ export default function Notifications() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Notification

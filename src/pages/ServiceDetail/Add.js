@@ -20,7 +20,6 @@ import IconButton from '@mui/material/IconButton';
 import { ORDINANCE } from '../../constants/constants';
 
 import ServiceDetailService from '../../services/ServiceDetailService';
-import Loader2 from '../../components/Loader2';
 
 const Add = () => {
   const { _createServiceDetail } = ServiceDetailService;
@@ -30,10 +29,7 @@ const Add = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const [highlights, setHighlights] = useState(['']);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
   const { state } = useLocation();
   const { superCategory, type } = useParams();
@@ -107,17 +103,6 @@ const Add = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

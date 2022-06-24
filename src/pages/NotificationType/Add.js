@@ -8,7 +8,6 @@ import { LoadingButton } from '@mui/lab';
 
 import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -74,12 +73,6 @@ const AddNotificationType = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

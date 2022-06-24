@@ -22,7 +22,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { LoadingButton } from '@mui/lab';
 import Modal from '@mui/material/Modal';
-import Loader2 from '../../components/Loader2';
 
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
@@ -125,7 +124,6 @@ export default function Appointments() {
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -145,19 +143,14 @@ export default function Appointments() {
   }, []);
 
   const getAllAppointmentSlots = () => {
-    setLoading(true);
     _getAllAppointmentSlots()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
-          setLoading(false);
-
-          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.response?.data?.message, 'error');
       });
@@ -201,15 +194,6 @@ export default function Appointments() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
         ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>

@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 // components
 import TableHead from '@mui/material/TableHead';
@@ -105,7 +104,6 @@ const Insights = () => {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -145,11 +143,6 @@ const Insights = () => {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Research & Insights

@@ -14,22 +14,19 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
-
 // components
 import TableHead from '@mui/material/TableHead';
 import { ToastContainer, toast } from 'react-toastify';
-
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import AboutusService from '../../services/AboutusService';
 import USERLIST from '../../_mock/user';
-import Loader2 from '../../components/Loader2';
 
 import environment from '../../environment/env';
 
@@ -78,7 +75,6 @@ export default function Dictionary() {
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   const { fileURL } = environment;
 
@@ -102,18 +98,14 @@ export default function Dictionary() {
   }, []);
 
   const getAboutus = () => {
-    setLoading(true);
-
     _getAboutus()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
-          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -155,11 +147,6 @@ export default function Dictionary() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             About us Section

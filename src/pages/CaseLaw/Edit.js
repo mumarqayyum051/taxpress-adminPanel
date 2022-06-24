@@ -42,15 +42,12 @@ const EditCase = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [statutes, setStatutes] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+
   const [hasFile, setHasFile] = useState(false);
 
-  useEffect(() => {
-    setisLoading(false);
-  }, []);
+  useEffect(() => {}, []);
   const { fileURL } = environment;
 
   const notify = (message, type) =>
@@ -171,24 +168,19 @@ const EditCase = () => {
   };
 
   const getStatutes = () => {
-    setisLoading(true);
     _getStatutesOnly()
       .then(async (res) => {
         if (res.status === 200) {
           console.log(res);
           setStatutes(res.data.data);
-          setisLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setisLoading(false);
       });
   };
 
   const getCaseById = (id) => {
-    setisLoading(true);
-
     _getCaseById(id)
       .then(async (res) => {
         if (res.status === 200) {
@@ -205,24 +197,16 @@ const EditCase = () => {
               const law_or_statute = _.findIndex(statutes, ['id', response.law_or_statute]);
               // console.log(law_or_statute);
               await formik.setFieldValue('law_or_statute', statutes[law_or_statute]);
-              setisLoading(false);
             }
           }
         }
       })
       .catch((err) => {
         console.log(err);
-        setisLoading(false);
       });
   };
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       {!isLoading ? (
         <Card sx={{ minWidth: 275 }}>
           <CardContent>

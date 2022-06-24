@@ -24,11 +24,6 @@ export default function EcommerceShop() {
     <Page title="Dashboard: Products">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Typography variant="h4" sx={{ mb: 5 }}>
           Products
         </Typography>

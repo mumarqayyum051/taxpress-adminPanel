@@ -21,7 +21,6 @@ import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
-import Loader2 from '../../components/Loader2';
 
 import CaseLawService from '../../services/CaseLawService';
 import USERLIST from '../../_mock/user';
@@ -93,7 +92,6 @@ export default function CaseLaw() {
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
-          setLoading(false);
         }
       })
       .catch((err) => {
@@ -140,11 +138,6 @@ export default function CaseLaw() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Cases

@@ -1,24 +1,20 @@
 import { LoadingButton } from '@mui/lab';
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import React, { useEffect, useRef, useState } from 'react';
-import FileBase64 from 'react-file-base64';
-import { useNavigate, useLocation } from 'react-router-dom';
-import * as yup from 'yup';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import * as yup from 'yup';
 import environment from '../../environment/env';
 import TeamService from '../../services/TeamService';
 
@@ -30,7 +26,6 @@ const EditMember = () => {
   const { id } = state;
   const { fileURL } = environment;
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [hasFile, setHasFile] = useState(false);
 
@@ -113,7 +108,6 @@ const EditMember = () => {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       })
@@ -122,12 +116,6 @@ const EditMember = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

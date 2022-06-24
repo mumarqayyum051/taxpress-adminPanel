@@ -11,7 +11,6 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -30,7 +29,6 @@ const Add = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [highlights, setHighlights] = useState(['']);
 
@@ -73,12 +71,6 @@ const Add = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

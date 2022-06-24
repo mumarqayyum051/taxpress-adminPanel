@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 // components
 import TableHead from '@mui/material/TableHead';
@@ -94,9 +93,6 @@ export default function Statutes() {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
-
-        notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -136,11 +132,6 @@ export default function Statutes() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Statutes

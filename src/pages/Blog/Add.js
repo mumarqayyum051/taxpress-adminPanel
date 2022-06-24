@@ -12,7 +12,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -38,7 +37,6 @@ const AddBlog = () => {
   const uploader = useRef();
   const allowedFormates = ['jpeg', 'png', 'jpg'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const notify = (message, type) =>
@@ -102,12 +100,6 @@ const AddBlog = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

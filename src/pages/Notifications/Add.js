@@ -26,7 +26,6 @@ const AddNotification = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [notificationTypes, setNotificationTypes] = useState([]);
   const [statutes, setStatutes] = useState([]);
@@ -46,7 +45,6 @@ const AddNotification = () => {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -61,7 +59,6 @@ const AddNotification = () => {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -128,12 +125,6 @@ const AddNotification = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

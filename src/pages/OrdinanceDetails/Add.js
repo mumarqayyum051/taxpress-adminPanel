@@ -16,7 +16,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
 import { ORDINANCE } from '../../constants/constants';
 import OrdinanceService from '../../services/OrdinanceService';
-import Loader2 from '../../components/Loader2';
 
 const Add = () => {
   const { _addOrdinanceDetail, _getAllOrdinanceByType } = OrdinanceService;
@@ -26,10 +25,8 @@ const Add = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [highlights, setHighlights] = useState(['']);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
   const override = css`
     display: block;
@@ -50,18 +47,14 @@ const Add = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getAllOrdinanceByType = async (type) => {
-    setLoading(true);
     try {
       const response = await _getAllOrdinanceByType(type);
       if (response.status === 200) {
         setResult(response?.data?.data);
         console.log(response.data);
-
-        setLoading(false);
       }
     } catch (e) {
       console.log(e);
-      setLoading(false);
     }
   };
   const formik = useFormik({
@@ -104,17 +97,6 @@ const Add = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

@@ -17,7 +17,6 @@ import {
 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 // components
 // eslint-disable-next-line import/no-duplicates
@@ -27,7 +26,7 @@ import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import Loader2 from '../../components/Loader2';
+
 import Iconify from '../../components/Iconify';
 
 import Page from '../../components/Page';
@@ -81,7 +80,7 @@ function applySortFilter(array, comparator, query) {
 export default function Clients() {
   const { _getAllClients } = ClientService;
   const { fileURL } = environment;
-  const [isLoading, setIsLoading] = useState(false);
+
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [alert, setAlert] = useState({
@@ -89,7 +88,6 @@ export default function Clients() {
     message: '',
     severity: 'success',
   });
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
 
   useEffect(() => {
@@ -109,20 +107,16 @@ export default function Clients() {
     });
 
   const getClients = () => {
-    setIsLoading(true);
-    setLoading(true);
     _getAllClients()
       .then((res) => {
         if (res.status === 200) {
           setResult(res.data.data);
-          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
       })
-      .finally(setIsLoading(false));
+      .finally();
   };
   useEffect(() => {
     const arr = applySortFilter(result, getComparator('asc', 'name'), filterName);
@@ -157,17 +151,6 @@ export default function Clients() {
   return (
     <Page title="User">
       <Container>
-        {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Clients

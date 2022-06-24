@@ -6,18 +6,15 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import * as yup from 'yup';
-import { ORDINANCE } from '../../constants/constants';
-import OrdinanceService from '../../services/OrdinanceService';
+
 import InsightsService from '../../services/InsightsService';
-import Loader2 from '../../components/Loader2';
 
 const Add = () => {
   const { _addInsight } = InsightsService;
@@ -27,10 +24,7 @@ const Add = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const [highlights, setHighlights] = useState(['']);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
   const override = css`
     display: block;
@@ -95,17 +89,6 @@ const Add = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

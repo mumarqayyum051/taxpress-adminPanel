@@ -24,11 +24,6 @@ export default function Page404() {
     <Page title="404 Page Not Found">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <ContentStyle sx={{ textAlign: 'center', alignItems: 'center' }}>
           <Typography variant="h3" paragraph>
             Sorry, page not found!

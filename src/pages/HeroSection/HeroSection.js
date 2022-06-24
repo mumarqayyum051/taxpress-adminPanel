@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 // components
 import TableHead from '@mui/material/TableHead';
@@ -102,12 +101,10 @@ export default function Dictionary() {
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
-          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       });
@@ -149,11 +146,6 @@ export default function Dictionary() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Hero Section

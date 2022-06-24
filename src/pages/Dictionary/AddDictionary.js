@@ -8,7 +8,6 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { LoadingButton } from '@mui/lab';
 import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
 
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -28,7 +27,6 @@ const AddDictionary = () => {
   const uploader = useRef();
   const allowedFormates = ['pdf'];
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const notify = (message, type) =>
     toast(message, {
@@ -85,12 +83,6 @@ const AddDictionary = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>

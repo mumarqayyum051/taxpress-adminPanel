@@ -15,10 +15,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import Loader2 from '../../components/Loader2';
-
 // components
 // eslint-disable-next-line import/no-duplicates
 
@@ -26,7 +22,7 @@ import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Iconify from '../../components/Iconify';
 
 import Page from '../../components/Page';
@@ -35,10 +31,10 @@ import environment from '../../environment/env';
 import TeamService from '../../services/TeamService';
 import USERLIST from '../../_mock/user';
 // mock
+import Loader from '../../components/Loader';
 import Actions from './Actions';
 import MemberAvatar from './Avatar';
 import Social from './Social';
-import Loader from '../../components/Loader';
 
 // ----------------------------------------------------------------------
 
@@ -80,7 +76,7 @@ function applySortFilter(array, comparator, query) {
 export default function Team() {
   const { _getAllMembers } = TeamService;
   const { fileURL } = environment;
-  const [isLoading, setIsLoading] = useState(false);
+
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [alert, setAlert] = useState({
@@ -107,7 +103,6 @@ export default function Team() {
     });
 
   const getAllMembers = () => {
-    setIsLoading(true);
     _getAllMembers()
       .then((res) => {
         if (res.status === 200) {
@@ -116,11 +111,10 @@ export default function Team() {
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
 
         notify(err?.message, 'error');
       })
-      .finally(setIsLoading(false));
+      .finally();
   };
   useEffect(() => {
     const arr = applySortFilter(result, getComparator('asc', 'name'), filterName);
@@ -156,11 +150,6 @@ export default function Team() {
     <Page title="User">
       <Container>
         {' '}
-        {loading ? (
-          <>
-            <Loader2 />
-          </>
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Team Members
@@ -204,18 +193,14 @@ export default function Team() {
                           <Social id={id} social={row} />
                         </TableCell>
                         <TableCell align="right">
-                          {isLoading ? (
-                            <Loader />
-                          ) : (
-                            <Actions
-                              id={id}
-                              onDelete={() => {
-                                getAllMembers();
+                          <Actions
+                            id={id}
+                            onDelete={() => {
+                              getAllMembers();
 
-                                notify('Team member has been deleted successfully', 'success');
-                              }}
-                            />
-                          )}
+                              notify('Team member has been deleted successfully', 'success');
+                            }}
+                          />
                         </TableCell>
                       </TableRow>
                     );

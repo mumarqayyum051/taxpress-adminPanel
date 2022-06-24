@@ -20,7 +20,6 @@ const AddMember = () => {
   const uploader = useRef();
 
   const [setFile, setFileError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -92,12 +91,6 @@ const AddMember = () => {
 
   return (
     <Container>
-      {' '}
-      {loading ? (
-        <>
-          <Loader2 />
-        </>
-      ) : null}
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
