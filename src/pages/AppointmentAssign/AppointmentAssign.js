@@ -32,7 +32,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { LoadingButton } from '@mui/lab';
 import Modal from '@mui/material/Modal';
-
+import * as _ from 'lodash';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -139,6 +139,17 @@ export default function Appointments() {
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [page, setPage] = useState(0);
+
+  const [order, setOrder] = useState('asc');
+
+  const [orderBy, setOrderBy] = useState('name');
+
+  const [filterName, setFilterName] = useState('');
+  const [physicalAdmins, setPhysicalAdmins] = useState([]);
+  const [callAdmins, setCallAdmins] = useState([]);
+
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -176,6 +187,13 @@ export default function Appointments() {
       .then((res) => {
         if (res.status === 200) {
           setRoles(res.data.data);
+          const admins = res.data.data;
+          if (admins.length) {
+            const physicalAdmins = _.filter(admins, { user_role: 'physical_appointment_admin' });
+            const callAdmins = _.filter(admins, { user_role: 'call_appointment_admin' });
+            setPhysicalAdmins(physicalAdmins);
+            setCallAdmins(callAdmins);
+          }
         }
       })
       .catch((err) => {
@@ -196,15 +214,9 @@ export default function Appointments() {
     }
   }, [cases]);
 
-  const [page, setPage] = useState(0);
-
-  const [order, setOrder] = useState('asc');
-
-  const [orderBy, setOrderBy] = useState('name');
-
-  const [filterName, setFilterName] = useState('');
-
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  useEffect(() => {
+    console.log(physicalAdmins);
+  }, [physicalAdmins]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -235,6 +247,7 @@ export default function Appointments() {
         err?.response?.data?.message ? notify(err?.response?.data?.message, 'error') : notify(err?.message, 'error');
       });
   };
+
   return (
     <Page title="User">
       <Container>
@@ -331,25 +344,57 @@ export default function Appointments() {
                             }
                           />
                         </TableCell>
-                        <TableCell sx={{ width: '15%' }}>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-autowidth-label">Admin</InputLabel>
+                        <>
+                          {row.appointmentType === 'physical_appointment' ? (
+                            <TableCell>
+                              {physicalAdmins.length > 0 ? (
+                                <FormControl fullWidth>
+                                  <InputLabel id="demo-simple-select-autowidth-label">Admin</InputLabel>
 
-                            <Select
-                              labelId="demo-simple-select-autowidth-label"
-                              id="demo-simple-select-autowidth"
-                              label="Admin"
-                              value={assignedTo || ''}
-                              onChange={(e) => {
-                                handleAssignment(e.target.value, row);
-                              }}
-                            >
-                              {roles.map((role) => (
-                                <MenuItem value={role.id}>{role.username}</MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </TableCell>
+                                  <Select
+                                    labelId="demo-simple-select-autowidth-label"
+                                    id="demo-simple-select-autowidth"
+                                    label="Admin"
+                                    value={assignedTo || ''}
+                                    onChange={(e) => {
+                                      handleAssignment(e.target.value, row);
+                                    }}
+                                  >
+                                    {physicalAdmins.map((admin) => {
+                                      <MenuItem value={admin.id}>{admin.username}</MenuItem>;
+                                    })}
+                                  </Select>
+                                </FormControl>
+                              ) : (
+                                'No Admin'
+                              )}
+                            </TableCell>
+                          ) : (
+                            <TableCell>
+                              {callAdmins.length > 0 ? (
+                                <FormControl fullWidth>
+                                  <InputLabel id="demo-simple-select-autowidth-label">Admin</InputLabel>
+
+                                  <Select
+                                    labelId="demo-simple-select-autowidth-label"
+                                    id="demo-simple-select-autowidth"
+                                    label="Admin"
+                                    value={assignedTo || ''}
+                                    onChange={(e) => {
+                                      handleAssignment(e.target.value, row);
+                                    }}
+                                  >
+                                    {callAdmins.map((admin) => {
+                                      <MenuItem value={admin.id}>{admin.username}</MenuItem>;
+                                    })}
+                                  </Select>
+                                </FormControl>
+                              ) : (
+                                'No Admin'
+                              )}
+                            </TableCell>
+                          )}
+                        </>
                         <TableCell align="right">
                           <Actions
                             id={id}
