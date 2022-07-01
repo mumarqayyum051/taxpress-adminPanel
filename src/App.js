@@ -99,7 +99,7 @@ export default function App() {
     { path: 'appointmentSlots', element: <AppointmentSlots /> },
     { path: 'appointmentSlots/addSlot', element: <AddSlot /> },
     { path: 'appointments', element: <Appointments /> },
-    { path: 'appointments/assign', element: <AppointmentAssign /> },
+    { path: 'appointmentsController/assign', element: <AppointmentAssign /> },
     { path: 'backgrounds', element: <Backgrounds /> },
     { path: 'backgrounds/addBackground', element: <AddBackground /> },
     { path: 'heroSection', element: <HeroSection /> },

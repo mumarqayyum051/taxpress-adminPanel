@@ -130,7 +130,7 @@ const navConfig = [
       },
       {
         title: 'Assign Appointment',
-        path: '/appointments/assign',
+        path: '/appointmentsController/assign',
         icon: getIcon('teenyicons:appointments-outline'),
       },
     ],
