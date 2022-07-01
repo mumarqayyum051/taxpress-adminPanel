@@ -55,6 +55,9 @@ import EditMember from './pages/Team/Edit';
 import Team from './pages/Team/Team';
 import PersistLogin from './PersistLogin';
 import RequireAuth from './RequireAuth';
+import AdminRoles from './pages/AdminRole/AdminRoles';
+import AddAdmin from './pages/AdminRole/AddAdmin';
+import AppointmentAssign from './pages/AppointmentAssign/AppointmentAssign';
 
 // ----------------------------------------------------------------------
 
@@ -96,6 +99,7 @@ export default function App() {
     { path: 'appointmentSlots', element: <AppointmentSlots /> },
     { path: 'appointmentSlots/addSlot', element: <AddSlot /> },
     { path: 'appointments', element: <Appointments /> },
+    { path: 'appointments/assign', element: <AppointmentAssign /> },
     { path: 'backgrounds', element: <Backgrounds /> },
     { path: 'backgrounds/addBackground', element: <AddBackground /> },
     { path: 'heroSection', element: <HeroSection /> },
@@ -104,6 +108,8 @@ export default function App() {
     { path: 'aboutus/addAboutus', element: <AddAboutus /> },
     { path: 'clients', element: <Clients /> },
     { path: 'clients/addClient', element: <AddClient /> },
+    { path: 'admins', element: <AdminRoles /> },
+    { path: 'admins/addAdmin', element: <AddAdmin /> },
   ];
   return (
     <ThemeProvider>

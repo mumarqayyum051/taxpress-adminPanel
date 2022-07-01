@@ -128,6 +128,11 @@ const navConfig = [
         path: '/appointments',
         icon: getIcon('teenyicons:appointments-outline'),
       },
+      {
+        title: 'Assign Appointment',
+        path: '/appointments/assign',
+        icon: getIcon('teenyicons:appointments-outline'),
+      },
     ],
   },
   {
@@ -147,11 +152,11 @@ const navConfig = [
     icon: getIcon('raphael:customer'),
   },
 
-  // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: getIcon('eva:lock-fill'),
-  // },
+  {
+    title: 'Admins',
+    path: '/admins',
+    icon: getIcon('eva:lock-fill'),
+  },
   // {
   //   title: 'register',
   //   path: '/register',
