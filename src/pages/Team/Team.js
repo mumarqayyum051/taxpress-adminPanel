@@ -1,5 +1,5 @@
-/* eslint-disable import/no-duplicates */
-/* eslint-disable camelcase */
+/*    */
+/*  */
 // material
 import {
   Button,
@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 
 // components
-// eslint-disable-next-line import/no-duplicates
 
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
@@ -178,7 +177,7 @@ export default function Team() {
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // eslint-disable-next-line camelcase
+                    //   -disable-next-line camelcase
                     const { id, name, designation, file } = row;
 
                     return (

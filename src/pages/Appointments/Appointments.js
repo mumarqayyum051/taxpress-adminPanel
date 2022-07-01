@@ -1,5 +1,5 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable camelcase */
+/*   -disable no-nested-ternary */
+/*   -disable camelcase */
 // material
 import {
   Button,
@@ -196,8 +196,6 @@ export default function Appointments() {
   return (
     <Page title="User">
       <Container>
-        {' '}
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Appointments
@@ -207,7 +205,7 @@ export default function Appointments() {
             <Button
               variant="contained"
               component={RouterLink}
-              to="/appointments/addSlot"
+              to="/appointmentSlots/addSlot"
               startIcon={<Iconify icon="eva:plus-fill" />}
               sx={{ marginLeft: 2 }}
             >

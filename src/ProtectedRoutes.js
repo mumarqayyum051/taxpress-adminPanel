@@ -1,4 +1,4 @@
-// /* eslint-disable no-unused-expressions */
+// /*   -disable no-unused-expressions */
 import React, { useEffect } from 'react';
 import { Route, Navigate } from 'react-router-dom';
 import useAuth from './hooks/useAuth';

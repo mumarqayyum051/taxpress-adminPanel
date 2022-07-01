@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/*   -disable react/jsx-key */
 import { css } from '@emotion/react';
 import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
@@ -160,9 +160,9 @@ const Add = () => {
                   ) : null}
                 </Grid>
                 {highlights.map((highlight, index) =>
-                  // eslint-disable-next-line react/jsx-key
+                  //   -disable-next-line react/jsx-key
                   [
-                    // eslint-disable-next-line react/jsx-key
+                    //   -disable-next-line react/jsx-key
                     <Grid item xs={10} md={10}>
                       <TextField
                         label={index === 0 ? `Highlight` : `Highlight ${index}`}

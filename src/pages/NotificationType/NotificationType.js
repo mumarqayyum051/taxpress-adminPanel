@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/*  */
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -171,7 +171,7 @@ export default function NotificationType() {
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     console.log(row);
-                    // eslint-disable-next-line camelcase
+                    //   -disable-next-line camelcase
                     const { id, title } = row;
 
                     return (

@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/*   -disable react/jsx-key */
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';

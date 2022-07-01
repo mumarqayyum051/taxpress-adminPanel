@@ -1,5 +1,6 @@
 // material
 import {
+  Box,
   Button,
   Card,
   Container,
@@ -11,23 +12,18 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  Box,
 } from '@mui/material';
+import Modal from '@mui/material/Modal';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
-import { format, compareAsc } from 'date-fns';
-import * as moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { LoadingButton } from '@mui/lab';
-import Modal from '@mui/material/Modal';
 
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
-import CaseLawService from '../../services/CaseLawService';
 import AppointmentsService from '../../services/AppointmentsService';
 import USERLIST from '../../_mock/user';
 // mock
@@ -193,8 +189,6 @@ export default function Appointments() {
   return (
     <Page title="User">
       <Container>
-        {' '}
-        ) : null}
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Appointment Slots
@@ -204,7 +198,7 @@ export default function Appointments() {
             <Button
               variant="contained"
               component={RouterLink}
-              to="/appointments/addSlot"
+              to="/appointmentSlots/addSlot"
               startIcon={<Iconify icon="eva:plus-fill" />}
               sx={{ marginLeft: 2 }}
             >

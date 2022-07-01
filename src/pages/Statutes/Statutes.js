@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/*  */
 // material
 import {
   Button,
@@ -162,7 +162,7 @@ export default function Statutes() {
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // eslint-disable-next-line camelcase
+                    //   -disable-next-line camelcase
                     const { id, law_or_statute, chapter, section, file } = row;
 
                     return (

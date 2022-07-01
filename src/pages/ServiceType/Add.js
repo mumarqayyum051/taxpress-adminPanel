@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/*   -disable react/jsx-key */
 import { LoadingButton } from '@mui/lab';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';

@@ -1,5 +1,5 @@
-/* eslint-disable import/no-duplicates */
-/* eslint-disable camelcase */
+/*    */
+/*  */
 // material
 import {
   Button,
@@ -19,7 +19,7 @@ import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
 // components
-// eslint-disable-next-line import/no-duplicates
+//   -disable-next-line import/no-duplicates
 
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
@@ -180,7 +180,7 @@ export default function Clients() {
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // eslint-disable-next-line camelcase
+                    //   -disable-next-line camelcase
                     const { id, comment, review, clientDesignation, clientName, file, reviewTitle } = row;
 
                     return (

@@ -26,7 +26,7 @@ const PersistLogin = () => {
         setIsLoading(false);
       }
     };
-    // eslint-disable-next-line no-unused-expressions
+    //   -disable-next-line no-unused-expressions
     !isAuthenticated ? verifyToken() : setIsLoading(false);
   }, []);
   useEffect(() => {

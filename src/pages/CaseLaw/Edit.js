@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/*  */
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from '@mui/lab';
 import Autocomplete from '@mui/material/Autocomplete';

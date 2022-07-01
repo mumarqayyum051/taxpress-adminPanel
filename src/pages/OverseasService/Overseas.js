@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/*  */
 // material
 import {
   Button,
@@ -164,7 +164,7 @@ const Ordinance = () => {
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // eslint-disable-next-line camelcase
+                    //   -disable-next-line camelcase
                     const { id, file, type } = row;
                     console.log(row);
                     return (

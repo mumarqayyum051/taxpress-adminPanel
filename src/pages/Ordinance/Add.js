@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/*   -disable react/jsx-key */
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
@@ -106,9 +106,9 @@ const Add = () => {
                   ) : null}
                 </Grid>
                 {highlights.map((highlight, index) =>
-                  // eslint-disable-next-line react/jsx-key
+                  //   -disable-next-line react/jsx-key
                   [
-                    // eslint-disable-next-line react/jsx-key
+                    //   -disable-next-line react/jsx-key
                     <Grid item xs={12} md={12}>
                       <TextField
                         label={index === 0 ? `Highlight` : `Highlight ${index}`}
