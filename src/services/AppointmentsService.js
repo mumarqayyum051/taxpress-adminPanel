@@ -11,6 +11,8 @@ const _getSlotsByType = (type) => _get(`/appointments/getAppointmentSlotsByType/
 const _getAllAppointments = () => _get(`/appointments/getAllAppointments`);
 
 const _changeAppointmentStatus = (data, id) => _put(`/appointments/changeAppointmentStatus/${id}`, data);
+
+const _assignment = (data, id) => _post(`/appointments/assignment/${id}`, data);
 const AppointmentsService = {
   _createAppointment,
   _deleteAppointmentSlot,
@@ -18,6 +20,7 @@ const AppointmentsService = {
   _getAllAppointments,
   _changeAppointmentStatus,
   _getSlotsByType,
+  _assignment,
 };
 
 export default AppointmentsService;

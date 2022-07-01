@@ -14,7 +14,8 @@ const PersistLogin = () => {
     const verifyToken = async () => {
       try {
         const response = await _userContext();
-        setUser(response.data);
+        console.log({ response });
+        setUser(response.data.data);
         setIsAuthenticated(true);
         _setToken(response.data.token);
       } catch (error) {

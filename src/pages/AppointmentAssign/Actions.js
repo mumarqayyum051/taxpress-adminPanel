@@ -4,12 +4,20 @@ import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // component
 import Iconify from '../../components/Iconify';
-import AboutusService from '../../services/AboutusService';
 
 // ----------------------------------------------------------------------
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import AppointmentsService from '../../services/AppointmentsService';
 
 export default function UserMoreMenu(props) {
-  const { _deleteAboutus } = AboutusService;
+  const { _changeAppointmentStatus } = AppointmentsService;
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -33,21 +41,46 @@ export default function UserMoreMenu(props) {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem sx={{ color: 'text.secondary' }}>
-          <ListItemIcon>
-            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
-          </ListItemIcon>
           <ListItemText
-            primary="Delete"
+            primary="Pending"
             primaryTypographyProps={{ variant: 'body2' }}
             onClick={() => {
-              console.log('delete');
-              _deleteAboutus(props.id)
+              _changeAppointmentStatus({ status: 'Pending' }, props.id)
                 .then((res) => {
                   console.log(res);
-                  if (res.status === 200) {
-                    props.onDelete();
-                    setIsOpen(false);
-                  }
+                  props.onStatusChange();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+          />
+        </MenuItem>
+        <MenuItem sx={{ color: 'text.secondary' }}>
+          <ListItemText
+            primary="Completed"
+            primaryTypographyProps={{ variant: 'body2' }}
+            onClick={() => {
+              _changeAppointmentStatus({ status: 'Completed' }, props.id)
+                .then((res) => {
+                  console.log(res);
+                  props.onStatusChange();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }}
+          />
+        </MenuItem>
+        <MenuItem sx={{ color: 'text.secondary' }}>
+          <ListItemText
+            primary="Canceled"
+            primaryTypographyProps={{ variant: 'body2' }}
+            onClick={() => {
+              _changeAppointmentStatus({ status: 'Canceled' }, props.id)
+                .then((res) => {
+                  console.log(res);
+                  props.onStatusChange();
                 })
                 .catch((err) => {
                   console.log(err);

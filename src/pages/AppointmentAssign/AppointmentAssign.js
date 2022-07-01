@@ -1,6 +1,7 @@
+/*   -disable no-nested-ternary */
+/*   -disable camelcase */
 // material
 import {
-  Box,
   Button,
   Card,
   Container,
@@ -11,21 +12,36 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
+  Chip,
   Typography,
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  MenuItem,
+  Select,
+  Switch,
+  InputLabel,
 } from '@mui/material';
-import Modal from '@mui/material/Modal';
 import TableHead from '@mui/material/TableHead';
 import { filter } from 'lodash';
+import { format, compareAsc } from 'date-fns';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import { LoadingButton } from '@mui/lab';
+import Modal from '@mui/material/Modal';
 
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
+import CaseLawService from '../../services/CaseLawService';
 import AppointmentsService from '../../services/AppointmentsService';
+import RoleService from '../../services/RoleService';
 import USERLIST from '../../_mock/user';
+import useAuth from '../../hooks/useAuth';
 // mock
 import Actions from './Actions';
 
@@ -114,12 +130,15 @@ function InfoModal(props) {
   );
 }
 
-export default function AppointmentAssign() {
-  const { _getAllAppointmentSlots, _deleteAllAppointmentSlots } = AppointmentsService;
+export default function Appointments() {
+  const { _getAllAppointments, _assignment } = AppointmentsService;
+  const { _getRoles } = RoleService;
+  const { user } = useAuth();
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [roles, setRoles] = useState([]);
   const notify = (message, type) =>
     toast(message, {
       position: 'top-right',
@@ -135,11 +154,12 @@ export default function AppointmentAssign() {
   const { fileURL } = environment;
 
   useEffect(() => {
-    getAllAppointmentSlots();
+    getAllAppointments();
+    getRoles();
   }, []);
 
-  const getAllAppointmentSlots = () => {
-    _getAllAppointmentSlots()
+  const getAllAppointments = () => {
+    _getAllAppointments()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -149,6 +169,17 @@ export default function AppointmentAssign() {
         console.log(err);
 
         notify(err?.response?.data?.message, 'error');
+      });
+  };
+  const getRoles = () => {
+    _getRoles()
+      .then((res) => {
+        if (res.status === 200) {
+          setRoles(res.data.data);
+        }
+      })
+      .catch((err) => {
+        err?.response?.data?.message ? notify(err?.response?.data?.message, 'error') : notify(err?.message, 'error');
       });
   };
   useEffect(() => {
@@ -185,13 +216,31 @@ export default function AppointmentAssign() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
+  const handleAssignment = (assignedTo, appointment) => {
+    const data = {
+      assignedTo,
+      assignedBy: user.id,
+    };
+    _assignment(data, appointment.id)
+      .then((res) => {
+        if (res.status === 200) {
+          notify(
+            `Appointment has been assigned to ${roles.find((admin) => admin.id === assignedTo).username}`,
+            'success'
+          );
+          getAllAppointments();
+        }
+      })
+      .catch((err) => {
+        err?.response?.data?.message ? notify(err?.response?.data?.message, 'error') : notify(err?.message, 'error');
+      });
+  };
   return (
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Appointment Slots
+            Appointments Controller
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -216,45 +265,100 @@ export default function AppointmentAssign() {
                     <TableCell align="left">#</TableCell>
                     <TableCell align="left">Start Time</TableCell>
                     <TableCell align="left">End Time</TableCell>
-                    <TableCell align="left">Consultant</TableCell>
-                    <TableCell align="left">Appointments</TableCell>
+                    <TableCell align="left">Type</TableCell>
+                    <TableCell align="left">Name</TableCell>
+                    {/* <TableCell align="left">Email</TableCell> */}
+                    <TableCell align="left">Date</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                    <TableCell align="left" sx={{ width: '15%' }}>
+                      Assign to
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-                    // console.log(row);
-                    const { id, startTime, endTime, consultant, NoOfAppointments } = row;
+                    console.log(row);
+                    const {
+                      appointmentType,
+
+                      client_email,
+                      client_name,
+                      client_phone,
+                      date,
+                      startTime,
+                      endTime,
+                      id,
+                      status,
+                      assignedTo,
+                    } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{startTime}</TableCell>
-                        <TableCell align="left">{endTime}</TableCell>
-                        <TableCell align="left">{consultant}</TableCell>
-                        <TableCell align="left">{NoOfAppointments}</TableCell>
-                        {/* <TableCell align="left">
-                          {appointmentType === 'call_appointment' ? 'Call Appointment' : 'Physical Appointment'}
+                        <TableCell align="left">
+                          {new Date(`1994/01/01 ${startTime}`).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                         </TableCell>
-                        <TableCell align="left">{booked}</TableCell>
-                        {booked === 'Yes' ? (
-                          <TableCell align="center">
-                            <Button
-                              variant="contained"
-                              onClick={() => {
-                                setShowModal(true);
+                        <TableCell align="left">
+                          {new Date(`1994/01/01 ${endTime}`).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </TableCell>
+                        <TableCell align="left">
+                          {appointmentType === 'physical_appointment'
+                            ? 'Physical'
+                            : appointmentType === 'call_appointment'
+                            ? 'Call'
+                            : null}
+                        </TableCell>
+                        <TableCell align="left">{client_name}</TableCell>
+                        {/* <TableCell align="left">{client_email}</TableCell> */}
+                        <TableCell align="left">{moment(date).format('DD-MMM-YYYY')}</TableCell>
+                        <TableCell align="left">
+                          <Chip
+                            label={status}
+                            color={
+                              status === 'Completed'
+                                ? 'success'
+                                : status === 'Canceled'
+                                ? 'error'
+                                : status === 'Pending'
+                                ? 'primary'
+                                : 'primary'
+                            }
+                          />
+                        </TableCell>
+                        <TableCell sx={{ width: '15%' }}>
+                          <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-autowidth-label">Admin</InputLabel>
+
+                            <Select
+                              labelId="demo-simple-select-autowidth-label"
+                              id="demo-simple-select-autowidth"
+                              label="Admin"
+                              value={assignedTo || ''}
+                              onChange={(e) => {
+                                handleAssignment(e.target.value, row);
                               }}
-                              startIcon={<Iconify icon="eva:info-outline" />}
                             >
-                              View
-                            </Button>
-                          </TableCell>
-                        ) : null} */}
+                              {roles.map((role) => (
+                                <MenuItem value={role.id}>{role.username}</MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </TableCell>
                         <TableCell align="right">
                           <Actions
                             id={id}
-                            onDelete={() => {
-                              getAllAppointmentSlots();
-                              notify('Appointment Slot has been deleted successfully', 'success');
+                            refresh={() => {
+                              getAllAppointments();
+                            }}
+                            onStatusChange={() => {
+                              getAllAppointments();
+                              notify('Appointment status has been updated successfully', 'success');
                             }}
                           />
                         </TableCell>

@@ -40,4 +40,8 @@ export const ADMIN_TYPES = [
   { label: 'Admin', value: 'admin' },
   { label: 'Front Desk Admin', value: 'front_desk_admin' },
   { label: 'Library Admin', value: 'library_admin' },
+  { label: 'Website Admin', value: 'website_admin' },
+  { label: 'Appoinment Admin', value: 'appointment_admin' },
+  { label: 'Call Appointment Admin', value: 'call_appointment_admin' },
+  { label: 'Physical Appointment Admin', value: 'physical_appointment_admin' },
 ];
