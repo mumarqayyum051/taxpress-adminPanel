@@ -35,3 +35,9 @@ export const APPOINTMENT_TYPES = [
   { label: 'Physical Appointment', value: 'physical_appointment' },
   { label: 'Call Appointment', value: 'call_appointment' },
 ];
+
+export const ADMIN_TYPES = [
+  { label: 'Admin', value: 'admin' },
+  { label: 'Front Desk Admin', value: 'front_desk_admin' },
+  { label: 'Library Admin', value: 'library_admin' },
+];

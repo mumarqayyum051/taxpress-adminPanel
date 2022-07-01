@@ -70,7 +70,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Dictionary() {
+export default function AboutUs() {
   const { _getAboutus } = AboutusService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);

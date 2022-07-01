@@ -56,7 +56,7 @@ const AddDictionary = () => {
           console.log(res);
           setIsSubmitting(false);
           if (res.status === 200) {
-            notify(`Abou us section will now be updated in a whlie`, 'success');
+            notify(`About us section will now be updated in a whlie`, 'success');
             setTimeout(() => {
               navigate('/aboutus');
             }, 2000);
