@@ -13,7 +13,10 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { ToastContainer, toast } from 'react-toastify';
 import MenuItem from '@mui/material/MenuItem';
 import Snackbar from '@mui/material/Snackbar';
+import Chip from '@mui/material/Chip';
+import DeleteIcon from '@mui/icons-material/Delete';
 
+import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
@@ -21,21 +24,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import FileBase64 from 'react-file-base64';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
 import { COURTS, MONTHS, APPOINTMENT_TYPES } from '../../constants/constants';
 import CaseLawService from '../../services/CaseLawService';
 import StatuteService from '../../services/StatuteService';
-import AppointmentsService from '../../services/AppointmentsService';
+import BackgroundService from '../../services/BackgroundService';
 
 const AddBackground = () => {
-  const courts = COURTS;
-  const { _addCase } = CaseLawService;
-  const { _createAppointment } = AppointmentsService;
+  const { _uploadBg } = BackgroundService;
   const navigate = useNavigate();
   useEffect(() => {}, []);
   const uploader = useRef();
-  const [setFile, setFileError] = useState('');
-
-  const [statutes, setStatutes] = useState([]);
+  const [backgrounds, setBackgrounds] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const notify = (message, type) =>
     toast(message, {
@@ -52,29 +53,34 @@ const AddBackground = () => {
 
   const formik = useFormik({
     initialValues: {
-      startTime: date.toLocaleTimeString('en-GB'),
-      endTime: date.toLocaleTimeString('en-GB'),
-      consultant: '',
-      appointmentType: '',
+      path: '',
+      file: '',
     },
 
     validationSchema: yup.object({
-      startTime: yup.string().required('Start time is required'),
-      endTime: yup.string().required('End time is required'),
-      appointmentType: yup.string().required('Appointment type is required'),
+      path: yup.string().required('Path is required'),
     }),
 
     onSubmit: (values) => {
+      if (backgrounds.length === 0) {
+        notify('Please upload a background', 'error');
+        return;
+      }
       console.log(values);
       setIsSubmitting(true);
-      _createAppointment(formik.values)
+      const formData = new FormData();
+      backgrounds.forEach((bg) => {
+        formData.append('file', bg.file);
+      });
+      formData.append('path', values.path);
+      _uploadBg(formData)
         .then((res) => {
           console.log(res);
           if (res.status === 200) {
-            notify('Appointment Slot has been added', 'success');
+            notify('Background has been added and will reflect in a while', 'success');
             setIsSubmitting(false);
             setTimeout(() => {
-              navigate('/appointments');
+              navigate('/backgrounds');
             }, 2000);
           }
         })
@@ -86,83 +92,82 @@ const AddBackground = () => {
     },
   });
 
+  const handleImageDelete = (e) => {
+    console.log(e);
+    let temp = [...backgrounds];
+    temp.splice(e, 1);
+    console.log(temp);
+    setBackgrounds(temp);
+  };
   return (
     <Container>
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-            Create Appointment Slot
+            Add Background
           </Typography>
 
           <Box sx={{ flexGrow: 1 }}>
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={6} md={6}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <TimePicker
-                      onChange={(e) => {
-                        formik.setFieldValue('startTime', e.toLocaleTimeString('en-GB'));
-                      }}
-                      label="Start Time"
-                      renderInput={(params) => <TextField {...params} fullWidth />}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid item xs={6} md={6}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <TimePicker
-                      onChange={(e) => {
-                        formik.setFieldValue('endTime', e.toLocaleTimeString('en-GB'));
-                      }}
-                      label="End Time"
-                      renderInput={(params) => <TextField {...params} fullWidth />}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid item xs={6} md={6}>
+                <Grid item xs={12} md={12}>
                   <TextField
-                    label="Consultant"
+                    label="Path"
                     color="secondary"
-                    id="consultant"
+                    id="path"
                     type="text"
-                    key="consultant"
-                    value={formik.values.consultant}
+                    key="path"
+                    value={formik.values.path}
                     onChange={formik.handleChange}
                     fullWidth
                   />
-                  {formik.errors.consultant && formik.touched.consultant ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.consultant}</p>
+                  {formik.errors.path && formik.touched.path ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.path}</p>
                   ) : null}
                 </Grid>
-                <Grid item xs={6} md={6}>
-                  <TextField
-                    id="appointmentType"
-                    select
-                    label="Appointment Type"
-                    color="secondary"
-                    key="appointmentType"
-                    placeholder="Select Appointment Type"
-                    value={formik.values.appointmentType}
-                    onChange={(event) => {
-                      formik.setFieldValue('appointmentType', event.target.value);
+                {backgrounds.length > 0 ? (
+                  <Grid item xs={12} md={12}>
+                    <Stack direction="row" spacing={1}>
+                      {backgrounds.map((background, index) => (
+                        <Chip
+                          label={background.name}
+                          key={index}
+                          onDelete={() => {
+                            handleImageDelete(index);
+                          }}
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                          }}
+                          deleteIcon={<DeleteIcon />}
+                        />
+                      ))}
+                    </Stack>
+                  </Grid>
+                ) : null}
+                <Grid item xs={12} md={12}>
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      // allow png, jpg, jpeg
+                      const fileType = e.target.files[0].type;
+                      if (fileType === 'image/jpeg' || fileType === 'image/png' || fileType === 'image/jpg') {
+                        formik.setFieldValue('file', e.target.files[0]);
+                        // const backgrounds = [...formik.values.backgrounds];
+                        setBackgrounds([...backgrounds, { name: e.target.files[0].name, file: e.target.files[0] }]);
+                        console.log(backgrounds);
+                        uploader.current.value = '';
+                      } else {
+                        notify('Please upload jpg or png file', 'warning');
+                        uploader.current.value = '';
+                      }
                     }}
-                    fullWidth
-                  >
-                    {APPOINTMENT_TYPES.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  {formik.errors.appointmentType && formik.touched.appointmentType ? (
-                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.appointmentType}</p>
-                  ) : null}
+                    accept="image/apng, image/avif, image/gif, image/jpeg, image/png"
+                    ref={uploader}
+                  />
+                  {formik.errors.file && formik.touched.file ? (
+                    <p style={{ color: 'red', fontSize: 12 }}>{formik.errors.file}</p>
+                  ) : null}{' '}
                 </Grid>
-                {/* <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
-                  <Button variant="contained" size="medium" type="submit" onClick={formik.handleSubmit}>
-                    Submit
-                  </Button>
-                </Grid> */}
                 <Grid item container xs={12} md={12} direction="row" justifyContent="center" alignItems="center">
                   <LoadingButton size="medium" type="submit" variant="contained" loading={isSubmitting}>
                     Submit
