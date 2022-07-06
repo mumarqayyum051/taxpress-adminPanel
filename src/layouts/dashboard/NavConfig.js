@@ -137,7 +137,7 @@ const navConfig = [
   },
   {
     title: 'backgrounds',
-    path: '/backgrounds',
+    path: '/background',
     icon: getIcon('icon-park-outline:background-color'),
   },
   {

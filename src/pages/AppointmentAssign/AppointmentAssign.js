@@ -191,6 +191,10 @@ export default function Appointments() {
           if (admins.length) {
             const physicalAdmins = _.filter(admins, { user_role: 'physical_appointment_admin' });
             const callAdmins = _.filter(admins, { user_role: 'call_appointment_admin' });
+            console.log({
+              physicalAdmins,
+              callAdmins,
+            });
             setPhysicalAdmins(physicalAdmins);
             setCallAdmins(callAdmins);
           }
@@ -201,7 +205,7 @@ export default function Appointments() {
       });
   };
   useEffect(() => {
-    console.log(cases);
+    console.log({ cases });
     const arr = applySortFilter(cases, getComparator('asc', 'name'), filterName);
     console.log(arr);
     if (arr.length === 0) {
@@ -355,14 +359,14 @@ export default function Appointments() {
                                     labelId="demo-simple-select-autowidth-label"
                                     id="demo-simple-select-autowidth"
                                     label="Admin"
-                                    value={assignedTo || ''}
+                                    value={assignedTo || null}
                                     onChange={(e) => {
                                       handleAssignment(e.target.value, row);
                                     }}
                                   >
-                                    {physicalAdmins.map((admin) => {
-                                      <MenuItem value={admin.id}>{admin.username}</MenuItem>;
-                                    })}
+                                    {physicalAdmins.map((admin) => (
+                                      <MenuItem value={admin.id}>{admin.username}</MenuItem>
+                                    ))}
                                   </Select>
                                 </FormControl>
                               ) : (

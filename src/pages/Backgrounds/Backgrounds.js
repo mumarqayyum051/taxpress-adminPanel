@@ -19,12 +19,12 @@ import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-
+import Avatar from './Avatar';
 import Iconify from '../../components/Iconify';
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
 import environment from '../../environment/env';
-import AppointmentsService from '../../services/AppointmentsService';
+import BackgroundService from '../../services/BackgroundService';
 import USERLIST from '../../_mock/user';
 // mock
 import Actions from './Actions';
@@ -114,8 +114,8 @@ function InfoModal(props) {
   );
 }
 
-export default function Appointments() {
-  const { _getAllAppointmentSlots, _deleteAllAppointmentSlots } = AppointmentsService;
+export default function Backgrounds() {
+  const { _getAllBGs } = BackgroundService;
   const [cases, setCases] = useState([]);
   const [filteredCases, setFilteredCases] = useState([]);
   const [isCaseNotFound, setisCaseNotFound] = useState([]);
@@ -136,11 +136,11 @@ export default function Appointments() {
   const { fileURL } = environment;
 
   useEffect(() => {
-    getAllAppointmentSlots();
+    getBGs();
   }, []);
 
-  const getAllAppointmentSlots = () => {
-    _getAllAppointmentSlots()
+  const getBGs = () => {
+    _getAllBGs()
       .then((res) => {
         if (res.status === 200) {
           setCases(res.data.data);
@@ -215,47 +215,33 @@ export default function Appointments() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">#</TableCell>
-                    <TableCell align="left">Start Time</TableCell>
-                    <TableCell align="left">End Time</TableCell>
-                    <TableCell align="left">Consultant</TableCell>
-                    <TableCell align="left">Appointments</TableCell>
+                    <TableCell align="left">Path</TableCell>
+                    <TableCell align="left">Background(s)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCases.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
                     // console.log(row);
-                    const { id, startTime, endTime, consultant, NoOfAppointments } = row;
+                    const { id, path, backgrounds } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="left">{i + 1}</TableCell>
-                        <TableCell align="left">{startTime}</TableCell>
-                        <TableCell align="left">{endTime}</TableCell>
-                        <TableCell align="left">{consultant}</TableCell>
-                        <TableCell align="left">{NoOfAppointments}</TableCell>
-                        {/* <TableCell align="left">
-                          {appointmentType === 'call_appointment' ? 'Call Appointment' : 'Physical Appointment'}
+                        <TableCell align="left">{path}</TableCell>
+                        <TableCell
+                          align="left"
+                          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '20%' }}
+                        >
+                          {backgrounds.length > 0
+                            ? backgrounds.map((_file) => <Avatar avatar={fileURL + _file.filePath} />)
+                            : null}
                         </TableCell>
-                        <TableCell align="left">{booked}</TableCell>
-                        {booked === 'Yes' ? (
-                          <TableCell align="center">
-                            <Button
-                              variant="contained"
-                              onClick={() => {
-                                setShowModal(true);
-                              }}
-                              startIcon={<Iconify icon="eva:info-outline" />}
-                            >
-                              View
-                            </Button>
-                          </TableCell>
-                        ) : null} */}
                         <TableCell align="right">
                           <Actions
                             id={id}
                             onDelete={() => {
-                              getAllAppointmentSlots();
-                              notify('Appointment Slot has been deleted successfully', 'success');
+                              getBGs();
+                              notify('Background has been deleted successfully', 'success');
                             }}
                           />
                         </TableCell>

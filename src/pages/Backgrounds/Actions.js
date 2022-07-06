@@ -4,15 +4,14 @@ import { useNavigate } from 'react-router-dom';
 // component
 import Iconify from '../../components/Iconify';
 import CaseLawService from '../../services/CaseLawService';
-import AppointmentsService from '../../services/AppointmentsService';
+import BackgroundService from '../../services/BackgroundService';
 
 // ----------------------------------------------------------------------
 
 export default function UserMoreMenu(props) {
   const ref = useRef(null);
   const navigate = useNavigate();
-  const { _deleteCase } = CaseLawService;
-  const { _deleteAppointmentSlot } = AppointmentsService;
+  const { _deleteBg } = BackgroundService;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,7 +36,7 @@ export default function UserMoreMenu(props) {
         <MenuItem
           sx={{ color: 'text.secondary' }}
           onClick={() => {
-            _deleteAppointmentSlot(props.id)
+            _deleteBg(props.id)
               .then((res) => {
                 console.log(res);
                 if (res.status === 200) {
